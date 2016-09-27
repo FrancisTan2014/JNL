@@ -1,0 +1,27 @@
+<div class="container z-depth-5" id="loginBox">
+    <div class="title">集宁机务段安全风险管理系统</div>
+    <div class="panel-body">
+
+        <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+            <!-- 工号 -->
+            <div class="row">
+                <div class="input-field col s12">
+                    <input type="number" id="workId" name="workId" class="validate" required pattern="\d{1,10}" [(ngModel)]="loginUser.workId" (input)="onInputChange()" #workIdInput>
+                    <label class="active" for="workId">工号</label>
+                </div>
+            </div>
+
+            <!-- 密码 -->
+            <div class="row">
+                <div class="input-field col s12">
+                    <input type="password" id="password" name="password" class="validate" required minlength="6" maxlength="16" ngControl="password" [(ngModel)]="loginUser.password" (input)="onInputChange()">
+                    <label class="active" for="password">密码</label>
+                </div>
+            </div>
+
+            <span>{{msg}}</span>
+
+            <button [disabled]="!loginForm.valid" class="btn waves-effect waves-light" type="submit" name="action">登 录</button>
+        </form>
+    </div>
+</div>

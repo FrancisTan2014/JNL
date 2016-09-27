@@ -1,0 +1,12 @@
+<div [class.loaded]="loaderVisible()">
+    <div id="loader-wrapper">
+      <div id="loader"></div>        
+      <div class="loader-section section-left"></div>
+      <div class="loader-section section-right"></div>
+    </div>
+
+    <my-header *ngIf="showHeader()"></my-header>
+    <div id="content">
+        <router-outlet></router-outlet>
+    </div>
+</div>
