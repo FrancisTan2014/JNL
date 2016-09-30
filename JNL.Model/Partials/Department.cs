@@ -29,8 +29,8 @@ namespace JNL.Model
 		private int _id;
 		private string _name;
 		private int _parentid;
-		private string _parentname;
-		private string _grandparentname;
+		private string _parentname = string.Empty;
+		private string _grandparentname = string.Empty;
 		private DateTime _addtime= DateTime.Now;
 		private bool _isdelete= false;
 		/// <summary>

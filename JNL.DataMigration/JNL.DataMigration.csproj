@@ -63,6 +63,10 @@
       <Project>{a82c2ce7-823a-4e9d-a1bd-1742c54aab28}</Project>
       <Name>JNL.Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\JNL.Utilities\JNL.Utilities.csproj">
+      <Project>{97d43a15-beef-4408-9274-4995ed8bf810}</Project>
+      <Name>JNL.Utilities</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

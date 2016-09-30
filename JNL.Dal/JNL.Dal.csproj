@@ -51,6 +51,7 @@
     <Compile Include="Partials\DepartmentDal.cs" />
     <Compile Include="Partials\DictionariesDal.cs" />
     <Compile Include="Partials\ExamScoreDal.cs" />
+    <Compile Include="Partials\ExceptionLogDal.cs" />
     <Compile Include="Partials\LineDal.cs" />
     <Compile Include="Partials\LineStationsDal.cs" />
     <Compile Include="Partials\LocomotiveDal.cs" />

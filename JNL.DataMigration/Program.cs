@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 using JNL.Bll;
 using JNL.DbProvider;
 using JNL.Model;
+using JNL.Utilities.Extensions;
 
 namespace JNL.DataMigration
 {
@@ -17,8 +19,11 @@ namespace JNL.DataMigration
         private static readonly string MySqlConnectionString = ConfigurationManager.ConnectionStrings["MySqlConnection"].ToString();
         private static readonly IDbHelper MySqlHelper = DbHelperFactory.GetInstance(DatabaseType.MySql);
 
+        private static Dictionary<int, int> DicRelate = new Dictionary<int, int>();
+
         static void Main(string[] args)
         {
+
             // BasicDownload();
             // WorkFlag();
             // Rest();
@@ -32,6 +37,150 @@ namespace JNL.DataMigration
             // Dictionaries(15, "修程", 11);
             // Dictionaries(16, "机车类型", 12);
             // Locomotive();
+            // Department();
+            BuildDictionary();
+            Staves();
+        }
+
+
+        /// <summary>
+        /// 构造mysql中的字典表与sqlserver中字典表的对应关系
+        /// </summary>
+        private static void BuildDictionary()
+        {
+            var typeDic = new Dictionary<int, int> { { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 14, 10 }, { 11, 9 }, { 10, 8 } };
+
+            var cmdText = "SELECT Id,Name,Type FROM dictionary";
+            var dataTable = MySqlHelper.ExecuteDataTable(MySqlConnectionString, CommandType.Text, cmdText);
+            var mySqlDic = EntityHelper.MapEntity<Dictionaries>(dataTable).ToList();
+
+            var mysqlNameDic = mySqlDic.ToDictionary(dictionariese => dictionariese.Id, dictionariese => dictionariese.Name);
+
+            var sqlDic = new DictionariesBll().QueryAll().ToList();
+            var sqlNameDic = sqlDic.ToDictionary(dic => dic.Id, dic => dic.Name);
+
+            foreach (var typePair in typeDic)
+            {
+                var mlist = mySqlDic.Where(d => d.Type == typePair.Key);
+                var slist = sqlDic.Where(d => d.Type == typePair.Value);
+                var dic =
+                    mlist.Join(slist, d => d.Name, d => d.Name,
+                        (inner, outer) => new KeyValuePair<int, int>(inner.Id, outer.Id))
+                        .ToDictionary(k => k.Key, k => k.Value);
+                foreach (var keyPair in dic)
+                {
+                    DicRelate.Add(keyPair.Key, keyPair.Value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 员工数据
+        /// </summary>
+        private static void Staves()
+        {
+            var cmdText = "SELECT Id,Name,Type FROM dictionary WHERE type=7";
+            var table = MySqlHelper.ExecuteDataTable(MySqlConnectionString, CommandType.Text, cmdText);
+            var departList = EntityHelper.MapEntity<Department>(table);
+
+            var departs = new DepartmentBll().QueryAll();
+            var departDic = departList.Join(departs, depart => depart.Name, depart => depart.Name,
+                (inner, outer) => new KeyValuePair<int, int>(inner.Id, outer.Id)).ToDictionary(key => key.Key, key => key.Value);
+
+            var staffBll = new StaffBll();
+            if (!staffBll.Exists())
+            {
+                var staffCmdText = @"SELECT work_id AS WorkId, salary_id AS SalaryId, NAME, 
+                                    (CASE sex WHEN 1 THEN '男' WHEN 2 THEN '女' END) AS Gender,
+                                    hireday AS HireDate, birthday AS BirthDate, 
+                                    work_flag AS WorkFlagId, work_type AS WorkTypeId,
+                                    political_status AS PoliticalStatusId,position_level AS PositionId,
+                                    depart_id AS DepartmentId
+                                    FROM STAFF";
+                var datatable = MySqlHelper.ExecuteDataTable(MySqlConnectionString, CommandType.Text, staffCmdText);
+                var staves = EntityHelper.MapEntity<Staff>(datatable).ToList();
+                foreach (var staff in staves)
+                {
+                    if (staff.HireDate == DateTime.MinValue)
+                    {
+                        staff.HireDate = DateTime.Now;
+                    }
+                    if (staff.BirthDate == DateTime.MinValue)
+                    {
+                        staff.BirthDate = new DateTime(1970, 1, 1);
+                    }
+
+                    staff.AddTime = DateTime.Now;
+                    staff.Password = staff.SalaryId.GetMd5();
+
+                    try
+                    {
+                        staff.WorkFlagId = DicRelate[staff.WorkFlagId];
+                    }
+                    catch (Exception)
+                    {
+                        //
+                    }
+
+                    try
+                    {
+
+                        staff.WorkTypeId = DicRelate[staff.WorkTypeId];
+                    }
+                    catch (Exception)
+                    {
+                        // 
+                    }
+
+                    try
+                    {
+
+                        staff.PoliticalStatusId = DicRelate[staff.PoliticalStatusId];
+
+                    }
+                    catch (Exception)
+                    {
+                        // 
+                    }
+
+                    try
+                    {
+                        staff.DepartmentId = departDic[staff.DepartmentId];
+
+                    }
+                    catch (Exception)
+                    {
+                        //
+                    }
+
+                    try
+                    {
+                        staff.PositionId = DicRelate[staff.PositionId];
+                    }
+                    catch (Exception)
+                    {
+                        //
+                    }
+                }
+
+                staffBll.BulkInsert(staves);
+
+                Console.WriteLine("员工数据迁移成功");
+            }
+        }
+
+        private static void Department()
+        {
+            var departBll = new DepartmentBll();
+            if (!departBll.Exists())
+            {
+                var cmdText = "SELECT Name FROM dictionary WHERE type=7";
+                var table = MySqlHelper.ExecuteDataTable(MySqlConnectionString, CommandType.Text, cmdText);
+                var departList = EntityHelper.MapEntity<Department>(table);
+
+                departBll.BulkInsert(departList);
+                Console.WriteLine("部门数迁移成功");
+            }
         }
 
         /// <summary>

@@ -1,0 +1,89 @@
+﻿@{
+    ViewBag.Title = "添加基础文件";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .row:not(.inside-row) {
+        margin-bottom: 40px;
+    }
+
+    #btnSave {
+        width: 95%;
+    }
+
+    form {
+        overflow: hidden;
+        padding: 0 20px;
+        border-top: 50px solid #26a69a;
+    }
+</style>
+
+<h5 class="center title">添加基础文件</h5>
+
+<form id="fileForm" class="z-depth-5">
+    <div class="row"></div>
+    <div class="row">
+        <div class="input-field col s6">
+            <div class="select-wrapper">
+                <select class="initialized" name="FileType">
+                    <option value="-1">请选择文件类型</option>
+                    <option value="1">技术规章</option>
+                    <option value="2">企业标准</option>
+                    <option value="3">制度措施</option>
+                </select>
+            </div>
+        </div>
+        <div class="input-field col s6">
+            <div class="select-wrapper">
+                <select class="initialized" name="PublishLevel">
+                    <option value="-1">请选择发布级别</option>
+                    <option value="1">总公司</option>
+                    <option value="2">铁路局</option>
+                    <option value="3">机务段</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-field col s6">
+            <input type="text" id="FileName" name="FileName" required maxlength="30" data-parsley-required-message="文件名称不能为空" />
+            <label for="FileName">文件名称</label>
+        </div>
+        <div class="input-field col s6">
+            <input type="text" id="FileNumber" name="FileNumber" required maxlength="30" data-parsley-required-message="文件编号不能为空" />
+            <label for="FileNumber">文件编号</label>
+        </div>
+    </div>
+    <div class="row file-row">
+        <div class="col s8">
+            <div class="row">
+                <div class="input-field col s12">
+                    <div class="row inside-row">
+                        <div class="col s6">
+                            <input name="UploadOrNot" type="radio" id="download" checked="checked" value="1" />
+                            <label for="download">去铁路局网站查询</label>
+                            &nbsp;&nbsp;
+                            <input name="UploadOrNot" type="radio" id="uploadFile" value="2" />
+                            <label name="UploadOrNot" for="uploadFile">上传文件</label>
+                        </div>
+                        <div class="col s6">
+                            <input type="hidden" name="FilePath" />
+                            <input type="text" value="http://10.94.4.75/Rules/" readonly="readonly" />
+                        </div>
+                    </div>
+                </div>
+                <div class="file-field input-field col s12" style="display: none">
+                    <div class="uploadify"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col s4">
+            <button class="btn btn-large waves-effect waves-light right" id="btnSave" type="submit">保 存</button>
+        </div>
+    </div>
+</form>
+
+<link href="/Scripts/plugins/uplodifive/uploadifive.css" rel="stylesheet" />
+<script src="/Scripts/plugins/uplodifive/jquery.uploadifive.min.js"></script>
+<script src="/Scripts/page-scripts/add-file.js"></script>

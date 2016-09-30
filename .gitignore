@@ -243,3 +243,4 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+/JNL.Web/Upload/BasicFiles/2016-09-30

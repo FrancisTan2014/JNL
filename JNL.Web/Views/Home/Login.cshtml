@@ -1,0 +1,54 @@
+﻿@{
+    ViewBag.Title = "登 录";
+}
+
+<!doctype html>
+<html>
+<head>
+    <title>登 录</title>
+
+    <link rel="stylesheet" href="/node_modules/materialize-css/dist/css/materialize.min.css" />
+    <link href="/Content/login.css" rel="stylesheet"/>
+    <style>
+        .parsley-errors-list {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container z-depth-5" id="loginBox">
+        <div class="title">集宁机务段安全风险管理系统</div>
+        <div class="panel-body">
+
+            <form>
+                <!-- 工号 -->
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input type="number" id="WorkNo" name="WorkNo" class="validate" required pattern="\d{1,10}">
+                        <label class="active" for="WorkNo">工号</label>
+                    </div>
+                </div>
+
+                <!-- 密码 -->
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input type="password" id="Password" name="Password" class="validate" required minlength="6" maxlength="16" max="16" min="6">
+                        <label class="active" for="Password">密码</label>
+                    </div>
+                </div>
+
+                <input type="hidden" name="Remember" id="Remember" value="false" />
+                <input type="checkbox" id="Switch" name="Switch" />
+                <label for="Switch">七天免登录</label>
+
+                <button class="btn waves-effect waves-light" type="submit" name="action">登 录</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="/node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="/node_modules/materialize-css/dist/js/materialize.min.js"></script>
+    <script src="/Scripts/common.js"></script>
+    <script src="/Scripts/login.js"></script>
+</body>
+</html>

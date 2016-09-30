@@ -49,6 +49,7 @@
     <Compile Include="Partials\Department.cs" />
     <Compile Include="Partials\Dictionaries.cs" />
     <Compile Include="Partials\ExamScore.cs" />
+    <Compile Include="Partials\ExceptionLog.cs" />
     <Compile Include="Partials\Line.cs" />
     <Compile Include="Partials\LineStations.cs" />
     <Compile Include="Partials\Locomotive.cs" />

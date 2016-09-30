@@ -29,7 +29,7 @@ namespace JNL.Model
 		private int _id;
 		private string _workid;
 		private string _salaryid;
-		private string _identity;
+		private string _identity = string.Empty;
 		private string _name;
 		private string _gender;
 		private DateTime _hiredate;
@@ -40,7 +40,7 @@ namespace JNL.Model
 		private int _positionid;
 		private int _departmentid;
 		private string _password="";
-		private DateTime _addtime;
+		private DateTime _addtime = DateTime.Now;
 		private DateTime _updatetime= DateTime.Now;
 		private bool _isdelete= false;
 		/// <summary>

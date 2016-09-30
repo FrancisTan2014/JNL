@@ -15,11 +15,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JNL.Model", "JNL.Model\JNL.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JNL.DataMigration", "JNL.DataMigration\JNL.DataMigration.csproj", "{490E16B2-C753-4792-A578-4EF3F2C05EA4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JNL.Web", "JNL.Web\JNL.Web.csproj", "{3855F650-CA8D-4839-966A-396F5BFF98E3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JNL.Admin", "JNL.Admin\JNL.Admin.csproj", "{0D297609-4FC3-46F2-B492-EA642869E697}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JNL.Admin", "C:\Users\lenovo\Desktop\MvcApplication1\JNL.Admin\JNL.Admin.csproj", "{0D297609-4FC3-46F2-B492-EA642869E697}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JNL.Api", "C:\Users\lenovo\Desktop\MvcApplication1\JNL.Api\JNL.Api.csproj", "{D6CFF05A-2C3E-4C35-BE63-D5683085FEE0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JNL.Web", "JNL.Web\JNL.Web.csproj", "{FCAE0BD0-143C-4CE6-92E1-AFAA32DC68BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,18 +49,14 @@ Global
 		{490E16B2-C753-4792-A578-4EF3F2C05EA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{490E16B2-C753-4792-A578-4EF3F2C05EA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{490E16B2-C753-4792-A578-4EF3F2C05EA4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3855F650-CA8D-4839-966A-396F5BFF98E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3855F650-CA8D-4839-966A-396F5BFF98E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3855F650-CA8D-4839-966A-396F5BFF98E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3855F650-CA8D-4839-966A-396F5BFF98E3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0D297609-4FC3-46F2-B492-EA642869E697}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0D297609-4FC3-46F2-B492-EA642869E697}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D297609-4FC3-46F2-B492-EA642869E697}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D297609-4FC3-46F2-B492-EA642869E697}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D6CFF05A-2C3E-4C35-BE63-D5683085FEE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D6CFF05A-2C3E-4C35-BE63-D5683085FEE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D6CFF05A-2C3E-4C35-BE63-D5683085FEE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D6CFF05A-2C3E-4C35-BE63-D5683085FEE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCAE0BD0-143C-4CE6-92E1-AFAA32DC68BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCAE0BD0-143C-4CE6-92E1-AFAA32DC68BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCAE0BD0-143C-4CE6-92E1-AFAA32DC68BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCAE0BD0-143C-4CE6-92E1-AFAA32DC68BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
