@@ -1,6 +1,46 @@
 ﻿(function () {
     window.common = {
         /**
+         * 为页面上的选择框加载字典集
+         * @param {Object[]} types 如：{ type: 1, selector: '#select', value: 'Id' }
+         */
+        loadDictionaries: function (targets) {
+            var targetList = targets || [],
+                _this = this;
+
+            function buildParams(type) {
+                return {
+                    TableName: 'Dictionaries',
+                    Conditions: 'Type=' + type
+                };
+            }
+
+            targetList.forEach(function (target) {
+                var formData = buildParams(target.type);
+                _this.ajax({
+                    url: '/Common/GetList',
+                    data: formData
+                }).done(function(res) {
+                    if (res.code == 108) {
+                        var $select = $(target.selector);
+
+                        var data = res.data || [],
+                            html = '';
+                        data.forEach(function(model) {
+                            var value = model[target.value],
+                                text = model.Name;
+
+                            html += '<option value="{0}">{1}</option>'.format(value, text);
+                        });
+
+                        $select.append(html);
+                        $select.material_select();
+                    }
+                });
+            });
+        },
+
+        /**
          * 封装带有提示信息的方块，且可对此方块进行简单的配置
          * @param {Object} options 对方块的配置信息
          * @returns {void} 
@@ -1036,7 +1076,7 @@
             if (typeof(getConFunc) === 'function') {
                 var conditions = getConFunc();
                 if (conditions instanceof Array) {
-                    return conditions.join();
+                    return conditions.join('###');
                 } else {
                     return conditions;
                 }
@@ -1064,7 +1104,11 @@
 
                 if (typeof(onCreateCell) === 'function') {
                     var result = onCreateCell(value);
-                    $tr.append(result);
+                    if (typeof(result) === 'string' && result.indexOf('<td>') === -1) {
+                        $tr.append('<td>{0}</td>'.format(result));
+                    } else {
+                        $tr.append(result);
+                    }
                 } else {
                     $tr.append('<td>{0}</td>'.format(value));
                 }

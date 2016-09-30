@@ -15,22 +15,6 @@ using JNL.Utilities.Extensions;
 
 namespace JNL.DataMigration
 {
-    public class Person
-    {
-        public string Name { get; set; }
-        public string Gender { get; set; }
-
-        public Person()
-        {
-            Name = "FrancisTan";
-            Gender = "Male";
-        }
-
-        public string Introduce()
-        {
-            return $"{Name} {Gender}";
-        }
-    }
 
     class Program
     {
@@ -57,9 +41,31 @@ namespace JNL.DataMigration
             // Department();
             // BuildDictionary();
             // Staves();
+            RailBureau();
             // Depots();
+            // Accidents();
+            // AccidentType();
+        }
 
-            Accidents();
+        private static void AccidentType()
+        {
+            var dicBll = new DictionariesBll();
+            if (!dicBll.Exists("Type=7"))
+            {
+                var cmdText = "SELECT DISTINCT `Type` AS Name FROM basic WHERE `Type`<>''";
+                var table = MySqlHelper.ExecuteDataTable(MySqlConnectionString, CommandType.Text, cmdText);
+                var list = EntityHelper.MapEntity<Dictionaries>(table).ToList();
+
+                list.ForEach(elem =>
+                {
+                    elem.Type = 7;
+                });
+
+                dicBll.BulkInsert(list);
+
+                Console.WriteLine("事故类别插入成功");
+                Console.ReadKey();
+            }
         }
 
         private static void Accidents()
@@ -85,6 +91,33 @@ namespace JNL.DataMigration
             }
         }
 
+        /// <summary>
+        /// 铁路局
+        /// </summary>
+        private static void RailBureau()
+        {
+            var bureausBll = new DictionariesBll();
+
+            if (!bureausBll.Exists("Type=16"))
+            {
+                var cmdText = "SELECT DISTINCT address AS `Name` FROM basic WHERE address<>''";
+                var dataTable = MySqlHelper.ExecuteDataTable(MySqlConnectionString, CommandType.Text, cmdText);
+                var bureaus = EntityHelper.MapEntity<Dictionaries>(dataTable).ToList();
+                foreach (var bureau in bureaus)
+                {
+                    bureau.Type = 16;
+                }
+
+                bureausBll.BulkInsert(bureaus);
+
+                Console.WriteLine("铁路局数据插入成功");
+                Console.ReadKey();
+            }
+        }
+
+        /// <summary>
+        /// 机务段
+        /// </summary>
         private static void Depots()
         {
             var depotsBll = new DictionariesBll();

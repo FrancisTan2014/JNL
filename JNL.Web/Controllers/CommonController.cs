@@ -35,7 +35,7 @@ namespace JNL.Web.Controllers
 
                     var condition = string.IsNullOrEmpty(parameters.Conditions)
                         ? string.Empty
-                        : parameters.Conditions.Replace(",", " AND ");
+                        : parameters.Conditions.Replace("###", " AND ");
 
                     object data;
                     var type = bllInstance.GetType();

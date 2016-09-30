@@ -3,18 +3,104 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<style>
+    #btnSearch {
+        width: 100%;
+        height: 46px;
+    }
+</style>
+
 <h5 class="title">全路典型事故查询</h5>
+
+<div id="searchBox" class="row z-depth-1">
+    <div class="col s2">
+        <div class="select-wrapper">
+            <select class="initialized" id="searchMonth">
+                <option value="-1">所有月份</option>
+                <option value="1">每年一月</option>
+                <option value="2">每年二月</option>
+                <option value="3">每年三月</option>
+                <option value="4">每年四月</option>
+                <option value="5">每年五月</option>
+                <option value="6">每年六月</option>
+                <option value="7">每年七月</option>
+                <option value="8">每年八月</option>
+                <option value="9">每年九月</option>
+                <option value="10">每年十月</option>
+                <option value="11">每年十一月</option>
+                <option value="12">每年十二月</option>
+            </select>
+        </div>
+    </div>
+    <div class="col s2">
+        <input type="date" class="datepicker" id="searchStar" placeholder="起始日期"/>
+    </div>
+    <div class="col s2">
+        <input type="date" class="datepicker" id="searchEnd" placeholder="结束日期"/>
+    </div>
+    <div class="col s2">
+        <input type="text" id="searchReason" placeholder="事故原因" />
+    </div>
+    <div class="col s2">
+        <div class="select-wrapper">
+            <select class="initialized same-condition" data-field="ResponseBureau" id="searchBereau">
+                <option value="">所有铁路局</option>
+            </select>
+        </div>
+    </div>
+    <div class="col s2">
+        <div class="select-wrapper">
+            <select class="initialized same-condition" data-field="ResponseDepot" id="searchDepot">
+                <option value="">所有机务段</option>
+            </select>
+        </div>
+    </div>
+    <div class="col s2">
+        <div class="select-wrapper">
+            <select class="initialized same-condition" data-field="Place" id="searchPlace">
+                <option value="">所有发生地点</option>
+            </select>
+        </div>
+    </div>
+    <div class="col s2">
+        <div class="select-wrapper">
+            <select class="initialized same-condition" data-field="AccidentType" id="searchType">
+                <option value="">所有事故类别</option>
+            </select>
+        </div>
+    </div>
+    <div class="col s2">
+        <div class="select-wrapper">
+            <select class="initialized same-condition" data-field="LocoType" id="searchLocoType">
+                <option value="">所有列车分类</option>
+            </select>
+        </div>
+    </div>
+    <div class="col s2">
+        <div class="select-wrapper">
+            <select class="initialized same-condition" data-field="WeatherLike" id="searchWeather">
+                <option value="">所有天气状况</option>
+            </select>
+        </div>
+    </div>
+    <div class="col s4">
+        <button class="btn waves-effect waves-light" id="btnSearch">查 询</button>
+    </div>
+</div>
 
 <table class="bordered accident-table">
     <thead>
-        <tr>
-            <th>时间</th>
-            <th>地点</th>
-            <th>责任单位</th>
-            <th>类别</th>
-            <th>事故概况</th>
-            <th>详情</th>
-        </tr>
+    <tr>
+        <th>时间</th>
+        <th>地点</th>
+        <th>铁路局</th>
+        <th>机务段</th>
+        <th>类别</th>
+        <th>事故概况</th>
+        <th>详情</th>
+    </tr>
     </thead>
     <tbody></tbody>
 </table>
+
+<script src="/Scripts/page-scripts/basic-accident.js"></script>

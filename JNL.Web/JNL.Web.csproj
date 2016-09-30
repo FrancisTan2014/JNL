@@ -165,6 +165,7 @@
     <Content Include="Content\parsley.css" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\page-scripts\add-file.js" />
+    <Content Include="Scripts\page-scripts\basic-accident.js" />
     <Content Include="Scripts\page-scripts\basic-files.js" />
     <Content Include="login-filter.config" />
     <Content Include="auth-filter.config" />
@@ -192,6 +193,7 @@
     <Content Include="Views\Basic\AddFile.cshtml" />
     <Content Include="Views\Error\NoAuth.cshtml" />
     <Content Include="Views\Basic\Accidents.cshtml" />
+    <Content Include="Views\Basic\AccidentDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

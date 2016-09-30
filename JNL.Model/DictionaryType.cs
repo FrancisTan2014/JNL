@@ -80,10 +80,20 @@ namespace JNL.Model
         /// 机车车号（如44142)
         /// </summary>
         LocoNumber = 14,
-
+        
         /// <summary>
         /// 机务段名称
         /// </summary>
         Depots = 15,
+
+        /// <summary>
+        /// 铁路局
+        /// </summary>
+        RailBuearu = 16,
+
+        /// <summary>
+        /// 事故发生地点
+        /// </summary>
+        Place = 17
     }
 }
