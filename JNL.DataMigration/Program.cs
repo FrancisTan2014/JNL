@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,23 @@ using JNL.Utilities.Extensions;
 
 namespace JNL.DataMigration
 {
+    public class Person
+    {
+        public string Name { get; set; }
+        public string Gender { get; set; }
+
+        public Person()
+        {
+            Name = "FrancisTan";
+            Gender = "Male";
+        }
+
+        public string Introduce()
+        {
+            return $"{Name} {Gender}";
+        }
+    }
+
     class Program
     {
         private static readonly string MySqlConnectionString = ConfigurationManager.ConnectionStrings["MySqlConnection"].ToString();
@@ -23,7 +41,6 @@ namespace JNL.DataMigration
 
         static void Main(string[] args)
         {
-
             // BasicDownload();
             // WorkFlag();
             // Rest();
@@ -38,10 +55,53 @@ namespace JNL.DataMigration
             // Dictionaries(16, "机车类型", 12);
             // Locomotive();
             // Department();
-            BuildDictionary();
-            Staves();
+            // BuildDictionary();
+            // Staves();
+            // Depots();
+
+            Accidents();
         }
 
+        private static void Accidents()
+        {
+            var accidentBll = new AccidentBll();
+            if (!accidentBll.Exists())
+            {
+                var cmdText = @"SELECT STARTTIME AS OccurrenceTime, address AS Place, company AS ResponseBureau, blance AS ResponseDepot, TYPE AS AccidentType, cartype AS LocoType, weather AS WeatherLike, world AS Keywords, `desc` AS Summary, measures AS `Help`, responsibility AS Responsibility, lesson AS Lesson, reason AS Reason FROM basic";
+                var table = MySqlHelper.ExecuteDataTable(MySqlConnectionString, CommandType.Text, cmdText);
+                var list = EntityHelper.MapEntity<Accident>(table).ToList();
+
+                list.ForEach(e =>
+                {
+                    if (e.OccurrenceTime == DateTime.MinValue)
+                    {
+                        e.OccurrenceTime = DateTime.Now;
+                    }
+                });
+
+                accidentBll.BulkInsert(list);
+
+                Console.WriteLine("典型事故导入成功");
+            }
+        }
+
+        private static void Depots()
+        {
+            var depotsBll = new DictionariesBll();
+
+            if (!depotsBll.Exists("Type=15"))
+            {
+                var cmdText = "SELECT DISTINCT company AS Name FROM basic WHERE company<>''";
+                var dataTable = MySqlHelper.ExecuteDataTable(MySqlConnectionString, CommandType.Text, cmdText);
+                var depots = EntityHelper.MapEntity<Dictionaries>(dataTable).ToList();
+                foreach (var depot in depots)
+                {
+                    depot.Type = 15;
+                }
+
+                depotsBll.BulkInsert(depots);
+            }
+        }
 
         /// <summary>
         /// 构造mysql中的字典表与sqlserver中字典表的对应关系

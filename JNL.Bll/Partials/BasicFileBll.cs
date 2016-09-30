@@ -3,7 +3,6 @@
  * 若要添加新逻辑请在其他地方新建partial类
  */
 
-using JNL.Dal;
 using JNL.Model;
 
 namespace JNL.Bll 
@@ -14,6 +13,9 @@ namespace JNL.Bll
     /// <remarks>动软生成于2016-09-22</remarks>
 	public partial class BasicFileBll : BaseBll<BasicFile>
 	{
-		
+	    public BasicFileBll()
+	    {
+	        
+	    }
 	}
 }

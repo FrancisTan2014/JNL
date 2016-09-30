@@ -191,6 +191,7 @@
     <Content Include="Views\Basic\Files.cshtml" />
     <Content Include="Views\Basic\AddFile.cshtml" />
     <Content Include="Views\Error\NoAuth.cshtml" />
+    <Content Include="Views\Basic\Accidents.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

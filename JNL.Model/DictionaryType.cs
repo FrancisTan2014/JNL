@@ -79,6 +79,11 @@ namespace JNL.Model
         /// <summary>
         /// 机车车号（如44142)
         /// </summary>
-        LocoNumber = 14
+        LocoNumber = 14,
+
+        /// <summary>
+        /// 机务段名称
+        /// </summary>
+        Depots = 15,
     }
 }

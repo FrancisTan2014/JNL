@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace JNL.Bll
+﻿namespace JNL.Bll
 {
     /// <summary>
     /// 描述登录结果的枚举

@@ -6,7 +6,7 @@
 *
 * Ver    变更日期             负责人  变更内容
 * ───────────────────────────────────
-* V0.01  2016/9/22 13:26:34   N/A    初版
+* V0.01  2016/9/30 21:58:21   N/A    初版
 *
 * Copyright (c) 2012 Maticsoft Corporation. All rights reserved.
 *┌──────────────────────────────────┐
@@ -29,11 +29,12 @@ namespace JNL.Model
 		private int _id;
 		private DateTime _occurrencetime;
 		private string _place;
-		private int _depotid;
-		private int _accidenttypeid;
-		private int _locoservicetypeid;
-		private int _weatherid;
-		private string _keywords;
+		private string _responsebureau="";
+		private string _responsedepot="";
+		private string _accidenttype="";
+		private string _locotype="";
+		private string _weatherlike="";
+		private string _keywords="";
 		private string _summary="";
 		private string _help="";
 		private string _responsibility="";
@@ -66,36 +67,44 @@ namespace JNL.Model
 			get{return _place;}
 		}
 		/// <summary>
-		/// 责任机务/电务/车辆段Id（关联Department表主键）
+		/// 责任铁路局
 		/// </summary>
-		public int DepotId
+		public string ResponseBureau
 		{
-			set{ _depotid=value;}
-			get{return _depotid;}
+			set{ _responsebureau=value;}
+			get{return _responsebureau;}
 		}
 		/// <summary>
-		/// 事故类别Id（关联字典表主键）
+		/// 责任机务段
 		/// </summary>
-		public int AccidentTypeId
+		public string ResponseDepot
 		{
-			set{ _accidenttypeid=value;}
-			get{return _accidenttypeid;}
+			set{ _responsedepot=value;}
+			get{return _responsedepot;}
 		}
 		/// <summary>
-		/// 列车类别（如：货车、客车等）Id
+		/// 事故类别
 		/// </summary>
-		public int LocoServiceTypeId
+		public string AccidentType
 		{
-			set{ _locoservicetypeid=value;}
-			get{return _locoservicetypeid;}
+			set{ _accidenttype=value;}
+			get{return _accidenttype;}
 		}
 		/// <summary>
-		/// 天气情况Id（关联字典表主键）
+		/// 列车分类
 		/// </summary>
-		public int WeatherId
+		public string LocoType
 		{
-			set{ _weatherid=value;}
-			get{return _weatherid;}
+			set{ _locotype=value;}
+			get{return _locotype;}
+		}
+		/// <summary>
+		/// 天气情况
+		/// </summary>
+		public string WeatherLike
+		{
+			set{ _weatherlike=value;}
+			get{return _weatherlike;}
 		}
 		/// <summary>
 		/// 关键词

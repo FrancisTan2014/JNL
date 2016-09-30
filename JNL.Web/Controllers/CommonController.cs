@@ -107,29 +107,26 @@ namespace JNL.Web.Controllers
                 return Json(ErrorModel.InputError);
             }
 
-            var bllInstance = BllFactory.GetBllInstance(target);
+            dynamic bllInstance = BllFactory.GetBllInstance(target);
             if (bllInstance == null)
             {
                 return Json(ErrorModel.InputError);
             }
-
-            var model = typeof(JsonHelper).GetMethod("Deserialize")
+            
+            dynamic model = typeof(JsonHelper).GetMethod("Deserialize")
                 .MakeGenericMethod(modelType)
                 .Invoke(null, BindingFlags.InvokeMethod, null, new object[] { json }, CultureInfo.CurrentCulture);
 
             bool success;
-            var bllType = bllInstance.GetType();
             if (operate == "INSERT")
             {
-                model = bllType.InvokeMember("Insert", BindingFlags.InvokeMethod, null, bllInstance, new[] { model });
+                bllInstance.Insert(model);
 
-                var id = (int) modelType.GetProperty("Id").GetValue(model, BindingFlags.GetProperty, null, null, null);
-                success = id > 0;
+                success = model.Id > 0;
             }
             else if (operate == "UPDATE")
             {
-                success =
-                (bool)bllType.InvokeMember("Update", BindingFlags.InvokeMethod, null, bllInstance, new[] { model });
+                success = bllInstance.Update(model);
             }
             else
             {

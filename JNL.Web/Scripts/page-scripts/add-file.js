@@ -102,7 +102,7 @@
             $('#btnSave').prop('disabled', true).text('正在保存...');
 
             common.ajax({
-                url: '/Common/UpdateData',
+                url: '/Common/InsertData',
                 data: {
                     target: 'BasicFile',
                     json: JSON.stringify(fileInfo)

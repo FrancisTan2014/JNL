@@ -37,5 +37,10 @@ namespace JNL.Web.Controllers
         {
             return View();
         }
+
+        public ActionResult Accidents()
+        {
+            return View();
+        }
     }
 }

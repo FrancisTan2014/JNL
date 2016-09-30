@@ -3,7 +3,6 @@
  * 若要添加新逻辑请在其他地方新建partial类
  */
 
-using JNL.Dal;
 using JNL.Model;
 
 namespace JNL.Bll 
