@@ -169,6 +169,9 @@
     <Content Include="login-filter.config" />
     <Content Include="auth-filter.config" />
     <None Include="Scripts\_references.js" />
+    <Content Include="Scripts\page-scripts\common.js" />
+    <Content Include="Scripts\page-scripts\login.js" />
+    <None Include="Scripts\page-scripts\_references.js" />
     <Content Include="Scripts\plugins\uplodifive\jquery.uploadifive.js" />
     <Content Include="Scripts\plugins\uplodifive\jquery.uploadifive.min.js" />
     <Content Include="Scripts\plugins\uplodifive\uploadifive-cancel.png" />

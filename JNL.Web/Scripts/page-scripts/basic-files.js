@@ -55,7 +55,7 @@
             this.ajaxParams.PageSize = 20;
 
             var _this = this;
-            _this.commonTable = $.commonTable('.files-table', {
+            _this.commonTable = $.commonTable('#filesTable', {
                 columns: _this.columns,
                 builds: _this.builds,
                 ajaxParams: _this.ajaxParams,

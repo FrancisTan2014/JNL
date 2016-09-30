@@ -1,17 +1,45 @@
 ﻿@{
-    Layout = null;
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<!DOCTYPE html>
+<style>
+    .datepicker {
+        width: 40% !important;
+    }
+</style>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Files</title>
-</head>
-<body>
-    <div>
-        
+<h5 class="title">@ViewBag.Title</h5>
+
+<div class="row search-box">
+    <div class="col s2 offset-s2">
+        <input type="hidden" value="@ViewBag.FileType" name="FileType"/>
+        <input type="hidden" value="@ViewBag.Level" name="PublishLevel"/>
+        <input type="text" id="searchName" placeholder="文件名称"/>
     </div>
-</body>
-</html>
+    <div class="col s2">
+        <input type="text" id="searchNumber" placeholder="文件编号"/>
+    </div>
+    <div class="col s4">
+        <input type="date" class="datepicker" id="searchStar" placeholder="发文日期"/>
+        &nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;&nbsp;
+        <input type="date" class="datepicker" id="searchEnd" placeholder="发文日期"/>
+    </div>
+    <div class="col s2">
+        <div class="btn waves-effect waves-light" id="btnSearch">查 询</div>
+    </div>
+</div>
+
+<table class="bordered" id="filesTable">
+    <thead>
+        <tr>
+            <th>编号</th>
+            <th>文件名称</th>
+            <th>文件编号</th>
+            <th>发文日期</th>
+            <th>下载</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script src="/Scripts/page-scripts/basic-files.js"></script>

@@ -2,10 +2,6 @@
   font-family: 'Open Sans', Helvetica, Tahoma, Arial, "Microsoft YaHei", "微软雅黑", STXihei, "华文细黑", SimSun, "宋体", Heiti, "黑体", sans-serif;
 }
 
-body {
-    
-}
-
 .primary-bg {
   background-color: #ee6e73;
 }
@@ -416,4 +412,5 @@ a.button-collapse.top-nav.full {
 
 #content>.title {
     margin: 40px auto;
+    text-align: center;
 }
