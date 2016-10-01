@@ -1,5 +1,47 @@
 ﻿(function () {
     window.common = {
+        submitForbidden: function (selector, text) {
+            function Forbidden(selector, text) {
+                this.$dom = selector;
+                if (!(this.$dom instanceof jQuery)) {
+                    this.$dom = $(selector);
+                }
+
+                this.originalText = this.$dom.text();
+                this.newText = text;
+                this.intervalId = 0;
+
+                this.disabled();
+            }
+
+            Forbidden.prototype.disabled = function () {
+                this.$dom.prop('disabled', true);
+
+                var counter = 0, _this = this;
+                this.intervalId = setInterval(function () {
+                    counter++;
+                    if (counter === 6) {
+                        counter = 0;
+                    }
+
+                    var text = _this.newText;
+                    for (var i = 0; i < counter; i++) {
+                        text += '.';
+                    }
+
+                    _this.$dom.text(text);
+                }, 500);
+            };
+
+            Forbidden.prototype.enabled = function () {
+                this.$dom.prop('disabled', false).text(this.originalText);
+
+                window.clearInterval(this.intervalId);
+            }
+
+            return new Forbidden(selector, text);
+        },
+
         /**
          * 为页面上的选择框加载字典集
          * @param {Object[]} types 如：{ type: 1, selector: '#select', value: 'Id' }
@@ -20,13 +62,13 @@
                 _this.ajax({
                     url: '/Common/GetList',
                     data: formData
-                }).done(function(res) {
+                }).done(function (res) {
                     if (res.code == 108) {
                         var $select = $(target.selector);
 
                         var data = res.data || [],
                             html = '';
-                        data.forEach(function(model) {
+                        data.forEach(function (model) {
                             var value = model[target.value],
                                 text = model.Name;
 
@@ -308,7 +350,7 @@
             return this;
         },
 
-        hideModal: function() {
+        hideModal: function () {
             $('.___modal_close___').click();
         },
 
@@ -402,7 +444,7 @@
                 return new Date(time);
             } catch (e) {
                 return '';
-            } 
+            }
         },
 
         /**
@@ -463,7 +505,7 @@
          * @param {Dom} dom 
          * @returns {Boolean} 
          */
-        isFormElement: function(dom) {
+        isFormElement: function (dom) {
             try {
                 var nodeName = dom.nodeName;
 
@@ -471,7 +513,7 @@
             } catch (e) {
                 console.info(e);
                 return false;
-            } 
+            }
         },
 
         /**
@@ -479,7 +521,7 @@
          * @param {String} identity 合法的中国大陆身份证号码
          * @returns {String} 类似于 1990-06-10 这样的日期字符串或者''
          */
-        matchBirthDate: function(identity) {
+        matchBirthDate: function (identity) {
             var value = identity;
             var matches = /(^[1-9]\d{5}(\d{2}(0\d|1[0-2])([012]\d|3[0-1]))\d{3}$)|(^[1-9]\d{5}([1-9]\d{3}(0\d|1[0-2])([012]\d|3[0-1]))\d{3}[0-9]|X$)/.exec(value);
 
@@ -562,7 +604,7 @@
                 sServerMethod: 'POST', // 指定发送请求的方法（插件默认是GET）
                 bServerSide: true, //开启服务器模式，使用服务器端处理配置datatable。注意：sAjaxSource参数也必须被给予为了给datatable源代码来获取所需的数据对于每个画。 这个翻译有点别扭。开启此模式后，你对datatables的每个操作 每页显示多少条记录、下一页、上一页、排序（表头）、搜索，这些都会传给服务器相应的值。 
                 fnServerParams: function (aoData) { // 向服务器发送额外的参数
-                    
+
                 },
                 //sDom: "<'row'<'col-md-6'l><'col-md-6'f>r>t<'row'<'col-md-12'i><'col-md-12 center-block'p>>", //自定义布局
                 iDisplayLength: 10, //每页显示10条数据
@@ -625,8 +667,8 @@
                 }
             }, options);
 
-            if (typeof(options.fnServerParams) === 'function') {
-                opts.fnServerParams = function(aoData) {
+            if (typeof (options.fnServerParams) === 'function') {
+                opts.fnServerParams = function (aoData) {
                     aoData.push({
                         // 遵从系统规范，对所有异步请求添加async参数，值为true
                         name: 'async',
@@ -724,9 +766,9 @@
      * @param {} selector 
      * @returns {} 
      */
-    Array.prototype.max = function(selector) {
+    Array.prototype.max = function (selector) {
         var array = this;
-        if (typeof(selector) === 'function') {
+        if (typeof (selector) === 'function') {
             array = [];
             for (var i = 0; i < this.length; i++) {
                 array.push(selector(this[i]));
@@ -821,7 +863,7 @@
      * @param {Function} condition 对数据的筛选条件（返回true/false）
      * @returns {Array} 本数组的一个字集 
      */
-    Array.prototype.where = function(condition) {
+    Array.prototype.where = function (condition) {
         var subArr = [];
         for (var i = 0; i < this.length; i++) {
             if (condition(this[i])) {
@@ -838,13 +880,13 @@
      * @param {Function} conditionFunc 匹配元素的方法
      * @returns {Object|null} 
      */
-    Array.prototype.single = function(conditionFunc) {
-        if (typeof(conditionFunc) !== 'function') {
+    Array.prototype.single = function (conditionFunc) {
+        if (typeof (conditionFunc) !== 'function') {
             return null;
         }
 
         var result = null;
-        this.forEach(function(value, index) {
+        this.forEach(function (value, index) {
             if (conditionFunc(value)) {
                 result = value;
                 return false;
@@ -857,14 +899,14 @@
     /**
      * 返回数组中的第一个元素
      */
-    Array.prototype.first = function() {
+    Array.prototype.first = function () {
         return this[0];
     };
 
     /**
      * 返回数组中最后一个元素
      */
-    Array.prototype.last = function() {
+    Array.prototype.last = function () {
         return this[this.length - 1];
     };
 
@@ -1013,18 +1055,21 @@
         });
     } catch (e) {
         console.info(e);
-    } 
+    }
 })(window, jQuery);
 
-(function() {
-    $.commonTable = function(selector, options) {
+/*
+ * 封装网站公共table方法
+ */
+(function (window, $) {
+    $.commonTable = function (selector, options) {
         function CommonTable(selector, options) {
             this.selector = selector;
             this.config = $.extend({}, {
                 columns: [],
                 builds: [],
                 ajaxParams: {},
-                getConditions: function() { }
+                getConditions: function () { }
             }, options);
 
             this.$btnLoadMore = null;
@@ -1036,7 +1081,7 @@
             this.loadData();
         }
 
-        CommonTable.prototype.buildBtnLoad = function() {
+        CommonTable.prototype.buildBtnLoad = function () {
             this.$btnLoadMore = $('<div style="text-align: center; margin-top: 15px;"><button class="btn waves-effect waves-light" style="width: 40%">加载更多</button></div>');
 
             var _this = this;
@@ -1048,32 +1093,32 @@
             _this.$btnLoadMore.insertAfter(_this.selector);
         };
 
-        CommonTable.prototype.buildLoading = function() {
+        CommonTable.prototype.buildLoading = function () {
             this.$loading = $('<div style="margin-left: 47%;" class="preloader-wrapper big active"><div class="spinner-layer spinner-blue"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div></div><div class="circle-clipper right"><div class="circle"></div></div></div><div class="spinner-layer spinner-red"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div></div><div class="circle-clipper right"><div class="circle"></div></div></div><div class="spinner-layer spinner-yellow"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div></div><div class="circle-clipper right"><div class="circle"></div></div></div><div class="spinner-layer spinner-green"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div></div><div class="circle-clipper right"><div class="circle"></div></div></div></div>');
 
             var _this = this;
             _this.$loading.insertAfter(_this.selector);
         };
 
-        CommonTable.prototype.setPageIndex = function(index) {
+        CommonTable.prototype.setPageIndex = function (index) {
             this.config.ajaxParams.PageIndex = index;
         };
 
-        CommonTable.prototype.showLoading = function() {
+        CommonTable.prototype.showLoading = function () {
             this.$btnLoadMore.hide();
             this.$loading.show();
         };
 
-        CommonTable.prototype.hideLoading = function() {
+        CommonTable.prototype.hideLoading = function () {
             this.$btnLoadMore.show();
             this.$loading.hide();
         };
 
-        CommonTable.prototype.getConditions = function() {
+        CommonTable.prototype.getConditions = function () {
             var _this = this,
                 getConFunc = _this.config.getConditions;
 
-            if (typeof(getConFunc) === 'function') {
+            if (typeof (getConFunc) === 'function') {
                 var conditions = getConFunc();
                 if (conditions instanceof Array) {
                     return conditions.join('###');
@@ -1085,26 +1130,26 @@
             }
         };
 
-        CommonTable.prototype.buildTr = function(data) {
+        CommonTable.prototype.buildTr = function (data) {
             var _this = this;
 
             var $tr = $('<tr></tr>');
-            _this.config.columns.forEach(function(column, index) {
+            _this.config.columns.forEach(function (column, index) {
                 var onCreateCell;
-                _this.config.builds.forEach(function(build) {
+                _this.config.builds.forEach(function (build) {
                     if (build.targets.contains(index)) {
                         onCreateCell = build.onCreateCell;
                     }
                 });
 
                 var value = data[column];
-                if (typeof(value) === 'string' && value.indexOf('Date(') >= 0) {
+                if (typeof (value) === 'string' && value.indexOf('Date(') >= 0) {
                     value = common.processDate(value).format('yyyy-MM-dd HH:mm:ss');
                 }
 
-                if (typeof(onCreateCell) === 'function') {
+                if (typeof (onCreateCell) === 'function') {
                     var result = onCreateCell(value);
-                    if (typeof(result) === 'string' && result.indexOf('<td>') === -1) {
+                    if (typeof (result) === 'string' && result.indexOf('<td>') === -1) {
                         $tr.append('<td>{0}</td>'.format(result));
                     } else {
                         $tr.append(result);
@@ -1117,9 +1162,9 @@
             return $tr;
         };
 
-        CommonTable.prototype.loadData = function() {
+        CommonTable.prototype.loadData = function () {
             var _this = this;
-            
+
             if (_this.config.ajaxParams.PageIndex === 1) {
                 _this.$tbody.empty();
             }
@@ -1143,7 +1188,7 @@
 
                 if (res.code == 108) {
                     if (res.data instanceof Array && res.data.length > 0) {
-                        res.data.forEach(function(value) {
+                        res.data.forEach(function (value) {
                             var $tr = _this.buildTr(value);
                             _this.$tbody.append($tr);
                         });
@@ -1162,4 +1207,14 @@
 
         return new CommonTable(selector, options);
     };
+})(window, jQuery);
+
+(function (window, $) {
+    /**
+     * 为select添加验证规则，使用时，给定一个默认选项，验证选中的值是否等于默认选项
+     */
+    $.validator.addMethod('notEquals', function (value, element, params) {
+        console.log(params);
+        return this.optional(element) || value != params;
+    }, 'Value must not equal default value.');
 })(window, jQuery);

@@ -244,3 +244,5 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 /JNL.Web/Upload/BasicFiles/2016-09-30
+/JNL.Web/bower_components
+/JNL.Web/Upload/BasicFiles/2016-10-01

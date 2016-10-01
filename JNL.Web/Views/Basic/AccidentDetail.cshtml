@@ -1,6 +1,101 @@
 ﻿@{
-    ViewBag.Title = "AccidentDetail";
+    ViewBag.Title = "典型事故录入";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>AccidentDetail</h2>
+<style>
+    #btnSubmit {
+        width: 30%;
+        margin-top: 30px;
+    }
+
+    form {
+        padding-bottom: 20px;
+        margin-bottom: 200px;
+    }
+
+</style>
+
+<h5 class="title">@ViewBag.Title</h5>
+
+    <form class="z-depth-5 edit-form form-validate">
+        <div class="row">
+            <div class="input-field col s4">
+                <input type="date" name="OccurrenceTime" class="datepicker" required placeholder="事故发生时间" />
+            </div>
+            <div class="input-field col s4">
+                <div class="select-wrapper">
+                    <select class="initialized" name="Place" id="Place" required>
+                        <option value="">请选择事故发生地点</option>
+                    </select>
+                </div>
+            </div>
+            <div class="input-field col s4">
+                <div class="select-wrapper">
+                    <select class="initialized" name="ResponseBureau" id="ResponseBureau">
+                        <option value="">请选择铁路局</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row empty-row"></div>
+            <div class="input-field col s4">
+                <div class="select-wrapper">
+                    <select class="initialized" name="ResponseDepot" id="ResponseDepot">
+                        <option value="">请选择机务段</option>
+                    </select>
+                </div>
+            </div>
+            <div class="input-field col s4">
+                <div class="select-wrapper">
+                    <select class="initialized" name="AccidentType" id="AccidentType">
+                        <option value="">请选择事故类别</option>
+                    </select>
+                </div>
+            </div>
+            <div class="input-field col s4">
+                <div class="select-wrapper">
+                    <select class="initialized" name="LocoType" id="LocoType">
+                        <option value="">请选择机车类别</option>
+                    </select>
+                </div>
+            </div>
+            <div class="input-field col s4">
+                <div class="select-wrapper">
+                    <select class="initialized" name="WeatherLike" id="WeatherLike">
+                        <option value="">请选择天气情况</option>
+                    </select>
+                </div>
+            </div>
+            <div class="input-field col s12 error-offset-3">
+                <i class="mdi-editor-mode-edit prefix"></i>
+                <textarea class="materialize-textarea" name="Summary" id="Summary" length="8000"></textarea>
+                <label for="Summary">事故概述</label>
+            </div>
+            <div class="input-field col s12 error-offset-3">
+                <i class="mdi-editor-mode-edit prefix"></i>
+                <textarea class="materialize-textarea" name="Reason" id="Reason" length="8000"></textarea>
+                <label for="Reason">事故原因</label>
+            </div>
+            <div class="input-field col s12 error-offset-3">
+                <i class="mdi-editor-mode-edit prefix"></i>
+                <textarea class="materialize-textarea" name="Help" id="Help"  length="8000"></textarea>
+                <label for="Help">补救措施</label>
+            </div>
+            <div class="input-field col s12 error-offset-3">
+                <i class="mdi-editor-mode-edit prefix"></i>
+                <textarea class="materialize-textarea" name="Responsibility" id="Responsibility" length="8000"></textarea>
+                <label for="Responsibility">责任追究</label>
+            </div>
+            <div class="input-field col s12 error-offset-3">
+                <i class="mdi-editor-mode-edit prefix"></i>
+                <textarea class="materialize-textarea" name="Lesson" id="Lesson" length="8000"></textarea>
+                <label for="Lesson">吸取到的教训</label>
+            </div>
+            <div class="col s12">
+                <button id="btnSubmit" type="button" class="btn btn-large waves-effect waves-light right">保 存</button>
+            </div>
+        </div>
+    </form>
+<div class="bottom"></div>
+
+    <script src="/Scripts/page-scripts/accident-detail.js"></script>

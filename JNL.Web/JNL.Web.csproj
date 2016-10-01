@@ -164,6 +164,7 @@
     <Content Include="Content\login.css" />
     <Content Include="Content\parsley.css" />
     <Content Include="Global.asax" />
+    <Content Include="Scripts\page-scripts\accident-detail.js" />
     <Content Include="Scripts\page-scripts\add-file.js" />
     <Content Include="Scripts\page-scripts\basic-accident.js" />
     <Content Include="Scripts\page-scripts\basic-files.js" />

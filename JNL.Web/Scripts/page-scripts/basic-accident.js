@@ -28,7 +28,7 @@
         }],
 
         ajaxParams: {
-            OrderField: 'OccurrenceTime',
+            OrderField: 'AddTime',
             Desending: true
         },
 

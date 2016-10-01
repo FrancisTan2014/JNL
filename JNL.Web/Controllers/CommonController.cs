@@ -101,44 +101,53 @@ namespace JNL.Web.Controllers
 
         private JsonResult InsertOrUpdateData(string json, string target, string operate)
         {
-            var modelType = GetModelType(target);
-            if (modelType == null)
+            try
             {
+                var modelType = GetModelType(target);
+                if (modelType == null)
+                {
+                    return Json(ErrorModel.InputError);
+                }
+
+                dynamic bllInstance = BllFactory.GetBllInstance(target);
+                if (bllInstance == null)
+                {
+                    return Json(ErrorModel.InputError);
+                }
+
+                dynamic model = typeof(JsonHelper).GetMethod("Deserialize")
+                    .MakeGenericMethod(modelType)
+                    .Invoke(null, BindingFlags.InvokeMethod, null, new object[] { json }, CultureInfo.CurrentCulture);
+
+                bool success;
+                if (operate == "INSERT")
+                {
+                    bllInstance.Insert(model);
+
+                    success = model.Id > 0;
+                }
+                else if (operate == "UPDATE")
+                {
+                    success = bllInstance.Update(model);
+                }
+                else
+                {
+                    return Json(ErrorModel.InputError);
+                }
+
+                if (success)
+                {
+                    return Json(ErrorModel.OperateSuccess);
+                }
+
+                return Json(ErrorModel.OperateFailed);
+            }
+            catch (Exception ex)
+            {
+                ExceptionLogBll.ExceptionPersistence(nameof(CommonController), nameof(CommonController), ex);
+
                 return Json(ErrorModel.InputError);
             }
-
-            dynamic bllInstance = BllFactory.GetBllInstance(target);
-            if (bllInstance == null)
-            {
-                return Json(ErrorModel.InputError);
-            }
-            
-            dynamic model = typeof(JsonHelper).GetMethod("Deserialize")
-                .MakeGenericMethod(modelType)
-                .Invoke(null, BindingFlags.InvokeMethod, null, new object[] { json }, CultureInfo.CurrentCulture);
-
-            bool success;
-            if (operate == "INSERT")
-            {
-                bllInstance.Insert(model);
-
-                success = model.Id > 0;
-            }
-            else if (operate == "UPDATE")
-            {
-                success = bllInstance.Update(model);
-            }
-            else
-            {
-                return Json(ErrorModel.InputError);
-            }
-
-            if (success)
-            {
-                return Json(ErrorModel.OperateSuccess);
-            }
-
-            return Json(ErrorModel.OperateFailed);
         }
 
         /// <summary>
