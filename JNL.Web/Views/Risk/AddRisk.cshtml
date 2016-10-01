@@ -1,0 +1,164 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="/Content/material-card.css" rel="stylesheet" />
+<style>
+    .card {
+        box-shadow: none !important;
+    }
+
+        .card .row {
+            margin: 0;
+        }
+
+    .card-body {
+        padding-top: 0;
+    }
+
+    .edit-form {
+        padding-top: 20px;
+    }
+
+    .btn-group .btn {
+        width: 20%;
+    }
+
+    #staffList {
+        padding: 10px;
+        text-align: center;
+    }
+</style>
+
+<h5 class="title">@ViewBag.Title</h5>
+
+<form class="z-depth-5 edit-form form-validate">
+    <!-- 人员信息 -->
+    <div class="row">
+        <div class="col s6">
+            <div class="card card-outlined style-primary">
+                <div class="card-head">
+                    <header><i class="mdi-editor-mode-edit"></i> 提报人</header>
+                </div><!--end .card-head -->
+                <div class="card-body">
+                    <div class="row">
+                        <div class="input-field col s7">
+                            <input type="hidden" name="ReportStaffId" />
+                            <input type="text" id="ReportStaffId" placeholder="输入人名/工号搜索"/>
+                        </div>
+                        <div class="input-field col s5">
+                            <input type="text" placeholder="提报部门" value="集宁机务段" readonly="readonly"/>
+                        </div>
+                    </div>
+                </div><!--end .card-body -->
+            </div>
+        </div>
+        <div class="col s6">
+            <div class="card card-outlined style-primary">
+                <div class="card-head">
+                    <header><i class="mdi-social-person"></i> 责任人</header>
+                </div><!--end .card-head -->
+                <div class="card-body">
+                    <div class="row">
+                        <div class="input-field col s7">
+                            <input type="hidden" name="RespondStaffId" />
+                            <input type="text" placeholder="输入人名/工号搜索" id="RespondStaffId" />
+                        </div>
+                        <div class="input-field col s5">
+                            <input type="text" placeholder="责任部门" readonly="readonly"/>
+                        </div>
+                    </div>
+                </div><!--end .card-body -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 风险基本信息 -->
+    <div class="row">
+        <div class="card card-outlined style-primary">
+            <div class="card-head">
+                <header><i class="mdi-action-info-outline"></i> 风险基本信息（时间、地点、列车类别、天气等）</header>
+            </div><!--end .card-head -->
+            <div class="card-body">
+                <div class="row">
+                    <div class="input-field col s4">
+                        <input class="datepicker" name="OccurrenceTime" type="datetime" data-field="datetime" data-format="yyyy-MM-dd hh:mm:ss" placeholder="发生时间"/>
+                    </div>
+                    <div class="input-field col s4">
+                        <div class="select-wrapper">
+                            <select class="initialized">
+                                <option value="-1">列车类别</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-field col s4">
+                        <div class="select-wrapper">
+                            <select class="initialized">
+                                <option value="-1">天气</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-field col s4">
+                        <div class="select-wrapper">
+                            <select class="initialized">
+                                <option value="-1">发生线路名称</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-field col s4">
+                        <div class="select-wrapper">
+                            <select class="initialized">
+                                <option value="-1">起始站</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-field col s4">
+                        <div class="select-wrapper">
+                            <select class="initialized">
+                                <option value="-1">终点站（可选）</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div><!--end .card-body -->
+        </div>
+    </div>
+
+    <!-- 风险详情信息 -->
+    <div class="row">
+        <div class="card card-outlined style-primary">
+            <div class="card-head">
+                <header><i class="mdi-image-details"></i> 风险详情信息（概述、详情、存储等）</header>
+            </div><!--end .card-head -->
+            <div class="card-body">
+                <div class="row">
+                    <div class="input-field col s10">
+                        <input type="text" placeholder="风险概述，输入关键字搜索"/>
+                    </div>
+                    <div class="input-field col s2">
+                        <div class="switch">
+                            <label>
+                                库内
+                                <input type="checkbox">
+                                <span class="lever"></span>
+                                库外
+                            </label>
+                        </div>
+                    </div>
+                    <div class="input-field col s12">
+                        <textarea class="materialize-textarea" placeholder="风险详情描述"></textarea>
+                    </div>
+                </div>
+            </div><!--end .card-body -->
+        </div>
+    </div>
+
+    <!-- 按钮 -->
+    <div class="row btn-group">
+        <button id="btnSave" class="btn btn-large waves-effect waves-light right">保 存</button>
+    </div>
+</form>
+<div class="bottom"></div>
+<div id="dtBox"></div>
+
+<script src="/Scripts/page-scripts/add-risk.js"></script>

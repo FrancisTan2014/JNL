@@ -28,6 +28,7 @@ namespace JNL.Model
 		#region Model
 		private int _id;
 		private int _reportstaffid;
+	    private int _respondstaffid;
 		private int _occurrencelineid;
 		private int _firststationid;
 		private int _laststationid;
@@ -38,13 +39,13 @@ namespace JNL.Model
 		private string _riskdetails="";
 		private string _riskreason;
 		private string _riskfix="";
-		private bool _visible;
+		private bool _visible = false;
 		private int _risktypeid;
 		private int _verifystatus=1;
 		private int _verifystaffid;
 		private DateTime _verifytime= DateTime.Now;
-		private bool _showinstresspage;
-		private DateTime _dealtimelimit;
+		private bool _showinstresspage = false;
+		private DateTime _dealtimelimit = DateTime.Now;
 		private bool _hasdealed= false;
 		private bool _needroomsign= false;
 		private bool _needleadersign= false;
@@ -69,6 +70,15 @@ namespace JNL.Model
 			set{ _reportstaffid=value;}
 			get{return _reportstaffid;}
 		}
+
+	    /// <summary>
+	    /// 责任人Id
+	    /// </summary>
+	    public int RespondStaffId
+	    {
+            get { return _respondstaffid; }
+            set { _respondstaffid = value; }
+	    }
 		/// <summary>
 		/// 事件发生线路Id（关联线路表主键）
 		/// </summary>

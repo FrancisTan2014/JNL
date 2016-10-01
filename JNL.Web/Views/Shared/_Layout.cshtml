@@ -6,6 +6,7 @@
     <title>@ViewBag.Title</title>
 
     <link rel="stylesheet" href="/node_modules/materialize-css/dist/css/materialize.min.css"/>
+    <link rel="stylesheet" href="/node_modules/datetimepicker/dist/datetimepicker.min.css"/>
     <link href="/Content/loading-animate.css" rel="stylesheet"/>
     <link rel="stylesheet" href="/Content/parsley.css" />
 
@@ -16,6 +17,7 @@
     <script src="/node_modules/materialize-css/dist/js/materialize.min.js"></script>
     <script src="/node_modules/parsleyjs/dist/parsley.min.js"></script>
     <script src="/bower_components/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="/node_modules/datetimepicker/dist/datetimepicker.min.js"></script>
 
     <script src="/Scripts/page-scripts/common.js"></script>
 </head>
@@ -48,11 +50,9 @@
                         <li class="first-menu">
                             <a class="dropdown-button waves-effect waves-block waves-light" href="javascript:void(0);" data-activates="dropdown2">风险信息</a>
                             <ul id="dropdown2" class="dropdown-content">
-                                <li>
-                                    <a href="#!">安全管理信息中心</a>
-                                </li>
-                                <li><a href="#!">安全信息分析中心</a></li>
-                                <li><a href="#!">机车质量跟踪系统填报</a></li>
+                                <li class="second-menu" data-target="#target4" id="saveManage"><a href="javascript:void(0);">安全信息管理中心<i class="mdi-hardware-keyboard-arrow-right right"></i></a></li>
+                                <li class="second-menu" data-target="#target5" id="saveAnalysis"><a href="javascript:void(0);">安全信息分析中心<i class="mdi-hardware-keyboard-arrow-right right"></i></a></li>
+                                <li class="second-menu" data-target="#target6" id="locoQuality"><a href="javascript:void(0);">机车质量跟踪系统填报<i class="mdi-hardware-keyboard-arrow-right right"></i></a></li>
                             </ul>
                         </li>
                         <li class="first-menu">
@@ -78,6 +78,33 @@
                     <li class="third-menu-item"><a href="/Basic/Files/3/1">总公司</a></li>
                     <li class="third-menu-item"><a href="/Basic/Files/3/2">铁路局</a></li>
                     <li class="third-menu-item"><a href="/Basic/Files/3/3">机务段</a></li>
+                </ul>
+                <ul id="target4" data-source="#saveManage" class="dropdown-content third-menu">
+                    <li class="third-menu-item"><a href="/Basic/Files/3/1">110信息中心获知风险</a></li>
+                    <li class="third-menu-item"><a href="/Basic/Files/3/2">局安全风险管控系统确定风险</a></li>
+                    <li class="third-menu-item"><a href="/Basic/Files/3/3">上级单位通报风险</a></li>
+                    <li class="third-menu-item"><a href="/Basic/Files/3/3">段领导检查发现问题</a></li>
+                    <li class="third-menu-item"><a href="/Basic/Files/3/3">管理人员检查发现风险</a></li>
+                    <li class="third-menu-item"><a href="/Basic/Files/3/3">技术人员检查发现风险</a></li>
+                    <li class="third-menu-item"><a href="/Basic/Files/3/3">专题研究督办确定风险</a></li>
+                    <li class="third-menu-item"><a href="/Basic/Files/3/3">合理化建议确定风险</a></li>
+                    <li class="third-menu-item"><a href="/Basic/Files/3/3">段内结合部风险</a></li>
+                    <li class="third-menu-item"><a href="/Basic/Files/3/3">段外结合部风险</a></li>
+                    <li class="third-menu-item"><a href="/Basic/Files/3/3">需上级部门解决风险</a></li>
+                </ul>
+                <ul id="target5" data-source="#saveAnalysis" class="dropdown-content third-menu">
+                    <li class="third-menu-item"><a href="/Basic/Files/3/1">LKJ分析</a></li>
+                    <li class="third-menu-item"><a href="/Basic/Files/3/1">视频分析</a></li>
+                    <li class="third-menu-item"><a href="/Basic/Files/3/1">录音笔分析</a></li>
+                    <li class="third-menu-item"><a href="/Basic/Files/3/1">专调STP分析</a></li>
+                    <li class="third-menu-item"><a href="/Basic/Files/3/1">动车EOAS分析</a></li>
+                    <li class="third-menu-item"><a href="/Basic/Files/3/1">ATP分析</a></li>
+                    <li class="third-menu-item"><a href="/Basic/Files/3/1">防盹睡分析</a></li>
+                    <li class="third-menu-item"><a href="/Basic/Files/3/1">其他装备分析</a></li>
+                </ul>
+                <ul id="target6" data-source="#locoQuality" class="dropdown-content third-menu">
+                    <li class="third-menu-item"><a href="/Basic/Files/3/1">机统6活项填写</a></li>
+                    <li class="third-menu-item"><a href="/Basic/Files/3/2">机统28活项填写</a></li>
                 </ul>
             </nav>
         </div>

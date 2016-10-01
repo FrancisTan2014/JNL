@@ -66,6 +66,7 @@
     <Compile Include="Partials\StaffBll.cs" />
     <Compile Include="Partials\StationBll.cs" />
     <Compile Include="Partials\TraceInfoBll.cs" />
+    <Compile Include="Partials\ViewStaffBll.cs" />
     <Compile Include="Partials\WarningBll.cs" />
     <Compile Include="Partials\WarningImplementBll.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -11,6 +11,7 @@ nav {
     overflow: hidden;
     padding: 0 20px;
     border-top: 50px solid #26a69a;
+    margin-bottom: 100px;
 }
 
 .empty-row {
@@ -29,6 +30,16 @@ nav {
     -o-transform: translateY(0%);
     transform: translateY(0%);
 }
+
+/* 去除浏览器默认的type=number样式 */
+input[type=number] {  
+    -moz-appearance:textfield;  
+}  
+input[type=number]::-webkit-inner-spin-button,  
+input[type=number]::-webkit-outer-spin-button {  
+    -webkit-appearance: none;  
+    margin: 0;  
+} 
 
 .input-field.error-offset-3 div.error {
     left: 3rem;

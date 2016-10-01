@@ -2,6 +2,7 @@
   "name": "jnl.web",
   "version": "1.0.0",
   "devDependencies": {
+    "datetimepicker": "^0.1.9",
     "jquery": "^2.1.0",
     "jquery.cookie": "1.4.1",
     "materialize-css": "^0.97.5",

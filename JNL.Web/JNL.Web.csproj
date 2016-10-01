@@ -138,6 +138,7 @@
     <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\RiskController.cs" />
     <Compile Include="Filters\Authority.cs" />
     <Compile Include="Filters\AuthorityFilter.cs" />
     <Compile Include="Filters\ExceptionFilter.cs" />
@@ -162,6 +163,7 @@
     <Content Include="Content\index.css" />
     <Content Include="Content\loading-animate.css" />
     <Content Include="Content\login.css" />
+    <Content Include="Content\material-card.css" />
     <Content Include="Content\parsley.css" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\page-scripts\accident-detail.js" />
@@ -173,7 +175,7 @@
     <None Include="Scripts\_references.js" />
     <Content Include="Scripts\page-scripts\common.js" />
     <Content Include="Scripts\page-scripts\login.js" />
-    <None Include="Scripts\page-scripts\_references.js" />
+    <Content Include="Scripts\page-scripts\add-risk.js" />
     <Content Include="Scripts\plugins\uplodifive\jquery.uploadifive.js" />
     <Content Include="Scripts\plugins\uplodifive\jquery.uploadifive.min.js" />
     <Content Include="Scripts\plugins\uplodifive\uploadifive-cancel.png" />
@@ -196,6 +198,7 @@
     <Content Include="Views\Basic\Accidents.cshtml" />
     <Content Include="Views\Basic\AddAccident.cshtml" />
     <Content Include="Views\Basic\AccidentDetail.cshtml" />
+    <Content Include="Views\Risk\AddRisk.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

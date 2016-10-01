@@ -37,17 +37,21 @@ namespace JNL.Web.Controllers
                         ? string.Empty
                         : parameters.Conditions.Replace("###", " AND ");
 
+                    var fields = string.IsNullOrEmpty(parameters.Fields)
+                        ? null
+                        : parameters.Fields.Split(new[] { "###" }, StringSplitOptions.RemoveEmptyEntries);
+
                     object data;
                     var type = bllInstance.GetType();
                     if (parameters.PageIndex <= 0 || parameters.PageSize <= 0)
                     {
                         data = type.InvokeMember("QueryList", BindingFlags.InvokeMethod, null, bllInstance,
-                            new object[] { condition, null, null, parameters.OrderField, parameters.Desending });
+                            new object[] { condition, fields, null, parameters.OrderField, parameters.Desending });
                     }
                     else
                     {
                         data = type.InvokeMember("QueryPageList", BindingFlags.InvokeMethod, null, bllInstance,
-                            new object[] { parameters.PageIndex, parameters.PageSize, condition, null, null, parameters.OrderField, parameters.Desending });
+                            new object[] { parameters.PageIndex, parameters.PageSize, condition, fields, null, parameters.OrderField, parameters.Desending });
                     }
 
                     return Json(ErrorModel.GetDataSuccess(data));

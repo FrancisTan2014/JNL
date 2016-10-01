@@ -65,6 +65,7 @@
     <Compile Include="Partials\StaffDal.cs" />
     <Compile Include="Partials\StationDal.cs" />
     <Compile Include="Partials\TraceInfoDal.cs" />
+    <Compile Include="Partials\ViewStaffDal.cs" />
     <Compile Include="Partials\WarningDal.cs" />
     <Compile Include="Partials\WarningImplementDal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

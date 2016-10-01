@@ -19,5 +19,6 @@ namespace JNL.Web.Models
         public string OrderField { get; set; }
         public bool Desending { get; set; }
         public string Conditions { get; set; }
+        public string Fields { get; set; }
     }
 }

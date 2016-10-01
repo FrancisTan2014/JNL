@@ -1,5 +1,29 @@
 ﻿(function () {
     window.common = {
+        computeOffsetTop: function (dom) {
+            function compute(dom) {
+                if (dom.offsetParent) {
+                    return dom.offsetTop + compute(dom.offsetParent);
+                } else {
+                    return dom.offsetTop;
+                }
+            }
+
+            return compute(dom);
+        },
+
+        computeOffsetLeft: function (dom) {
+            function compute(dom) {
+                if (dom.offsetParent) {
+                    return dom.offsetLeft + compute(dom.offsetParent);
+                } else {
+                    return dom.offsetLeft;
+                }
+            }
+
+            return compute(dom);
+        },
+
         submitForbidden: function (selector, text) {
             function Forbidden(selector, text) {
                 this.$dom = selector;
@@ -1217,4 +1241,153 @@
         console.log(params);
         return this.optional(element) || value != params;
     }, 'Value must not equal default value.');
+})(window, jQuery);
+
+/*
+ * 封装input输入自动从服务器加载数据并弹出智能提示
+ */
+(function (window, $) {
+    $.inputIntelligence = function (selector, options) {
+        function Intelligence(selector, options) {
+            this.config = $.extend({}, {
+                ajaxUrl: '',
+                ajaxParams: {},
+                getAjaxParams: function () { },
+                buildDropdownItem: function (data) { },
+                afterSelected: function (data) { }
+            }, options);
+
+            this.frequency = 500; // 500ms
+            this.timeoutId = 0;
+            this.config.selector = selector;
+            this.$input = $(this.config.selector);
+            this.initDropdownList();
+            this.bindEvents();
+        }
+
+        Intelligence.prototype.setDropPosition = function (dom) {
+            var currentDom, domChanged, _this = this;
+            if (currentDom == dom) {
+                domChanged = false;
+            } else {
+                currentDom = dom;
+                domChanged = true;
+            }
+
+            (function () {
+                if (domChanged) {
+                    var offsetTop = common.computeOffsetTop(currentDom),
+                    offsetLeft = common.computeOffsetLeft(currentDom);
+
+                    _this.$drop.css({
+                        left: offsetLeft,
+                        top: offsetTop + currentDom.clientHeight + 5,
+                        width: currentDom.clientWidth
+                    });
+
+                    _this.showDropdown();
+                }
+            })();
+        };
+
+        Intelligence.prototype.showDropdown = function () {
+            this.$drop.css({
+                opacity: 1,
+                display: 'block'
+            });
+        };
+
+        Intelligence.prototype.hideDropdown = function () {
+            this.$drop.css({
+                opacity: 0,
+                display: 'none'
+            });
+        };
+
+        Intelligence.prototype.bindEvents = function () {
+            var _this = this;
+            _this.$input.on('keyup', function () {
+                var value = this.value;
+                var dom = this;
+                if (_this.isOverFrequency()) {
+                    // 如果两次输入间隔大于等于设定的频率，则注册一个新的定时器
+                    _this.timeoutId = setTimeout(function () {
+                        _this.setDropPosition(dom);
+                        _this.config.ajaxParams = _this.config.getAjaxParams(value);
+                        _this.ajaxLoad(value);
+                    }, _this.frequency);
+                } else {
+                    // 如果两次输入间隔小于设定的频率，则将上次注册的定时器清除，重新注册一个定时器
+                    window.clearTimeout(_this.timeoutId);
+                    _this.timeoutId = setTimeout(function () {
+                        _this.setDropPosition(dom);
+                        _this.config.ajaxParams = _this.config.getAjaxParams(value);
+                        _this.ajaxLoad(value);
+                    }, _this.frequency);
+                }
+            });
+        };
+
+        // 控制异步加载的频率
+        Intelligence.prototype.isOverFrequency = function () {
+            if (!this.lastTime) {
+                this.lastTime = new Date();
+                return true;
+            } else {
+                var currentTime = new Date();
+                var timespan = currentTime - this.lastTime;
+                
+                this.lastTime = currentTime;
+                return timespan >= this.frequency;
+            }
+        };
+
+        Intelligence.prototype.ajaxLoad = function (input) {
+            var _this = this;
+            _this.$drop.empty();
+
+            if (!input) {
+                return;
+            }
+
+            common.ajax({
+                url: _this.config.ajaxUrl,
+                data: _this.config.ajaxParams
+            }).done(function (res) {
+                if (res.code == 108) {
+                    _this.buildDropdownList(res.data);
+                }
+            });
+        };
+
+        Intelligence.prototype.initDropdownList = function () {
+            var $drop = $('#___intelligence___');
+            if ($drop.length > 0) {
+                this.$drop = $drop;
+            } else {
+                this.$drop = $('<ul id="___intelligence___" class="dropdown-content"></ul>');
+                this.$drop.appendTo('body');
+            }
+        };
+
+        Intelligence.prototype.buildDropdownList = function (data) {
+            var _this = this;
+            data.forEach(function (model) {
+                var text = _this.config.buildDropdownItem(model);
+                var $li = $('<li>{0}</li>'.format(text));
+                $li.on('click', function () {
+                    _this.hideDropdown();
+                    _this.$input.val($(this).text());
+
+                    if ($.isFunction(_this.config.afterSelected)) {
+                        _this.config.afterSelected(model, _this.$input);
+                    }
+                });
+
+                _this.$drop.append($li);
+            });
+        };
+
+        return new Intelligence(selector, options);
+    };
 })(window, jQuery);
