@@ -28,9 +28,9 @@ namespace JNL.Model
 		#region Model
 		private int _id;
 		private string _name;
-		private string _firststation;
-		private string _laststation;
-		private DateTime _addtime;
+		private string _firststation = string.Empty;
+		private string _laststation = string.Empty;
+		private DateTime _addtime = DateTime.Now;
 		private DateTime _updatetime= DateTime.Now;
 		private bool _isdelete= false;
 		/// <summary>

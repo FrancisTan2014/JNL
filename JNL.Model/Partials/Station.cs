@@ -28,8 +28,8 @@ namespace JNL.Model
 		#region Model
 		private int _id;
 		private string _name;
-		private string _spell;
-		private DateTime _addtime;
+		private string _spell = "";
+		private DateTime _addtime = DateTime.Now;
 		private bool _isdelete= false;
 		/// <summary>
 		/// 主键

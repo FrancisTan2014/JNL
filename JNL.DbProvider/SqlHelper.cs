@@ -48,6 +48,7 @@ namespace JNL.DbProvider
                 {
                     throw ex;
                 }
+
                 finally
                 {
                     connection.Close();

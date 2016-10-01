@@ -29,8 +29,9 @@ namespace JNL.Model
 		private int _id;
 		private string _description;
 		private int _parentid;
-		private bool _haschildren;
-		private DateTime _addtime;
+	    private int _topesttypeid;
+		private bool _isbottom;
+		private DateTime _addtime = DateTime.Now;
 		private DateTime _updatetime= DateTime.Now;
 		private bool _isdelete= false;
 		/// <summary>
@@ -57,18 +58,26 @@ namespace JNL.Model
 			set{ _parentid=value;}
 			get{return _parentid;}
 		}
-		/// <summary>
-		/// 是否存在子级
-		/// </summary>
-		public bool HasChildren
+        /// <summary>
+        /// 是否最底层，若为真，则表示此项为风险概述内容，否则它表示一个风险概述的分类（如红线、甲、乙等）
+        /// </summary>
+        public bool IsBottom
 		{
-			set{ _haschildren=value;}
-			get{return _haschildren;}
+			set{ _isbottom=value;}
+			get{return _isbottom;}
 		}
-		/// <summary>
-		/// 添加时间
-		/// </summary>
-		public DateTime AddTime
+        /// <summary>
+        /// 顶级分类Id
+        /// </summary>
+	    public int TopestTypeId
+	    {
+            set { _topesttypeid = value; }
+            get { return _topesttypeid; }
+	    }
+        /// <summary>
+        /// 添加时间
+        /// </summary>
+        public DateTime AddTime
 		{
 			set{ _addtime=value;}
 			get{return _addtime;}

@@ -15,13 +15,38 @@ using JNL.Utilities.Extensions;
 
 namespace JNL.DataMigration
 {
+    public class MySqlRiskSummary
+    {
+        public int id { get; set; }
+        public int type { get; set; }
+        public int level { get; set; }
+        public int cat1 { get; set; }
+        public int cat2 { get; set; }
+        public int cat3 { get; set; }
+        public int cid { get; set; }
+    }
+
+    public class Node
+    {
+        public int Id { get; set; }
+        public RiskSummary RiskSummary { get; set; }
+        public List<RiskSummary> ChildrenSummaries { get; set; } 
+        public List<Node> Children { get; set; }
+
+    }
 
     class Program
     {
         private static readonly string MySqlConnectionString = ConfigurationManager.ConnectionStrings["MySqlConnection"].ToString();
         private static readonly IDbHelper MySqlHelper = DbHelperFactory.GetInstance(DatabaseType.MySql);
 
+        private static readonly RiskSummaryBll RiskSummaryBll = new RiskSummaryBll();
+
         private static Dictionary<int, int> DicRelate = new Dictionary<int, int>();
+
+        private static List<Station> MySqlStations;
+        private static List<Station> SqlStations;
+        private static Dictionary<int, int> SqlAndMySqlLineDic;
 
         static void Main(string[] args)
         {
@@ -41,10 +66,388 @@ namespace JNL.DataMigration
             // Department();
             // BuildDictionary();
             // Staves();
-            RailBureau();
+            // RailBureau();
             // Depots();
             // Accidents();
             // AccidentType();
+            // RiskSummary();
+            // NewRiskSummary();
+            // Stations();
+            // Lines();
+            LineStations();
+        }
+
+        private static void RiskInfo()
+        {
+            var cmdText = "SELECT * FROM risk";
+            var table = MySqlHelper.ExecuteDataTable(MySqlConnectionString, CommandType.Text, cmdText);
+            var mysqlRiskList = EntityHelper.MapEntity<MySqlRisk>(table);
+        }
+
+        private static void LineStations()
+        {
+            var linestationBll = new LineStationsBll();
+
+            if (!linestationBll.Exists())
+            {
+                
+
+                var lineStations = GetListFromMySql<LineStations>("SELECT station_id AS StationId, line_id AS LineId, POSITION AS Sort FROM line_stop");
+                lineStations.ForEach(item =>
+                {
+                    item.LineId = GetSqlLineId(item.LineId);
+                    item.StationId = GetSqlStationId(item.StationId);
+                });
+
+                linestationBll.BulkInsert(lineStations);
+
+                Console.WriteLine("车站线路对应关系导入成功");
+                Console.ReadKey();
+            }
+        }
+
+        private static int GetSqlLineId(int mysqlLineId)
+        {
+            if (SqlAndMySqlLineDic == null)
+            {
+                var mysqlLines = GetListFromMySql<Line>("SELECT Id,Name FROM dictionary WHERE TYPE=9");
+                var sqlLines = new LineBll().QueryAll();
+                SqlAndMySqlLineDic =
+                    mysqlLines.Join(sqlLines, inner => inner.Name, outer => outer.Name,
+                        (inner, outer) => new KeyValuePair<int, int>(inner.Id, outer.Id))
+                        .ToDictionary(pair => pair.Key, pair => pair.Value);
+            }
+
+            return SqlAndMySqlLineDic[mysqlLineId];
+        }
+
+        private static int GetSqlStationId(int mysqlstationId)
+        {
+            if (MySqlStations == null)
+            {
+                MySqlStations = GetListFromMySql<Station>("SELECT Id,Name FROM dictionary WHERE TYPE=13");
+                SqlStations = new StationBll().QueryAll().ToList();
+            }
+
+            var stationName = MySqlStations.Find(s => s.Id == mysqlstationId).Name;
+            return SqlStations.Find(s => s.Name == stationName).Id;
+        }
+
+        private static void Lines()
+        {
+            var lineBll = new LineBll();
+            if (!lineBll.Exists())
+            {
+                var cmdText = "SELECT Name FROM dictionary WHERE TYPE=9";
+                var lines = GetListFromMySql<Line>(cmdText);
+
+                lineBll.BulkInsert(lines);
+
+                Console.WriteLine("线路数据导入成功");
+                Console.ReadKey();
+            }
+        }
+
+        private static void Stations()
+        {
+            var stationBll = new StationBll();
+            if (!stationBll.Exists())
+            {
+                var cmdText = "SELECT Name FROM dictionary WHERE TYPE=13";
+                var stations = GetListFromMySql<Station>(cmdText);
+
+                stationBll.BulkInsert(stations);
+
+                Console.WriteLine("车站数据导入成功");
+                Console.ReadKey();
+            }
+        }
+
+        private static List<T> GetListFromMySql<T>(string cmdText) where T: class, new()
+        {
+            var table = MySqlHelper.ExecuteDataTable(MySqlConnectionString, CommandType.Text, cmdText);
+            return EntityHelper.MapEntity<T>(table).ToList();
+        } 
+
+        private static void NewRiskSummary()
+        {
+            if (!RiskSummaryBll.Exists())
+            {
+                #region 创建字典
+                var dicCmdText = "SELECT * FROM dictionary WHERE type IN(12, 20, 21, 22, 23, 24)";
+                DataTable table = MySqlHelper.ExecuteDataTable(MySqlConnectionString, CommandType.Text, dicCmdText);
+                var nameDic = new Dictionary<int, string>();
+                foreach (DataRow row in table.Rows)
+                {
+                    var id = row["id"].ToString().ToInt32();
+                    var name = row["name"].ToString();
+                    nameDic.Add(id, name);
+                }
+                #endregion
+
+                var cmdText = "SELECT * FROM risk_summary";
+                var dataTable = MySqlHelper.ExecuteDataTable(MySqlConnectionString, CommandType.Text, cmdText);
+                var summaryList = EntityHelper.MapEntity<MySqlRiskSummary>(dataTable).ToList();
+
+                var insertedDic = new Dictionary<int, RiskSummary>();
+                summaryList.ForEach(summary =>
+                {
+                    RiskSummary firstLevel;
+                    if (!insertedDic.ContainsKey(summary.type))
+                    {
+                        firstLevel = new RiskSummary {Description = nameDic[summary.type]};
+                        firstLevel = RiskSummaryBll.Insert(firstLevel);
+                        if (firstLevel.Id > 0)
+                            insertedDic.Add(summary.type, firstLevel);
+                        else
+                            return;
+                    }
+                    else
+                    {
+                        firstLevel = insertedDic[summary.type];
+                    }
+
+                    RiskSummary secondLevel;
+                    if (!insertedDic.ContainsKey(summary.level))
+                    {
+                        secondLevel = new RiskSummary
+                        {
+                            Description = nameDic[summary.level],
+                            ParentId = firstLevel.Id,
+                            TopestTypeId = firstLevel.Id
+                        };
+                        secondLevel = RiskSummaryBll.Insert(secondLevel);
+                        if (secondLevel.Id > 0)
+                            insertedDic.Add(summary.level, secondLevel);
+                        else
+                            return;
+                    }
+                    else
+                    {
+                        secondLevel = insertedDic[summary.level];
+                    }
+
+                    RiskSummary thirdLevel;
+                    if (!insertedDic.ContainsKey(summary.cat1))
+                    {
+                        thirdLevel = new RiskSummary { Description = nameDic[summary.cat1], ParentId = secondLevel.ParentId, TopestTypeId = firstLevel.Id };
+                        thirdLevel = RiskSummaryBll.Insert(thirdLevel);
+                        if (thirdLevel.Id > 0)
+                            insertedDic.Add(summary.cat1, thirdLevel);
+                    }
+                    else
+                    {
+                        thirdLevel = insertedDic[summary.cat1];
+                    }
+
+                    RiskSummary fourthLevel;
+                    if (!insertedDic.ContainsKey(summary.cat2))
+                    {
+                        fourthLevel = new RiskSummary
+                        {
+                            Description = nameDic[summary.cat2],
+                            ParentId = thirdLevel.Id,
+                            TopestTypeId = firstLevel.Id
+                        };
+                        fourthLevel = RiskSummaryBll.Insert(fourthLevel);
+                        if (fourthLevel.Id > 0)
+                            insertedDic.Add(summary.cat2, fourthLevel);
+                    }
+                    else
+                    {
+                        fourthLevel = insertedDic[summary.cat2];
+                    }
+
+                    if (summary.cat3 == 0)
+                    {
+                        if (!insertedDic.ContainsKey(summary.cid))
+                        {
+                            RiskSummary bottom = new RiskSummary
+                            {
+                                Description = nameDic[summary.cid],
+                                ParentId = fourthLevel.Id,
+                                TopestTypeId = firstLevel.Id,
+                                IsBottom = true
+                            };
+                            bottom = RiskSummaryBll.Insert(bottom);
+                            if (bottom.Id > 0)
+                                insertedDic.Add(summary.cid, bottom);
+                        }
+                    }
+                    else
+                    {
+                        RiskSummary fifthLevel;
+                        if (!insertedDic.ContainsKey(summary.cat3))
+                        {
+                            fifthLevel = new RiskSummary { Description = nameDic[summary.cat3], ParentId = fourthLevel.Id, TopestTypeId = firstLevel.Id };
+                            fifthLevel = RiskSummaryBll.Insert(fifthLevel);
+                            if (fifthLevel.Id > 0)
+                                insertedDic.Add(summary.cat3, fifthLevel);
+                            else
+                                return;
+                        }
+                        else
+                        {   
+                            fifthLevel = insertedDic[summary.cat3];
+                        }
+                        
+                        if (!insertedDic.ContainsKey(summary.cid))
+                        {
+                            var realBottom = new RiskSummary { Description = nameDic[summary.cid], ParentId = fifthLevel.Id, TopestTypeId = firstLevel.Id, IsBottom = true };
+                            realBottom = RiskSummaryBll.Insert(realBottom);
+                            if (realBottom.Id > 0)
+                                insertedDic.Add(summary.cid, realBottom);
+                        }
+                    }
+                });
+
+                Console.WriteLine("风险概述数据导入成功");
+            }
+        }
+
+        /// <summary>
+        /// 风险概述信息（代码略复杂）
+        /// </summary>
+        private static void RiskSummary()
+        {
+            #region 创建字典
+            var dicCmdText = "SELECT * FROM dictionary WHERE type IN(12, 20, 21, 22, 23, 24)";
+            DataTable table = MySqlHelper.ExecuteDataTable(MySqlConnectionString, CommandType.Text, dicCmdText);
+            var nameDic = new Dictionary<int, string>();
+            foreach (DataRow row in table.Rows)
+            {
+                var id = row["id"].ToString().ToInt32();
+                var name = row["name"].ToString();
+                nameDic.Add(id, name);
+            } 
+            #endregion
+
+            var cmdText = "SELECT * FROM risk_summary";
+            var dataTable = MySqlHelper.ExecuteDataTable(MySqlConnectionString, CommandType.Text, cmdText);
+            var summaryList = EntityHelper.MapEntity<MySqlRiskSummary>(dataTable).ToList();
+
+            var rootNode = new Node
+            {
+                Children = summaryList.Select(s => s.type).Distinct().Select(s => new Node
+                {
+                    RiskSummary = new RiskSummary { Description = nameDic[s] },
+                    Id = s
+                }).ToList()
+            };
+
+            rootNode.Children.ForEach(rootLevel =>
+            {
+                
+                rootLevel.Children =
+                    summaryList.Where(s => s.type == rootLevel.Id)
+                        .Select(s => s.level)
+                        .Distinct()
+                        .Select(s => new Node {Id = s, RiskSummary = new RiskSummary { Description = nameDic[s] } })
+                        .ToList();
+
+                rootLevel.Children.ForEach(firstLevel =>
+                {
+                    firstLevel.Children =
+                        summaryList.Where(m => m.type == rootLevel.Id && m.level == firstLevel.Id)
+                            .Select(m => m.cat1)
+                            .Distinct()
+                            .Select(m => new Node {Id = m, RiskSummary = new RiskSummary { Description = nameDic[m]}})
+                            .ToList();
+
+                    firstLevel.Children.ForEach(secondLevel =>
+                    {
+                        secondLevel.Children =
+                            summaryList.Where(m => m.type == rootLevel.Id && m.level == firstLevel.Id && m.cat1 == secondLevel.Id)
+                                .Select(m => m.cat2)
+                                .Distinct()
+                                .Select(m => new Node {Id = m, RiskSummary = new RiskSummary { Description = nameDic[m]}})
+                                .ToList();
+
+                        secondLevel.Children.ForEach(thirdLevel =>
+                        {
+                            var subList =
+                                summaryList.Where(
+                                    m =>
+                                        m.type == rootLevel.Id && m.level == firstLevel.Id && m.cat1 == secondLevel.Id &&
+                                        m.cat2 == thirdLevel.Id).ToList();
+                            
+                            subList.ForEach(sub =>
+                            {
+                                if (sub.cat3 == 0)
+                                {
+                                    thirdLevel.ChildrenSummaries =
+                                        subList.Where(m => m.cat2 == thirdLevel.Id)
+                                            .Select(m => new RiskSummary {IsBottom = true, Description = nameDic[m.cid]}).ToList();
+                                }
+                                else
+                                {
+                                    thirdLevel.Children =
+                                        subList.Where( m => m.cat3 == sub.cat3 )
+                                            .Select(m => m.cat3)
+                                            .Distinct()
+                                            .Select(
+                                                m =>
+                                                    new Node
+                                                    {
+                                                        Id = m,
+                                                        RiskSummary = new RiskSummary {Description = nameDic[m]}
+                                                    })
+                                            .ToList();
+
+
+                                    thirdLevel.Children.ForEach(forthLevel =>
+                                    {
+                                        forthLevel.ChildrenSummaries = subList.Where(m => m.cid == rootLevel.Id).Select(m=>new RiskSummary {IsBottom = true, Description = nameDic[m.cid]}).ToList();
+                                    });
+                                }
+                            });
+                        });
+                    });
+                });
+            });
+
+            if (!RiskSummaryBll.Exists())
+            {
+                rootNode.Children.ForEach(node =>
+                {
+                    InsertRiskSummaryToDb(node, 0, 0);
+                });
+
+                Console.WriteLine("风险概述数据导入成功");
+            }
+        }
+
+        private static void InsertRiskSummaryToDb(Node node, int parentId, int topestId)
+        {
+            if (node.RiskSummary != null)
+            {
+                node.RiskSummary.TopestTypeId = topestId;
+                node.RiskSummary.ParentId = parentId;
+                node.RiskSummary = RiskSummaryBll.Insert(node.RiskSummary);
+                if (node.RiskSummary.Id > 0)
+                {
+                    if (topestId == 0)
+                    {
+                        topestId = node.RiskSummary.Id;
+                    }
+
+                    node.Children?.ForEach(subNode =>
+                    {
+                        InsertRiskSummaryToDb(subNode, node.RiskSummary.Id, topestId);
+                    });
+
+                    node.ChildrenSummaries?.ForEach(summary =>
+                    {
+                        summary.ParentId = node.RiskSummary.Id;
+                        summary.TopestTypeId = topestId;
+                    });
+
+                    if (node.ChildrenSummaries != null)
+                    {
+                        RiskSummaryBll.BulkInsert(node.ChildrenSummaries);
+                    }
+                }
+            }
         }
 
         private static void AccidentType()
