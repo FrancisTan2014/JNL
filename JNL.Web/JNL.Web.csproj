@@ -194,6 +194,7 @@
     <Content Include="Views\Basic\AddFile.cshtml" />
     <Content Include="Views\Error\NoAuth.cshtml" />
     <Content Include="Views\Basic\Accidents.cshtml" />
+    <Content Include="Views\Basic\AddAccident.cshtml" />
     <Content Include="Views\Basic\AccidentDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using JNL.Bll;
 using JNL.Utilities.Extensions;
 
 namespace JNL.Web.Controllers
@@ -43,9 +44,22 @@ namespace JNL.Web.Controllers
             return View();
         }
 
-        public ActionResult AccidentDetail()
+        public ActionResult AddAccident()
         {
             return View();
+        }
+
+        public ActionResult AccidentDetail()
+        {
+            var id = RouteData.Values["id"].ToString().ToInt32();
+            var model = new AccidentBll().QuerySingle(id);
+
+            if (model == null)
+            {
+                return Redirect("/Error/NotFound");
+            }
+
+            return View(model);
         }
     }
 }
