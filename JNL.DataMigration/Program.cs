@@ -74,14 +74,149 @@ namespace JNL.DataMigration
             // NewRiskSummary();
             // Stations();
             // Lines();
-            LineStations();
+            // LineStations();
+            RiskInfo();
         }
 
         private static void RiskInfo()
         {
-            var cmdText = "SELECT * FROM risk";
-            var table = MySqlHelper.ExecuteDataTable(MySqlConnectionString, CommandType.Text, cmdText);
-            var mysqlRiskList = EntityHelper.MapEntity<MySqlRisk>(table);
+            if (!new RiskInfoBll().Exists())
+            {
+                // make staff dictionary
+                var staffDic = new Dictionary<string, int>();
+                var staffList = new StaffBll().QueryAll().ToList();
+                staffList.ForEach(staff =>
+                {
+                    if (!staffDic.ContainsKey(staff.WorkId))
+                    {
+                        staffDic.Add(staff.WorkId, staff.Id);
+                    }
+                });
+
+
+                // make type dictionary
+                BuildDictionary();
+
+                var riskSummaryDic = NewRiskSummary();
+
+                var cmdText = "SELECT * FROM risk";
+                var table = MySqlHelper.ExecuteDataTable(MySqlConnectionString, CommandType.Text, cmdText);
+                var mysqlRiskList = EntityHelper.MapEntity<MySqlRisk>(table);
+
+                var riskInfoList = mysqlRiskList.Select(risk =>
+                {
+                    if (!staffDic.ContainsKey(risk.resp_user_id) || !staffDic.ContainsKey(risk.report_user_id))
+                    {
+                        return new RiskNode();
+                    }
+
+                    var happenTime = risk.event_date_time == DateTime.MinValue
+                        ? DateTime.Now
+                        : risk.event_date_time;
+
+                    var firstStationId = 0;
+                    var lastStationId = 0;
+                    if (risk.event_place_station > 0)
+                    {
+                        firstStationId = risk.event_place_station.Value;
+                    }
+                    else if (risk.event_place_start > 0 && risk.event_place_end > 0)
+                    {
+                        firstStationId = risk.event_place_start.Value;
+                        lastStationId = risk.event_place_end.Value;
+                    }
+
+                    var trainType = 0;
+                    if (risk.train_type > 0)
+                    {
+                        trainType = DicRelate[risk.train_type.Value];
+                    }
+
+                    var weather = 0;
+                    if (!string.IsNullOrEmpty(risk.weather_type))
+                    {
+                        if (risk.weather_type.Contains(","))
+                        {
+                            risk.weather_type = risk.weather_type.Substring(0,
+                                risk.weather_type.IndexOf(",", StringComparison.CurrentCulture));
+                        }
+
+                        weather = DicRelate[risk.weather_type.ToInt32()];
+                    }
+
+                    var riskSummaryId = 0;
+                    if (risk.risk_outline_id > 0)
+                    {
+                        riskSummaryId = riskSummaryDic[risk.risk_outline_id.Value];
+                    }
+
+                    var verifyTime = DateTime.Now;
+                    if (risk.audit_time > 1000000000)
+                    {
+                        verifyTime = new DateTime(1970, 1, 1).AddMilliseconds(risk.audit_time);
+                    }
+
+                    return new RiskNode
+                    {
+                        RiskInfo = new RiskInfo
+                        {
+                            ReportStaffId = staffDic[risk.report_user_id],
+                            OccurrenceTime = happenTime,
+                            OccurrenceLineId = GetSqlLineId(risk.event_place_line),
+                            FirstStationId = firstStationId,
+                            LastStationId = lastStationId,
+                            LocoServiceTypeId = trainType,
+                            WeatherId = weather,
+                            RiskSummaryId = riskSummaryId,
+                            RiskDetails = risk.risk_detail ?? string.Empty,
+                            Visible = risk.risk_store == 1,
+                            RiskTypeId = risk.menu_type + 2,
+                            VerifyTime = verifyTime,
+                            NeedRoomSign = risk.room_sign == 1,
+                            NeedLeaderSign = risk.leader_sign == 1,
+                            NeedStressTrack = risk.stress_trace == 1,
+                            ShowInStressPage = risk.is_stress == 1,
+                            NeedWriteFixDesc = risk.need_fix_text == 1,
+                            RiskFix = risk.risk_fix ?? string.Empty,
+                            HasDealed = risk.deal_status == 1,
+                            RiskReason = risk.risk_reason ?? string.Empty
+                        },
+                        RiskResponseStaff = new RiskResponseStaff
+                        {
+                            ResponseStaffId = staffDic[risk.resp_user_id]
+                        }
+                    };
+                }).ToList();
+
+                var riskInfoBll = new RiskInfoBll();
+                var riskRespBll = new RiskResponseStaffBll();
+                riskInfoList.ForEach(risk =>
+                {
+                    if (risk.RiskInfo != null && risk.RiskResponseStaff != null)
+                    {
+                        riskInfoBll.ExecuteTransation(
+                       () =>
+                       {
+                           risk.RiskInfo = riskInfoBll.Insert(risk.RiskInfo);
+                           if (risk.RiskInfo.Id > 0)
+                           {
+                               risk.RiskResponseStaff.RiskId = risk.RiskInfo.Id;
+                               risk.RiskResponseStaff = riskRespBll.Insert(risk.RiskResponseStaff);
+                               if (risk.RiskResponseStaff.Id > 0)
+                               {
+                                   return true;
+                               }
+                           }
+
+                           return false;
+                       }
+                   );
+                    }
+                });
+
+                Console.WriteLine("风险信息数据导入成功");
+                Console.ReadKey();
+            }
         }
 
         private static void LineStations()
@@ -118,7 +253,12 @@ namespace JNL.DataMigration
                         .ToDictionary(pair => pair.Key, pair => pair.Value);
             }
 
-            return SqlAndMySqlLineDic[mysqlLineId];
+            if (SqlAndMySqlLineDic.ContainsKey(mysqlLineId))
+            {
+                return SqlAndMySqlLineDic[mysqlLineId];
+            }
+
+            return 0;
         }
 
         private static int GetSqlStationId(int mysqlstationId)
@@ -169,8 +309,10 @@ namespace JNL.DataMigration
             return EntityHelper.MapEntity<T>(table).ToList();
         } 
 
-        private static void NewRiskSummary()
+        private static Dictionary<int, int> NewRiskSummary()
         {
+            var mysqlRiskSummaryIdDic = new Dictionary<int, int>();
+
             if (!RiskSummaryBll.Exists())
             {
                 #region 创建字典
@@ -198,7 +340,10 @@ namespace JNL.DataMigration
                         firstLevel = new RiskSummary {Description = nameDic[summary.type]};
                         firstLevel = RiskSummaryBll.Insert(firstLevel);
                         if (firstLevel.Id > 0)
+                        {
                             insertedDic.Add(summary.type, firstLevel);
+                            mysqlRiskSummaryIdDic.Add(summary.type, firstLevel.Id);
+                        }
                         else
                             return;
                     }
@@ -218,7 +363,11 @@ namespace JNL.DataMigration
                         };
                         secondLevel = RiskSummaryBll.Insert(secondLevel);
                         if (secondLevel.Id > 0)
+                        {
                             insertedDic.Add(summary.level, secondLevel);
+                            mysqlRiskSummaryIdDic.Add(summary.level, secondLevel.Id);
+                        }
+                            
                         else
                             return;
                     }
@@ -233,7 +382,11 @@ namespace JNL.DataMigration
                         thirdLevel = new RiskSummary { Description = nameDic[summary.cat1], ParentId = secondLevel.ParentId, TopestTypeId = firstLevel.Id };
                         thirdLevel = RiskSummaryBll.Insert(thirdLevel);
                         if (thirdLevel.Id > 0)
+                        {
                             insertedDic.Add(summary.cat1, thirdLevel);
+                            mysqlRiskSummaryIdDic.Add(summary.cat1, thirdLevel.Id);
+                        }
+                            
                     }
                     else
                     {
@@ -251,7 +404,10 @@ namespace JNL.DataMigration
                         };
                         fourthLevel = RiskSummaryBll.Insert(fourthLevel);
                         if (fourthLevel.Id > 0)
+                        {
                             insertedDic.Add(summary.cat2, fourthLevel);
+                            mysqlRiskSummaryIdDic.Add(summary.cat2, fourthLevel.Id);
+                        }
                     }
                     else
                     {
@@ -271,7 +427,10 @@ namespace JNL.DataMigration
                             };
                             bottom = RiskSummaryBll.Insert(bottom);
                             if (bottom.Id > 0)
+                            {
                                 insertedDic.Add(summary.cid, bottom);
+                                mysqlRiskSummaryIdDic.Add(summary.cid, bottom.Id);
+                            }
                         }
                     }
                     else
@@ -282,7 +441,10 @@ namespace JNL.DataMigration
                             fifthLevel = new RiskSummary { Description = nameDic[summary.cat3], ParentId = fourthLevel.Id, TopestTypeId = firstLevel.Id };
                             fifthLevel = RiskSummaryBll.Insert(fifthLevel);
                             if (fifthLevel.Id > 0)
+                            {
                                 insertedDic.Add(summary.cat3, fifthLevel);
+                                mysqlRiskSummaryIdDic.Add(summary.cat3, fifthLevel.Id);
+                            }
                             else
                                 return;
                         }
@@ -296,13 +458,19 @@ namespace JNL.DataMigration
                             var realBottom = new RiskSummary { Description = nameDic[summary.cid], ParentId = fifthLevel.Id, TopestTypeId = firstLevel.Id, IsBottom = true };
                             realBottom = RiskSummaryBll.Insert(realBottom);
                             if (realBottom.Id > 0)
+                            {
+
                                 insertedDic.Add(summary.cid, realBottom);
+                                mysqlRiskSummaryIdDic.Add(summary.cid, realBottom.Id);
+                            }
                         }
                     }
                 });
 
                 Console.WriteLine("风险概述数据导入成功");
             }
+
+            return mysqlRiskSummaryIdDic;
         }
 
         /// <summary>

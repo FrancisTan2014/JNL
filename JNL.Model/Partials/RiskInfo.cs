@@ -28,7 +28,6 @@ namespace JNL.Model
 		#region Model
 		private int _id;
 		private int _reportstaffid;
-	    private int _respondstaffid;
 		private int _occurrencelineid;
 		private int _firststationid;
 		private int _laststationid;
@@ -37,7 +36,7 @@ namespace JNL.Model
 		private DateTime _occurrencetime;
 		private int _risksummaryid;
 		private string _riskdetails="";
-		private string _riskreason;
+		private string _riskreason="";
 		private string _riskfix="";
 		private bool _visible = false;
 		private int _risktypeid;
@@ -70,15 +69,6 @@ namespace JNL.Model
 			set{ _reportstaffid=value;}
 			get{return _reportstaffid;}
 		}
-
-	    /// <summary>
-	    /// 责任人Id
-	    /// </summary>
-	    public int RespondStaffId
-	    {
-            get { return _respondstaffid; }
-            set { _respondstaffid = value; }
-	    }
 		/// <summary>
 		/// 事件发生线路Id（关联线路表主键）
 		/// </summary>

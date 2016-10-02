@@ -8,8 +8,7 @@ nav {
 
 /* 所有录入表单的统一样式 */
 .edit-form {
-    overflow: hidden;
-    padding: 0 20px;
+    padding: 0 20px 20px 20px;
     border-top: 50px solid #26a69a;
     margin-bottom: 100px;
 }

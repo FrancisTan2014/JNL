@@ -1173,7 +1173,7 @@
 
                 if (typeof (onCreateCell) === 'function') {
                     var result = onCreateCell(value);
-                    if (typeof (result) === 'string' && result.indexOf('<td>') === -1) {
+                    if (typeof (result) === 'string' && result.indexOf('</td>') === -1) {
                         $tr.append('<td>{0}</td>'.format(result));
                     } else {
                         $tr.append(result);
@@ -1252,6 +1252,7 @@
             this.config = $.extend({}, {
                 ajaxUrl: '',
                 ajaxParams: {},
+                highlightColor: '#f50057',
                 getAjaxParams: function () { },
                 buildDropdownItem: function (data) { },
                 afterSelected: function (data) { }
@@ -1282,7 +1283,8 @@
                     _this.$drop.css({
                         left: offsetLeft,
                         top: offsetTop + currentDom.clientHeight + 5,
-                        width: currentDom.clientWidth
+                        width: currentDom.clientWidth,
+                        padding: 10
                     });
 
                     _this.showDropdown();
@@ -1355,7 +1357,7 @@
                 data: _this.config.ajaxParams
             }).done(function (res) {
                 if (res.code == 108) {
-                    _this.buildDropdownList(res.data);
+                    _this.buildDropdownList(res.data, input);
                 }
             });
         };
@@ -1370,11 +1372,13 @@
             }
         };
 
-        Intelligence.prototype.buildDropdownList = function (data) {
+        Intelligence.prototype.buildDropdownList = function (data, input) {
             var _this = this;
             data.forEach(function (model) {
                 var text = _this.config.buildDropdownItem(model);
-                var $li = $('<li>{0}</li>'.format(text));
+                text = _this.highlighting(text, input);
+
+                var $li = $('<li style="margin: 10px 0;">{0}</li>'.format(text));
                 $li.on('click', function () {
                     _this.hideDropdown();
                     _this.$input.val($(this).text());
@@ -1388,6 +1392,66 @@
             });
         };
 
+        Intelligence.prototype.highlighting = function(source, target) {
+            if (!!source && !!target) {
+                return source.replace(target, '<font style="color: {0}">{1}</font>'.format(this.config.highlightColor, target));
+            }
+        };
+
         return new Intelligence(selector, options);
+    };
+})(window, jQuery);
+
+/*
+ * 根据配置信息为select元素加载数据
+ */
+(function(window, $) {
+    $.initSelect = function(options) {
+        var config = $.extend({}, {
+            selectors: [],
+            ajaxUrl: '',
+            textField: '',
+            valueField: '',
+            selectedValue: '',
+            getAjaxParams: function () { },
+            beforeBuilt: function () {  },
+            afterBuilt: function () { }
+        }, options);
+
+
+        if (!(config.selectors instanceof Array)) {
+            config.selectors = [config.selectors];
+        }
+
+        var formData = {};
+        if ($.isFunction(config.getAjaxParams)) {
+            formData = config.getAjaxParams() || {};
+        }
+
+        common.ajax({
+            url: config.ajaxUrl,
+            data: formData
+        }).done(function(res) {
+            var data = res.data || [];
+            
+            config.selectors.forEach(function (selector) {
+                var $select = $(selector);
+                if ($.isFunction(config.beforeBuilt)) {
+                    config.beforeBuilt($select);
+                }
+
+                data.forEach(function (model) {
+                    var value = model[config.valueField],
+                        text = model[config.textField],
+                        selected = value == config.selectedValue ? 'selected="selected"' : '';
+
+                    $select.append('<option value="{0}" {1}>{2}</option>'.format(value, selected, text));
+                });
+
+                if ($.isFunction(config.afterBuilt)) {
+                    config.afterBuilt($select);
+                }
+            });
+        });
     };
 })(window, jQuery);

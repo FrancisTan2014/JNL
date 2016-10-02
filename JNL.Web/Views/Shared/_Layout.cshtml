@@ -56,6 +56,15 @@
                             </ul>
                         </li>
                         <li class="first-menu">
+                            <a href="javascript:void(0);" class="dropdown-button waves-effect waves-block waves-light">研判预警</a>
+                        </li>
+                        <li class="first-menu">
+                            <a href="javascript:void(0);" class="dropdown-button waves-effect waves-block waves-light" data-activates="dropdown4">过程控制</a>
+                            <ul id="dropdown4" class="dropdown-content">
+                                <li class="second-menu" data-target="#target7" id="riskVerify"><a href="javascript:void(0);">风险审核<i class="mdi-hardware-keyboard-arrow-right right"></i></a></li>
+                            </ul>
+                        </li>
+                        <li class="first-menu">
                             <a class="dropdown-button waves-effect waves-block waves-light" href="javascript:void(0);" data-activates="dropdown3">后台管理</a>
                             <ul id="dropdown3" class="dropdown-content">
                                 <li><a href="/Basic/AddFile">基础文件上传</a></li>
@@ -80,31 +89,35 @@
                     <li class="third-menu-item"><a href="/Basic/Files/3/3">机务段</a></li>
                 </ul>
                 <ul id="target4" data-source="#saveManage" class="dropdown-content third-menu">
-                    <li class="third-menu-item"><a href="/Basic/Files/3/1">110信息中心获知风险</a></li>
-                    <li class="third-menu-item"><a href="/Basic/Files/3/2">局安全风险管控系统确定风险</a></li>
-                    <li class="third-menu-item"><a href="/Basic/Files/3/3">上级单位通报风险</a></li>
-                    <li class="third-menu-item"><a href="/Basic/Files/3/3">段领导检查发现问题</a></li>
-                    <li class="third-menu-item"><a href="/Basic/Files/3/3">管理人员检查发现风险</a></li>
-                    <li class="third-menu-item"><a href="/Basic/Files/3/3">技术人员检查发现风险</a></li>
-                    <li class="third-menu-item"><a href="/Basic/Files/3/3">专题研究督办确定风险</a></li>
-                    <li class="third-menu-item"><a href="/Basic/Files/3/3">合理化建议确定风险</a></li>
-                    <li class="third-menu-item"><a href="/Basic/Files/3/3">段内结合部风险</a></li>
-                    <li class="third-menu-item"><a href="/Basic/Files/3/3">段外结合部风险</a></li>
-                    <li class="third-menu-item"><a href="/Basic/Files/3/3">需上级部门解决风险</a></li>
+                    <li class="third-menu-item"><a href="/Risk/AddRisk/3">110信息中心获知风险</a></li>
+                    <li class="third-menu-item"><a href="/Risk/AddRisk/4">局安全风险管控系统确定风险</a></li>
+                    <li class="third-menu-item"><a href="/Risk/AddRisk/5">上级单位通报风险</a></li>
+                    <li class="third-menu-item"><a href="/Risk/AddRisk/6">段领导检查发现问题</a></li>
+                    <li class="third-menu-item"><a href="/Risk/AddRisk/7">管理人员检查发现风险</a></li>
+                    <li class="third-menu-item"><a href="/Risk/AddRisk/8">技术人员检查发现风险</a></li>
+                    <li class="third-menu-item"><a href="/Risk/AddRisk/9">专题研究督办确定风险</a></li>
+                    <li class="third-menu-item"><a href="/Risk/AddRisk/10">合理化建议确定风险</a></li>
+                    <li class="third-menu-item"><a href="/Risk/AddRisk/11">段内结合部风险</a></li>
+                    <li class="third-menu-item"><a href="/Risk/AddRisk/12">段外结合部风险</a></li>
+                    <li class="third-menu-item"><a href="/Risk/AddRisk/13">需上级部门解决风险</a></li>
                 </ul>
                 <ul id="target5" data-source="#saveAnalysis" class="dropdown-content third-menu">
-                    <li class="third-menu-item"><a href="/Basic/Files/3/1">LKJ分析</a></li>
-                    <li class="third-menu-item"><a href="/Basic/Files/3/1">视频分析</a></li>
-                    <li class="third-menu-item"><a href="/Basic/Files/3/1">录音笔分析</a></li>
-                    <li class="third-menu-item"><a href="/Basic/Files/3/1">专调STP分析</a></li>
-                    <li class="third-menu-item"><a href="/Basic/Files/3/1">动车EOAS分析</a></li>
-                    <li class="third-menu-item"><a href="/Basic/Files/3/1">ATP分析</a></li>
-                    <li class="third-menu-item"><a href="/Basic/Files/3/1">防盹睡分析</a></li>
-                    <li class="third-menu-item"><a href="/Basic/Files/3/1">其他装备分析</a></li>
+                    <li class="third-menu-item"><a href="/Risk/AddRisk/14">LKJ分析</a></li>
+                    <li class="third-menu-item"><a href="/Risk/AddRisk/15">视频分析</a></li>
+                    <li class="third-menu-item"><a href="/Risk/AddRisk/16">录音笔分析</a></li>
+                    <li class="third-menu-item"><a href="/Risk/AddRisk/17">专调STP分析</a></li>
+                    <li class="third-menu-item"><a href="/Risk/AddRisk/18">动车EOAS分析</a></li>
+                    <li class="third-menu-item"><a href="/Risk/AddRisk/19">ATP分析</a></li>
+                    <li class="third-menu-item"><a href="/Risk/AddRisk/20">防盹睡分析</a></li>
+                    <li class="third-menu-item"><a href="/Risk/AddRisk/21">其他装备分析</a></li>
                 </ul>
                 <ul id="target6" data-source="#locoQuality" class="dropdown-content third-menu">
                     <li class="third-menu-item"><a href="/Basic/Files/3/1">机统6活项填写</a></li>
                     <li class="third-menu-item"><a href="/Basic/Files/3/2">机统28活项填写</a></li>
+                </ul>
+                <ul id="target7" data-source="#riskVerify" class="dropdown-content third-menu">
+                    <li class="third-menu-item"><a href="#">本部门责任风险审核</a></li>
+                    <li class="third-menu-item"><a href="#">风险办风险审核</a></li>
                 </ul>
             </nav>
         </div>

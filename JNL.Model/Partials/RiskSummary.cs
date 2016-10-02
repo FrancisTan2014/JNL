@@ -30,6 +30,7 @@ namespace JNL.Model
 		private string _description;
 		private int _parentid;
 	    private int _topesttypeid;
+	    private string _topestname = string.Empty;
 		private bool _isbottom;
 		private DateTime _addtime = DateTime.Now;
 		private DateTime _updatetime= DateTime.Now;
@@ -73,6 +74,12 @@ namespace JNL.Model
 	    {
             set { _topesttypeid = value; }
             get { return _topesttypeid; }
+	    }
+
+	    public string TopestName
+	    {
+            set { _topestname = value; }
+            get { return _topestname; }
 	    }
         /// <summary>
         /// 添加时间

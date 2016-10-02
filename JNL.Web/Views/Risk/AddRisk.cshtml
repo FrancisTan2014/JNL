@@ -28,6 +28,15 @@
         padding: 10px;
         text-align: center;
     }
+
+    .row header {
+        display: inline-block;
+        padding: 11px 24px;
+        vertical-align: middle;
+        line-height: 17px;
+        font-size: 20px;
+        margin: 20px 0;
+    }
 </style>
 
 <h5 class="title">@ViewBag.Title</h5>
@@ -43,11 +52,13 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="input-field col s7">
-                            <input type="hidden" name="ReportStaffId" />
-                            <input type="text" id="ReportStaffId" placeholder="输入人名/工号搜索"/>
+                            <input type="hidden" name="Id" value="0" />
+                            <input type="hidden" name="RiskTypeId" value="@ViewBag.RiskType"/>
+                            <input type="hidden" name="ReportStaffId"/>
+                            <input type="text" id="ReportStaffId" name="ReportStaff" maxlength="30" placeholder="输入人名/工号搜索"/>
                         </div>
                         <div class="input-field col s5">
-                            <input type="text" placeholder="提报部门" value="集宁机务段" readonly="readonly"/>
+                            <input type="text" placeholder="提报部门" value="集宁机务段" readonly="readonly" />
                         </div>
                     </div>
                 </div><!--end .card-body -->
@@ -62,10 +73,10 @@
                     <div class="row">
                         <div class="input-field col s7">
                             <input type="hidden" name="RespondStaffId" />
-                            <input type="text" placeholder="输入人名/工号搜索" id="RespondStaffId" />
+                            <input type="text" placeholder="输入人名/工号搜索" id="RespondStaffId" name="RespondStaff" />
                         </div>
                         <div class="input-field col s5">
-                            <input type="text" placeholder="责任部门" readonly="readonly"/>
+                            <input type="text" placeholder="责任部门" readonly="readonly" />
                         </div>
                     </div>
                 </div><!--end .card-body -->
@@ -75,87 +86,73 @@
 
     <!-- 风险基本信息 -->
     <div class="row">
-        <div class="card card-outlined style-primary">
-            <div class="card-head">
-                <header><i class="mdi-action-info-outline"></i> 风险基本信息（时间、地点、列车类别、天气等）</header>
-            </div><!--end .card-head -->
-            <div class="card-body">
-                <div class="row">
-                    <div class="input-field col s4">
-                        <input class="datepicker" name="OccurrenceTime" type="datetime" data-field="datetime" data-format="yyyy-MM-dd hh:mm:ss" placeholder="发生时间"/>
-                    </div>
-                    <div class="input-field col s4">
-                        <div class="select-wrapper">
-                            <select class="initialized">
-                                <option value="-1">列车类别</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="input-field col s4">
-                        <div class="select-wrapper">
-                            <select class="initialized">
-                                <option value="-1">天气</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="input-field col s4">
-                        <div class="select-wrapper">
-                            <select class="initialized">
-                                <option value="-1">发生线路名称</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="input-field col s4">
-                        <div class="select-wrapper">
-                            <select class="initialized">
-                                <option value="-1">起始站</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="input-field col s4">
-                        <div class="select-wrapper">
-                            <select class="initialized">
-                                <option value="-1">终点站（可选）</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div><!--end .card-body -->
+        <header class="col s12"><i class="mdi-action-info-outline"></i> 风险基本信息（时间、地点、列车类别、天气等）</header>
+        <div class="input-field col s4">
+            <input class="datepicker" name="OccurrenceTime" type="datetime" data-field="datetime" data-format="yyyy-MM-dd hh:mm:ss" placeholder="发生时间" id="OccurrenceTime" />
+        </div>
+        <div class="input-field col s4">
+            <div class="select-wrapper">
+                <select class="initialized" name="LocoServiceTypeId" id="LocoServiceTypeId">
+                    <option value="-1">列车类别</option>
+                </select>
+            </div>
+        </div>
+        <div class="input-field col s4">
+            <div class="select-wrapper">
+                <select class="initialized" id="WeatherId" name="WeatherId">
+                    <option value="-1">天气</option>
+                </select>
+            </div>
+        </div>
+        <div class="input-field col s4">
+            <div class="select-wrapper">
+                <select class="initialized" name="OccurrenceLineId" id="OccurrenceLineId">
+                    <option value="-1">事故发生线路</option>
+                </select>
+            </div>
+        </div>
+        <div class="input-field col s4">
+            <div class="select-wrapper">
+                <select class="initialized" id="FirstStationId" name="FirstStationId">
+                    <option value="-1">起始站</option>
+                </select>
+            </div>
+        </div>
+        <div class="input-field col s4">
+            <div class="select-wrapper">
+                <select class="initialized" id="LastStationId" name="LastStationId">
+                    <option value="-1">终点站（可选）</option>
+                </select>
+            </div>
         </div>
     </div>
 
     <!-- 风险详情信息 -->
     <div class="row">
-        <div class="card card-outlined style-primary">
-            <div class="card-head">
-                <header><i class="mdi-image-details"></i> 风险详情信息（概述、详情、存储等）</header>
-            </div><!--end .card-head -->
-            <div class="card-body">
-                <div class="row">
-                    <div class="input-field col s10">
-                        <input type="text" placeholder="风险概述，输入关键字搜索"/>
-                    </div>
-                    <div class="input-field col s2">
-                        <div class="switch">
-                            <label>
-                                库内
-                                <input type="checkbox">
-                                <span class="lever"></span>
-                                库外
-                            </label>
-                        </div>
-                    </div>
-                    <div class="input-field col s12">
-                        <textarea class="materialize-textarea" placeholder="风险详情描述"></textarea>
-                    </div>
-                </div>
-            </div><!--end .card-body -->
+        <header class="col s12"><i class="mdi-image-details"></i> 风险详情信息（概述、详情、存储等）</header>
+        <div class="input-field col s10">
+            <input type="hidden" name="RiskSummaryId" />
+            <textarea type="text" placeholder="风险概述，输入关键字搜索" id="RiskSummaryId" name="Summary" class="materialize-textarea"></textarea>
+        </div>
+        <div class="input-field col s2">
+            <div class="switch">
+                <label>
+                    库内
+                    <input type="hidden" name="Visible" id="Visible" value="false" />
+                    <input type="checkbox" id="Switch">
+                    <span class="lever"></span>
+                    库外
+                </label>
+            </div>
+        </div>
+        <div class="input-field col s12">
+            <textarea class="materialize-textarea" placeholder="风险详情描述" length="8000" name="RiskDetails" id="RiskDetails"></textarea>
         </div>
     </div>
 
     <!-- 按钮 -->
     <div class="row btn-group">
-        <button id="btnSave" class="btn btn-large waves-effect waves-light right">保 存</button>
+        <button type="button" id="btnSave" class="btn btn-large waves-effect waves-light right">保 存</button>
     </div>
 </form>
 <div class="bottom"></div>
