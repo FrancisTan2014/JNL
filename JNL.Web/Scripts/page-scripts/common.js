@@ -94,9 +94,10 @@
                             html = '';
                         data.forEach(function (model) {
                             var value = model[target.value],
-                                text = model.Name;
+                                text = model.Name,
+                                selected = value == target.selected ? 'selected="selected"' : '';
 
-                            html += '<option value="{0}">{1}</option>'.format(value, text);
+                            html += '<option value="{0}" {1}>{2}</option>'.format(value, selected, text);
                         });
 
                         $select.append(html);
@@ -512,6 +513,8 @@
                     var value = json[key];
                     if (/Date\(\d+\)/.test(value)) {
                         value = _this.processDate(value).format('yyyy-MM-dd HH:mm:ss');
+                    } else if (/True|False/.test(value)) {
+                        value = value == 'True' ? true : false;
                     }
 
                     var $dom = $form.find('*[name={0}]'.format(key));
@@ -1090,6 +1093,7 @@
         function CommonTable(selector, options) {
             this.selector = selector;
             this.config = $.extend({}, {
+                ajaxUrl: '/Common/GetList',
                 columns: [],
                 builds: [],
                 ajaxParams: {},
@@ -1169,10 +1173,12 @@
                 var value = data[column];
                 if (typeof (value) === 'string' && value.indexOf('Date(') >= 0) {
                     value = common.processDate(value).format('yyyy-MM-dd HH:mm:ss');
+                } else if(value == 'True' || value == 'False') {
+                    value = value == 'True' ? true : false;
                 }
 
                 if (typeof (onCreateCell) === 'function') {
-                    var result = onCreateCell(value);
+                    var result = onCreateCell(value, data);
                     if (typeof (result) === 'string' && result.indexOf('</td>') === -1) {
                         $tr.append('<td>{0}</td>'.format(result));
                     } else {
@@ -1200,7 +1206,7 @@
 
             ajaxParameters.Conditions = conditions;
             common.ajax({
-                url: '/Common/GetList',
+                url: _this.config.ajaxUrl,
                 data: ajaxParameters
             }).done(function (res) {
                 _this.hideLoading();
@@ -1338,7 +1344,7 @@
             } else {
                 var currentTime = new Date();
                 var timespan = currentTime - this.lastTime;
-                
+
                 this.lastTime = currentTime;
                 return timespan >= this.frequency;
             }
@@ -1392,7 +1398,7 @@
             });
         };
 
-        Intelligence.prototype.highlighting = function(source, target) {
+        Intelligence.prototype.highlighting = function (source, target) {
             if (!!source && !!target) {
                 return source.replace(target, '<font style="color: {0}">{1}</font>'.format(this.config.highlightColor, target));
             }
@@ -1405,8 +1411,8 @@
 /*
  * 根据配置信息为select元素加载数据
  */
-(function(window, $) {
-    $.initSelect = function(options) {
+(function (window, $) {
+    $.initSelect = function (options) {
         var config = $.extend({}, {
             selectors: [],
             ajaxUrl: '',
@@ -1414,7 +1420,7 @@
             valueField: '',
             selectedValue: '',
             getAjaxParams: function () { },
-            beforeBuilt: function () {  },
+            beforeBuilt: function () { },
             afterBuilt: function () { }
         }, options);
 
@@ -1431,9 +1437,9 @@
         common.ajax({
             url: config.ajaxUrl,
             data: formData
-        }).done(function(res) {
+        }).done(function (res) {
             var data = res.data || [];
-            
+
             config.selectors.forEach(function (selector) {
                 var $select = $(selector);
                 if ($.isFunction(config.beforeBuilt)) {
@@ -1453,5 +1459,48 @@
                 }
             });
         });
+    };
+})(window, jQuery);
+
+/**
+ * Materialize风格的模态框
+ */
+(function (window, $) {
+    /**
+     * 弹出Materialize风格的确定提示框
+     * @param {String} title 
+     * @param {String} text 
+     * @param {Function} confirm 
+     * @param {Function} cancel 
+     * @returns {void} 
+     */
+    $.confirm = function (title, text, confirm, cancel) {
+        var $modal = $('<div id="___modal___" class="modal"><div class="modal-content"><h4>{0}</h4><p>{1}</p></div><div class="modal-footer"><a href="javascript:void(0);" id="___confirm___" class=" modal-action modal-close waves-effect waves-green btn-flat">确 定</a><a href="javascript:void(0);" id="___cancel___" class=" modal-action modal-close waves-effect waves-green btn-flat">取 消</a></div></div>'.format(title, text)).appendTo('body');
+
+        $modal.leanModal({
+            dismissible: false, // 点击模态框外部则关闭模态框
+            opacity: .5, // 背景透明度
+            in_duration: 300, // 切入时间
+            out_duration: 200 // 切出时间
+        });
+
+        $('#___confirm___').on('click', function () {
+            if ($.isFunction(confirm)) {
+                confirm();
+                $('.lean-overlay').remove();
+                $modal.remove();
+            }
+        });
+
+        $('#___cancel___').on('click', function () {
+            if ($.isFunction(cancel)) {
+                cancel();
+                $('.lean-overlay').remove();
+                $modal.remove();
+            }
+        });
+
+
+        $modal.openModal();
     };
 })(window, jQuery);

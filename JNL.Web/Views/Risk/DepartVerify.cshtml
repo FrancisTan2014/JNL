@@ -1,0 +1,27 @@
+﻿@{
+    ViewBag.Title = "本部门责任风险审核";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h5 class="title">@ViewBag.Title</h5>
+
+<table class="bordered depart-verify" data-depart="@ViewBag.DepartId">
+    <thead>
+    <tr>
+        <th>序号</th>
+        <th>提报部门</th>
+        <th>提报时间</th>
+        <th>风险类别</th>
+        <th>风险等级</th>
+        <th>风险概述</th>
+        <th>部门审核状态</th>
+        <th>风险办审核状态</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+        
+    </tbody>
+</table>
+
+<script src="/Scripts/page-scripts/risk-verify.js"></script>

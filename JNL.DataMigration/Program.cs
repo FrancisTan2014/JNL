@@ -379,7 +379,12 @@ namespace JNL.DataMigration
                     RiskSummary thirdLevel;
                     if (!insertedDic.ContainsKey(summary.cat1))
                     {
-                        thirdLevel = new RiskSummary { Description = nameDic[summary.cat1], ParentId = secondLevel.ParentId, TopestTypeId = firstLevel.Id };
+                        thirdLevel = new RiskSummary
+                        {
+                            Description = nameDic[summary.cat1],
+                            ParentId = secondLevel.ParentId,
+                            TopestTypeId = firstLevel.Id
+                        };
                         thirdLevel = RiskSummaryBll.Insert(thirdLevel);
                         if (thirdLevel.Id > 0)
                         {

@@ -1,12 +1,12 @@
 ﻿/**  版本信息模板在安装目录下，可自行修改。
-* RiskInfo.cs
+* ViewRiskInfo.cs
 *
 * 功 能： N/A
-* 类 名： RiskInfo
+* 类 名： ViewRiskInfo
 *
 * Ver    变更日期             负责人  变更内容
 * ───────────────────────────────────
-* V0.01  2016/9/22 13:26:36   N/A    初版
+* V0.01  2016/10/3 19:33:29   N/A    初版
 *
 * Copyright (c) 2012 Maticsoft Corporation. All rights reserved.
 *┌──────────────────────────────────┐
@@ -18,12 +18,12 @@ using System;
 namespace JNL.Model
 {
 	/// <summary>
-	/// 风险信息登记
+	/// ViewRiskInfo:实体类(属性说明自动提取数据库字段的描述信息)
 	/// </summary>
 	[Serializable]
-	public partial class RiskInfo
+	public partial class ViewRiskInfo
 	{
-		public RiskInfo()
+		public ViewRiskInfo()
 		{}
 		#region Model
 		private int _id;
@@ -35,26 +35,42 @@ namespace JNL.Model
 		private int _weatherid;
 		private DateTime _occurrencetime;
 		private int _risksummaryid;
-		private string _riskdetails="";
-		private string _riskreason="";
-		private string _riskfix="";
-		private bool _visible = false;
+		private string _riskdetails;
+		private string _riskreason;
+		private string _riskfix;
+		private bool _visible;
 		private int _risktypeid;
-		private int _verifystatus=1;
 		private int _verifystaffid;
-		private DateTime _verifytime= DateTime.Now;
-		private bool _showinstresspage = false;
-		private DateTime _dealtimelimit = DateTime.Now;
-		private bool _hasdealed= false;
-		private bool _needroomsign= false;
-		private bool _needleadersign= false;
-		private bool _needwritefixdesc= false;
-		private bool _needstresstrack= false;
-		private DateTime _addtime= DateTime.Now;
-		private DateTime _updatetime= DateTime.Now;
-		private bool _isdelete= false;
+		private int _verifystatus;
+		private DateTime _verifytime;
+		private bool _showinstresspage;
+		private DateTime _dealtimelimit;
+		private bool _hasdealed;
+		private bool _needroomsign;
+		private bool _needleadersign;
+		private bool _needwritefixdesc;
+		private bool _needstresstrack;
+		private DateTime _addtime;
+		private DateTime _updatetime;
+		private bool _isdelete;
+		private string _reportstaffname;
+		private int? _reportstaffdepartid;
+		private string _reportstaffdepart;
+		private string _workid;
+		private string _salaryid;
+		private string _occurrencelinename;
+		private string _firststationname;
+		private string _laststationname;
+		private string _locoservicetype;
+		private string _weatherlike;
+		private string _risksummary;
+		private int? _risktopestlevelid;
+		private string _risktopestname;
+		private int? _risksecondlevelid;
+		private string _risksecondlevelname;
+		private string _risktype;
 		/// <summary>
-		/// 主键
+		/// 
 		/// </summary>
 		public int Id
 		{
@@ -62,7 +78,7 @@ namespace JNL.Model
 			get{return _id;}
 		}
 		/// <summary>
-		/// 提报人Id（关联人员信息表主键）
+		/// 
 		/// </summary>
 		public int ReportStaffId
 		{
@@ -70,7 +86,7 @@ namespace JNL.Model
 			get{return _reportstaffid;}
 		}
 		/// <summary>
-		/// 事件发生线路Id（关联线路表主键）
+		/// 
 		/// </summary>
 		public int OccurrenceLineId
 		{
@@ -78,7 +94,7 @@ namespace JNL.Model
 			get{return _occurrencelineid;}
 		}
 		/// <summary>
-		/// 事件发生区间起点站Id
+		/// 
 		/// </summary>
 		public int FirstStationId
 		{
@@ -86,7 +102,7 @@ namespace JNL.Model
 			get{return _firststationid;}
 		}
 		/// <summary>
-		/// 事件发生区间终点站Id
+		/// 
 		/// </summary>
 		public int LastStationId
 		{
@@ -94,7 +110,7 @@ namespace JNL.Model
 			get{return _laststationid;}
 		}
 		/// <summary>
-		/// 列车类别（关联字典表主键）
+		/// 
 		/// </summary>
 		public int LocoServiceTypeId
 		{
@@ -102,7 +118,7 @@ namespace JNL.Model
 			get{return _locoservicetypeid;}
 		}
 		/// <summary>
-		/// 天气情况（关联字典表主键）
+		/// 
 		/// </summary>
 		public int WeatherId
 		{
@@ -110,7 +126,7 @@ namespace JNL.Model
 			get{return _weatherid;}
 		}
 		/// <summary>
-		/// 事件发生时间
+		/// 
 		/// </summary>
 		public DateTime OccurrenceTime
 		{
@@ -118,7 +134,7 @@ namespace JNL.Model
 			get{return _occurrencetime;}
 		}
 		/// <summary>
-		/// 风险分类Id（关联风险分类表主键）
+		/// 
 		/// </summary>
 		public int RiskSummaryId
 		{
@@ -126,7 +142,7 @@ namespace JNL.Model
 			get{return _risksummaryid;}
 		}
 		/// <summary>
-		/// 风险详情
+		/// 
 		/// </summary>
 		public string RiskDetails
 		{
@@ -134,7 +150,7 @@ namespace JNL.Model
 			get{return _riskdetails;}
 		}
 		/// <summary>
-		/// 问题原因
+		/// 
 		/// </summary>
 		public string RiskReason
 		{
@@ -142,7 +158,7 @@ namespace JNL.Model
 			get{return _riskreason;}
 		}
 		/// <summary>
-		/// 落实情况
+		/// 
 		/// </summary>
 		public string RiskFix
 		{
@@ -150,7 +166,7 @@ namespace JNL.Model
 			get{return _riskfix;}
 		}
 		/// <summary>
-		/// 对外是否可见
+		/// 
 		/// </summary>
 		public bool Visible
 		{
@@ -158,23 +174,15 @@ namespace JNL.Model
 			get{return _visible;}
 		}
 		/// <summary>
-		/// 风险分类Id
+		/// 
 		/// </summary>
 		public int RiskTypeId
 		{
 			set{ _risktypeid=value;}
 			get{return _risktypeid;}
 		}
-        /// <summary>
-        /// 审核状态（1 待本部门审核； 2 待风险办审核；3 风险办否决，待部门重新审核；  4 审核通过；5 已填写整改处置； 6 已填写落实销号）
-        /// </summary>
-        public int VerifyStatus
-		{
-			set{ _verifystatus=value;}
-			get{return _verifystatus;}
-		}
 		/// <summary>
-		/// 审核人Id
+		/// 
 		/// </summary>
 		public int VerifyStaffId
 		{
@@ -182,7 +190,15 @@ namespace JNL.Model
 			get{return _verifystaffid;}
 		}
 		/// <summary>
-		/// 审核时间
+		/// 
+		/// </summary>
+		public int VerifyStatus
+		{
+			set{ _verifystatus=value;}
+			get{return _verifystatus;}
+		}
+		/// <summary>
+		/// 
 		/// </summary>
 		public DateTime VerifyTime
 		{
@@ -190,7 +206,7 @@ namespace JNL.Model
 			get{return _verifytime;}
 		}
 		/// <summary>
-		/// 是否进入日分析重点甄选队列，或为真，则此风险信息将在每日重点安全信息甄选统计页面中展示
+		/// 
 		/// </summary>
 		public bool ShowInStressPage
 		{
@@ -198,7 +214,7 @@ namespace JNL.Model
 			get{return _showinstresspage;}
 		}
 		/// <summary>
-		/// 处置期限
+		/// 
 		/// </summary>
 		public DateTime DealTimeLimit
 		{
@@ -206,7 +222,7 @@ namespace JNL.Model
 			get{return _dealtimelimit;}
 		}
 		/// <summary>
-		/// 是否已处置
+		/// 
 		/// </summary>
 		public bool HasDealed
 		{
@@ -214,7 +230,7 @@ namespace JNL.Model
 			get{return _hasdealed;}
 		}
 		/// <summary>
-		/// 是否需要科室签字
+		/// 
 		/// </summary>
 		public bool NeedRoomSign
 		{
@@ -222,7 +238,7 @@ namespace JNL.Model
 			get{return _needroomsign;}
 		}
 		/// <summary>
-		/// 是否需要领导签字
+		/// 
 		/// </summary>
 		public bool NeedLeaderSign
 		{
@@ -230,7 +246,7 @@ namespace JNL.Model
 			get{return _needleadersign;}
 		}
 		/// <summary>
-		/// 是否需要填写落实情况
+		/// 
 		/// </summary>
 		public bool NeedWriteFixDesc
 		{
@@ -238,7 +254,7 @@ namespace JNL.Model
 			get{return _needwritefixdesc;}
 		}
 		/// <summary>
-		/// 是否重点追踪
+		/// 
 		/// </summary>
 		public bool NeedStressTrack
 		{
@@ -246,7 +262,7 @@ namespace JNL.Model
 			get{return _needstresstrack;}
 		}
 		/// <summary>
-		/// 添加时间
+		/// 
 		/// </summary>
 		public DateTime AddTime
 		{
@@ -254,7 +270,7 @@ namespace JNL.Model
 			get{return _addtime;}
 		}
 		/// <summary>
-		/// 更新时间
+		/// 
 		/// </summary>
 		public DateTime UpdateTime
 		{
@@ -262,12 +278,140 @@ namespace JNL.Model
 			get{return _updatetime;}
 		}
 		/// <summary>
-		/// 删除标识
+		/// 
 		/// </summary>
 		public bool IsDelete
 		{
 			set{ _isdelete=value;}
 			get{return _isdelete;}
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		public string ReportStaffName
+		{
+			set{ _reportstaffname=value;}
+			get{return _reportstaffname;}
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		public int? ReportStaffDepartId
+		{
+			set{ _reportstaffdepartid=value;}
+			get{return _reportstaffdepartid;}
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		public string ReportStaffDepart
+		{
+			set{ _reportstaffdepart=value;}
+			get{return _reportstaffdepart;}
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		public string WorkId
+		{
+			set{ _workid=value;}
+			get{return _workid;}
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		public string SalaryId
+		{
+			set{ _salaryid=value;}
+			get{return _salaryid;}
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		public string OccurrenceLineName
+		{
+			set{ _occurrencelinename=value;}
+			get{return _occurrencelinename;}
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		public string FirstStationName
+		{
+			set{ _firststationname=value;}
+			get{return _firststationname;}
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		public string LastStationName
+		{
+			set{ _laststationname=value;}
+			get{return _laststationname;}
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		public string LocoServiceType
+		{
+			set{ _locoservicetype=value;}
+			get{return _locoservicetype;}
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		public string WeatherLike
+		{
+			set{ _weatherlike=value;}
+			get{return _weatherlike;}
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		public string RiskSummary
+		{
+			set{ _risksummary=value;}
+			get{return _risksummary;}
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		public int? RiskTopestLevelId
+		{
+			set{ _risktopestlevelid=value;}
+			get{return _risktopestlevelid;}
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		public string RiskTopestName
+		{
+			set{ _risktopestname=value;}
+			get{return _risktopestname;}
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		public int? RiskSecondLevelId
+		{
+			set{ _risksecondlevelid=value;}
+			get{return _risksecondlevelid;}
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		public string RiskSecondLevelName
+		{
+			set{ _risksecondlevelname=value;}
+			get{return _risksecondlevelname;}
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		public string RiskType
+		{
+			set{ _risktype=value;}
+			get{return _risktype;}
 		}
 		#endregion Model
 

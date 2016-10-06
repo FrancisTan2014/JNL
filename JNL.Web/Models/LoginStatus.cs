@@ -63,6 +63,13 @@ namespace JNL.Web.Models
             var userId = GetLoginId();
             var staff = new StaffBll().QuerySingle(userId);
 
+            if (staff == null)
+            {
+                // 登录过期，需重新登录
+                var requestUrl = HttpContext.Current.Request.RawUrl;
+                HttpContext.Current.Response.Redirect($"/Home/Login?backUrl={requestUrl}");
+            }
+
             return staff;
         }
 

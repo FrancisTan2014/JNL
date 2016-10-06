@@ -206,5 +206,14 @@
             code = 120,
             msg = "当前目录下已存在同名文件，无法上传"
         };
+
+        /// <summary>
+        /// 没有执行此执行的权限（121）
+        /// </summary>
+        public static object NoAuth => new
+        {
+            code = 121,
+            msg = "您没有执行此操作的权限"
+        };
     }
 }

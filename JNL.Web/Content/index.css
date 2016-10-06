@@ -31,14 +31,26 @@ nav {
 }
 
 /* 去除浏览器默认的type=number样式 */
-input[type=number] {  
-    -moz-appearance:textfield;  
-}  
-input[type=number]::-webkit-inner-spin-button,  
-input[type=number]::-webkit-outer-spin-button {  
-    -webkit-appearance: none;  
-    margin: 0;  
-} 
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+/* 自定义radio按钮样式 */
+.toggle-show {
+    background: #fff;
+    color: #000;
+}
+
+    .toggle-show.active, .toggle-show:hover {
+        background: #2bbbad;
+        color: #fff;
+    }
 
 .input-field.error-offset-3 div.error {
     left: 3rem;

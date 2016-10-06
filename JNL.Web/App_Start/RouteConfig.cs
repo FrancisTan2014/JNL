@@ -24,12 +24,6 @@ namespace JNL.Web
                 url: "{controller}/{action}/{fileType}/{level}",
                 defaults: new { controller = "Basic", action = "Files", fileType = UrlParameter.Optional, level = UrlParameter.Optional }
             );
-
-            routes.MapRoute(
-                name: "AccidentDetail",
-                url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Basic", action = "AccidentDetail", id = UrlParameter.Optional }
-            );
         }
     }
 }

@@ -58,7 +58,8 @@
                             <input type="text" id="ReportStaffId" name="ReportStaff" maxlength="30" placeholder="输入人名/工号搜索"/>
                         </div>
                         <div class="input-field col s5">
-                            <input type="text" placeholder="提报部门" value="集宁机务段" readonly="readonly" />
+                            <input type="text" placeholder="提报部门" value="集宁机务段" readonly="readonly"/>
+                            <input type="hidden" value="@ViewBag.RiskLevels" id="RiskLevels" />
                         </div>
                     </div>
                 </div><!--end .card-body -->
@@ -130,22 +131,23 @@
     <!-- 风险详情信息 -->
     <div class="row">
         <header class="col s12"><i class="mdi-image-details"></i> 风险详情信息（概述、详情、存储等）</header>
-        <div class="input-field col s10">
+        <div class="input-field col s8">
             <input type="hidden" name="RiskSummaryId" />
             <textarea type="text" placeholder="风险概述，输入关键字搜索" id="RiskSummaryId" name="Summary" class="materialize-textarea"></textarea>
         </div>
-        <div class="input-field col s2">
+        <div class="input-field col s4">
             <div class="switch">
                 <label>
-                    库内
-                    <input type="hidden" name="Visible" id="Visible" value="false" />
-                    <input type="checkbox" id="Switch">
+                    库内存储
+                    <input type="hidden" name="Visible" id="Visible" value="true" />
+                    <input type="checkbox" id="Switch" checked="checked">
                     <span class="lever"></span>
-                    库外
+                    库外存储
                 </label>
             </div>
         </div>
         <div class="input-field col s12">
+            <input type="hidden" name="NeedWriteFixDesc" />
             <textarea class="materialize-textarea" placeholder="风险详情描述" length="8000" name="RiskDetails" id="RiskDetails"></textarea>
         </div>
     </div>

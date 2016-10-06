@@ -64,6 +64,9 @@
     <Compile Include="Partials\Station.cs" />
     <Compile Include="Partials\TraceInfo.cs" />
     <Compile Include="Partials\ViewLine.cs" />
+    <Compile Include="Partials\ViewRiskInfo.cs" />
+    <Compile Include="Partials\ViewRiskResponse.cs" />
+    <Compile Include="Partials\ViewRiskResponseStaff.cs" />
     <Compile Include="Partials\ViewStaff.cs" />
     <Compile Include="Partials\Warning.cs" />
     <Compile Include="Partials\WarningImplement.cs" />

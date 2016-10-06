@@ -1,0 +1,24 @@
+﻿@{
+    ViewBag.Title = "风险整改处置列表";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h5 class="title">@ViewBag.Title</h5>
+
+<table class="bordered fix-form" data-status="4" data-depart="@ViewBag.Depart">
+    <thead>
+        <tr>
+            <th>提报时间</th>
+            <th>提报部门</th>
+            <th>提报平台</th>
+            <th>责任部门</th>
+            <th>问题状态</th>
+            <th>风险概述</th>
+            <th>风险详情</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script src="/Scripts/page-scripts/risk-fix.js"></script>

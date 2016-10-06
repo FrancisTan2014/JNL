@@ -1,14 +1,27 @@
-﻿(function(window, $) {
-    $(function() {
-        page.init();
+﻿(function (window, $) {
+    $(function () {
         page.bindEvents();
+        page.init();
+
+        setTimeout(function () {
+            var defaultFirstStationId = $('#defaultFirstStationId').val();
+            var $firstStationSelect = $('#FirstStationId');
+            $firstStationSelect.find('option[value={0}]'.format(defaultFirstStationId)).prop('selected', true);
+            $firstStationSelect.material_select();
+
+            var defaultLastStationId = $('#defaultLastStationId').val();
+            var $lastStationSelect = $('#LastStationId');
+            $lastStationSelect.find('option[value={0}]'.format(defaultLastStationId)).prop('selected', true);
+            $lastStationSelect.material_select();
+        }, 500);
     });
 
     window.page = {
         init: function () {
             var _this = this;
 
-            $('#dtBox').DateTimePicker();
+            var defaultCurrenceTime = $('#defaultOccurrenceTime').val();
+            $('#dtBox').DateTimePicker({ defaultDate: new Date(defaultCurrenceTime) });
 
             // input intelligence
             $.inputIntelligence('#RespondStaffId', _this.staffItelligenceConfig);
@@ -25,9 +38,15 @@
                 textField: 'Name',
                 valueField: 'Id',
                 getAjaxParams: function () { return { TableName: 'Line' }; },
-                afterBuilt: function ($select) { $select.material_select(); }
+                afterBuilt: function ($select) {
+                    var defaultLineId = $('#defaultOccurrenceLineId').val();
+                    $select.find('option[value={0}]'.format(defaultLineId)).prop('selected', true);
+                    $select.change();
+
+                    $select.material_select();
+                }
             });
-            
+
             var textAreaRules = {
                 required: true,
                 minlength: 10,
@@ -67,13 +86,13 @@
         },
 
         selectConfigs: [
-            { type: 8, selector: '#LocoServiceTypeId', value: 'Id' },
-            { type: 9, selector: '#WeatherId', value: 'Id' }
+            { type: 8, selector: '#LocoServiceTypeId', value: 'Id', selected: $('#defaultLocoServiceTypeId').val() },
+            { type: 9, selector: '#WeatherId', value: 'Id', selected: $('#defaultWeatherId').val() }
         ],
 
         staffItelligenceConfig: {
             ajaxUrl: '/Common/GetList',
-            getAjaxParams: function(input) {
+            getAjaxParams: function (input) {
                 return {
                     TableName: 'ViewStaff',
                     Fields: 'Id###WorkId###SalaryId###Name###Department',
@@ -82,10 +101,10 @@
                     Conditions: '(SalaryId LIKE \'{0}%\' OR WorkId LIKE \'{0}%\' OR Name LIKE \'{0}%\')'.format(input)
                 };
             },
-            buildDropdownItem: function(data) {
+            buildDropdownItem: function (data) {
                 return '{0} | {1} | {2}'.format(data.SalaryId, data.Name, data.WorkId);
             },
-            afterSelected: function(data, $input) {
+            afterSelected: function (data, $input) {
                 $input.prev().val(data.Id)
                     .parent().next().find('input').val(data.Department || '未知部门');
             }
@@ -93,7 +112,7 @@
 
         riskIntelligenceConfig: {
             ajaxUrl: '/Common/GetList',
-            getAjaxParams: function(input) {
+            getAjaxParams: function (input) {
                 return {
                     TableName: 'RiskSummary',
                     Fields: 'Id###Description###TopestName###SecondLevelId###SecondLevelName',
@@ -115,11 +134,21 @@
             }
         },
 
-        bindEvents: function() {
+        btnToggleDisbled: function () {
+            var disbled = $('.btn-group button:first').prop('disabled');
+            $('.btn-group button').prop('disabled', !disbled);
+        },
+
+        bindEvents: function () {
             var _this = this;
 
+            $('.toggle-show').on('click', function () {
+                var value = $(this).data('value');
+                $(this).addClass('active').siblings().removeClass('active');
+                $(this).siblings('input[type=hidden]').val(value);
+            });
 
-            $('#OccurrenceLineId').on('change', function() {
+            $('#OccurrenceLineId').on('change', function () {
                 var lineId = $(this).val();
 
                 $.initSelect({
@@ -127,7 +156,7 @@
                     ajaxUrl: '/Common/GetList',
                     textField: 'StationName',
                     valueField: 'StationId',
-                    getAjaxParams: function() {
+                    getAjaxParams: function () {
                         return {
                             TableName: 'ViewLine',
                             Conditions: 'Id=' + lineId,
@@ -135,78 +164,131 @@
                             Desending: true
                         };
                     },
-                    beforeBuilt: function($select) {
+                    beforeBuilt: function ($select) {
                         $select.find('option:not(:first)').remove();
                     },
-                    afterBuilt: function($select) {
+                    afterBuilt: function ($select) {
                         $select.material_select();
                     }
                 });
             });
 
-            $('#Switch').on('change', function() {
+            $('.edit-shadow').on('click', function () {
+                Materialize.toast('当前为不可编辑状态，请点击修改', 3000);
+            });
+
+            $('#Switch').on('change', function () {
                 $('#Visible').val($(this).is(':checked'));
             });
 
-            $('#btnSave').on('click', function () {
-                _this.save();
+            $('#btnEdit').on('click', function () {
+                $('.edit-shadow').hide();
+                $(this).hide();
+            });
+
+            $('#btnDelete').on('click', function () {
+                $.confirm('提示', '您确定要删除此风险信息吗？', function () {
+                    var id = $('input[name=Id]').val();
+
+                    _this.btnToggleDisbled();
+                    common.ajax({
+                        url: '/Risk/DeleteRisk',
+                        data: { id: id }
+                    }).done(function (res) {
+                        _this.btnToggleDisbled();
+                        if (res.code == 100) {
+                            Materialize.toast(res.msg, 1000, '', function () {
+                                history.back();
+                            });
+                            return;
+                        }
+
+                        Materialize.toast(res.msg, 3000);
+                    }).error(function () {
+                        _this.btnToggleDisbled();
+                    });
+                });
+            });
+
+            $('#btnPass,#btnVote').on('click', function () {
+                var status = $(this).data('pass');
+                _this.vote(status);
+            });
+
+            $('#btnBack').on('click', function () {
+                history.back();
             });
         },
 
-        save: function() {
+        validateFormAndGetJson: function () {
             if ($('.edit-form').valid()) {
                 var riskInfo = common.formJsonfiy('.edit-form');
                 if (riskInfo.ReportStaffId <= 0) {
                     Materialize.toast('提报人没有从提示下拉框中选择，不能提交', 3000);
-                    return;
+                    return null;
                 }
                 if (riskInfo.RespondStaffId <= 0) {
                     Materialize.toast('责任人没有从提示下拉框中选择，不能提交', 3000);
-                    return;
+                    return null;
                 }
 
                 var valid = true;
-                $('select.initialized').each(function() {
-                    var error = '请选择' + $(this).find('option:first').text();
-                    if ($(this).val() <= 0) {
-                        valid = false;
+                $('select.initialized').each(function () {
+                    var name = $(this).prop('name');
+                    if (name != 'LastStationId') {
+                        var error = '请选择' + $(this).find('option:first').text();
+                        if ($(this).val() <= 0) {
+                            valid = false;
 
-                        Materialize.toast(error, 3000);
-                        return false;
+                            Materialize.toast(error, 3000);
+                            return false;
+                        }
                     }
                 });
 
                 if (!valid) {
-                    return;
+                    return null;
                 }
 
                 if (riskInfo.RiskSummaryId <= 0) {
                     Materialize.toast('风险概述信息没有从提示下拉框中选择，不能提交', 3000);
-                    return;
+                    return null;
                 }
 
-                // save
-                var forbidden = common.submitForbidden('#btnSave', '正在保存');
+                return riskInfo;
+            } else {
+                Materialize.toast('请完善信息！！！', 3000);
+                return null;
+            }
+        },
+
+        vote: function (status) {
+            var _this = this;
+            var riskInfo = _this.validateFormAndGetJson();
+
+            if (riskInfo) {
+                riskInfo.VerifyStatus = status;
+                _this.btnToggleDisbled();
                 common.ajax({
-                    url: '/Risk/AddRisk',
+                    url: '/Risk/UpdateRisk',
                     data: {
                         responds: riskInfo.RespondStaffId,
                         risk: JSON.stringify(riskInfo)
                     }
-                }).done(function(res) {
+                }).done(function (res) {
+                    _this.btnToggleDisbled();
                     if (res.code == 100) {
-                        Materialize.toast('保存成功', 1000, '', function() {
-                            location.reload();
+                        Materialize.toast(res.msg, 1000, '', function () {
+                            history.back();
                         });
-
                         return;
                     }
 
-                    forbidden.enabled();
-                    Materialize.toast('保存失败，请稍后重试！', 3000);
+                    Materialize.toast(res.msg, 3000);
+                }).error(function (e) {
+                    console.info(e);
+                    _this.btnToggleDisbled();
                 });
-            } else {
-                Materialize.toast('请完善信息！！！', 3000);
             }
         }
     };

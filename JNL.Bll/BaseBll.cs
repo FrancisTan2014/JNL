@@ -151,6 +151,17 @@ namespace JNL.Bll
         }
 
         /// <summary>
+        /// 根据条件将指定的数据软删除
+        /// </summary>
+        /// <param name="condition">删除条件，不能为空</param>
+        /// <param name="softDeleteFieldName">记录删除状态的字段名称，默认为IsDelete</param>
+        /// <returns>操作成功与否的布尔值</returns>
+        public bool DeleteSoftly(string condition, string softDeleteFieldName = "IsDelete")
+        {
+            return DalInstance.DeleteSoftly(condition, softDeleteFieldName);
+        }
+
+        /// <summary>
         /// 根据条件查询表中的指定列，并返回这一列的数据集合，若查询不到数据则返回空集合(而非null)
         /// </summary>
         /// <param name="whereStr">查询条件</param>

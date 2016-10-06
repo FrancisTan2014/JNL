@@ -149,11 +149,13 @@
     <Compile Include="Models\GetListParams.cs" />
     <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\LoginStatus.cs" />
+    <Compile Include="Models\RiskVerifyStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\AppSettings.cs" />
     <Compile Include="Utils\BllFactory.cs" />
     <Compile Include="Utils\CookieNames.cs" />
     <Compile Include="Utils\RequestHelper.cs" />
+    <Compile Include="Utils\ResponseHelper.cs" />
     <Compile Include="Utils\SessionNames.cs" />
     <Compile Include="Utils\UploadHelper.cs" />
   </ItemGroup>
@@ -174,8 +176,11 @@
     <Content Include="auth-filter.config" />
     <None Include="Scripts\_references.js" />
     <Content Include="Scripts\page-scripts\common.js" />
+    <Content Include="Scripts\page-scripts\risk-fix.js" />
+    <Content Include="Scripts\page-scripts\risk-verify.js" />
     <Content Include="Scripts\page-scripts\login.js" />
     <Content Include="Scripts\page-scripts\add-risk.js" />
+    <Content Include="Scripts\page-scripts\update-risk.js" />
     <Content Include="Scripts\plugins\uplodifive\jquery.uploadifive.js" />
     <Content Include="Scripts\plugins\uplodifive\jquery.uploadifive.min.js" />
     <Content Include="Scripts\plugins\uplodifive\uploadifive-cancel.png" />
@@ -199,6 +204,12 @@
     <Content Include="Views\Basic\AddAccident.cshtml" />
     <Content Include="Views\Basic\AccidentDetail.cshtml" />
     <Content Include="Views\Risk\AddRisk.cshtml" />
+    <Content Include="Views\Risk\DepartVerify.cshtml" />
+    <Content Include="Views\Risk\FinalVerify.cshtml" />
+    <Content Include="Views\Risk\UpdateRisk.cshtml" />
+    <Content Include="Views\Risk\Reform.cshtml" />
+    <Content Include="Views\Risk\Fix.cshtml" />
+    <Content Include="Views\Risk\Write.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

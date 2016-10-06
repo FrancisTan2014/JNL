@@ -31,6 +31,8 @@ namespace JNL.Model
 		private int _parentid;
 	    private int _topesttypeid;
 	    private string _topestname = string.Empty;
+	    private int _secondlevelid;
+	    private string _secondlevelname = string.Empty;
 		private bool _isbottom;
 		private DateTime _addtime = DateTime.Now;
 		private DateTime _updatetime= DateTime.Now;
@@ -80,6 +82,18 @@ namespace JNL.Model
 	    {
             set { _topestname = value; }
             get { return _topestname; }
+	    }
+
+	    public int SecondLevelId
+	    {
+	        set { _secondlevelid = value; }
+            get { return _secondlevelid; }
+	    }
+
+	    public string SecondLevelName
+	    {
+	        set { _secondlevelname = value; }
+            get { return _secondlevelname; }
 	    }
         /// <summary>
         /// 添加时间

@@ -296,6 +296,19 @@ namespace JNL.Dal
         }
 
         /// <summary>
+        /// 根据条件将指定的数据软删除
+        /// </summary>
+        /// <param name="condition">删除条件，不能为空</param>
+        /// <param name="softDeleteFieldName">记录删除状态的字段名称，默认为IsDelete</param>
+        /// <returns>操作成功与否的布尔值</returns>
+        public virtual bool DeleteSoftly(string condition, string softDeleteFieldName = "IsDelete")
+        {
+            var cmdText = $"UPDATE {TableName} SET {softDeleteFieldName}=1 WHERE {condition}";
+
+            return DbHelper.ExecuteNonQuery(ConnectionString, CommandType.Text, cmdText) > 0;
+        }
+
+        /// <summary>
         /// 根据主键id查询单个实体
         /// </summary>
         /// <param name="id">主键id</param>
