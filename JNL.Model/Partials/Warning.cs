@@ -6,7 +6,7 @@
 *
 * Ver    变更日期             负责人  变更内容
 * ───────────────────────────────────
-* V0.01  2016/9/22 13:26:38   N/A    初版
+* V0.01  2016/10/7 10:06:43   N/A    初版
 *
 * Copyright (c) 2012 Maticsoft Corporation. All rights reserved.
 *┌──────────────────────────────────┐
@@ -29,10 +29,13 @@ namespace JNL.Model
 		private int _id;
 		private DateTime _warningtime;
 		private DateTime _timelimit;
-		private int _warningdepartmentid;
+		private int _warningsource;
+		private int _warningstaffid;
+		private string _implementdeparts;
 		private string _warningtitle;
 		private string _warningcontent;
 		private string _changerequirement;
+	    private bool _hasbeganimplement=false;
 		private bool _hasimplementedall= false;
 		private bool _visible= true;
 		private int _createstaffid;
@@ -64,12 +67,28 @@ namespace JNL.Model
 			get{return _timelimit;}
 		}
 		/// <summary>
+		/// 预警来源
+		/// </summary>
+		public int WarningSource
+		{
+			set{ _warningsource=value;}
+			get{return _warningsource;}
+		}
+		/// <summary>
 		/// 预警部门Id
 		/// </summary>
-		public int WarningDepartmentId
+		public int WarningStaffId
 		{
-			set{ _warningdepartmentid=value;}
-			get{return _warningdepartmentid;}
+			set{ _warningstaffid=value;}
+			get{return _warningstaffid;}
+		}
+		/// <summary>
+		/// 落实部门Id（多个部门Id之间用逗号隔开）
+		/// </summary>
+		public string ImplementDeparts
+		{
+			set{ _implementdeparts=value;}
+			get{return _implementdeparts;}
 		}
 		/// <summary>
 		/// 预警主题
@@ -95,10 +114,18 @@ namespace JNL.Model
 			set{ _changerequirement=value;}
 			get{return _changerequirement;}
 		}
-		/// <summary>
-		/// 是否全部响应
-		/// </summary>
-		public bool HasImplementedAll
+        /// <summary>
+        /// 是否已经开始响应
+        /// </summary>
+	    public bool HasBeganImplement
+	    {
+	        set { _hasbeganimplement = value; }
+            get { return _hasbeganimplement; }
+	    }
+        /// <summary>
+        /// 是否全部响应
+        /// </summary>
+        public bool HasImplementedAll
 		{
 			set{ _hasimplementedall=value;}
 			get{return _hasimplementedall;}

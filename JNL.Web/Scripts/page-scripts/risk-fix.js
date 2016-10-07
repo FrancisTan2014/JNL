@@ -6,7 +6,7 @@
 
     window.page = {
         commonTable: null,
-        columns: ['AddTime', 'ReportStaffDepart', 'RiskType', 'RiskRespondDepart', 'HasDealed', 'RiskSummary', 'RiskDetails', 'Id'],
+        columns: ['AddTime', 'ReportStaffDepart', 'RiskType', 'RiskRespondDepart', 'HasDealed', 'RiskSummary', 'RiskDetails', 'RiskId'],
         builds: [
         {
             targets: [4],
@@ -29,7 +29,7 @@
         {
             targets: [7],
             onCreateCell: function (columnValue) {
-                return '<td><a href="{0}">处置</a></td>'.format(columnValue);
+                return '<td><a href="/Risk/Write/{0}">处置</a></td>'.format(columnValue);
             }
         }],
 

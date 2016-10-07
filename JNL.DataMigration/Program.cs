@@ -76,6 +76,23 @@ namespace JNL.DataMigration
             // Lines();
             // LineStations();
             RiskInfo();
+            //WarningSource();
+        }
+
+        private static void WarningSource()
+        {
+            var dictionaryBll = new DictionariesBll();
+            if (!dictionaryBll.Exists("Type=18"))
+            {
+                var cmdText = "SELECT Name FROM dictionary WHERE Type=18";
+                var list = GetListFromMySql<Dictionaries>(cmdText);
+                list.ForEach(s=>s.Type=18);
+
+                dictionaryBll.BulkInsert(list);
+
+                Console.WriteLine("预警来源导入成功");
+                Console.ReadKey();
+            }
         }
 
         private static void RiskInfo()
@@ -118,12 +135,12 @@ namespace JNL.DataMigration
                     var lastStationId = 0;
                     if (risk.event_place_station > 0)
                     {
-                        firstStationId = risk.event_place_station.Value;
+                        firstStationId = GetSqlStationId(risk.event_place_station.Value);
                     }
                     else if (risk.event_place_start > 0 && risk.event_place_end > 0)
                     {
-                        firstStationId = risk.event_place_start.Value;
-                        lastStationId = risk.event_place_end.Value;
+                        firstStationId = GetSqlStationId(risk.event_place_start.Value);
+                        lastStationId = GetSqlStationId(risk.event_place_end.Value);
                     }
 
                     var trainType = 0;
@@ -383,7 +400,10 @@ namespace JNL.DataMigration
                         {
                             Description = nameDic[summary.cat1],
                             ParentId = secondLevel.ParentId,
-                            TopestTypeId = firstLevel.Id
+                            TopestTypeId = firstLevel.Id,
+                            TopestName = firstLevel.Description,
+                            SecondLevelId = secondLevel.Id,
+                            SecondLevelName = secondLevel.Description
                         };
                         thirdLevel = RiskSummaryBll.Insert(thirdLevel);
                         if (thirdLevel.Id > 0)
@@ -405,7 +425,10 @@ namespace JNL.DataMigration
                         {
                             Description = nameDic[summary.cat2],
                             ParentId = thirdLevel.Id,
-                            TopestTypeId = firstLevel.Id
+                            TopestTypeId = firstLevel.Id,
+                            TopestName = firstLevel.Description,
+                            SecondLevelId = secondLevel.Id,
+                            SecondLevelName = secondLevel.Description
                         };
                         fourthLevel = RiskSummaryBll.Insert(fourthLevel);
                         if (fourthLevel.Id > 0)
@@ -428,6 +451,9 @@ namespace JNL.DataMigration
                                 Description = nameDic[summary.cid],
                                 ParentId = fourthLevel.Id,
                                 TopestTypeId = firstLevel.Id,
+                                TopestName = firstLevel.Description,
+                                SecondLevelId = secondLevel.Id,
+                                SecondLevelName = secondLevel.Description,
                                 IsBottom = true
                             };
                             bottom = RiskSummaryBll.Insert(bottom);
@@ -443,7 +469,15 @@ namespace JNL.DataMigration
                         RiskSummary fifthLevel;
                         if (!insertedDic.ContainsKey(summary.cat3))
                         {
-                            fifthLevel = new RiskSummary { Description = nameDic[summary.cat3], ParentId = fourthLevel.Id, TopestTypeId = firstLevel.Id };
+                            fifthLevel = new RiskSummary
+                            {
+                                Description = nameDic[summary.cat3],
+                                ParentId = fourthLevel.Id,
+                                TopestTypeId = firstLevel.Id,
+                                TopestName = firstLevel.Description,
+                                SecondLevelId = secondLevel.Id,
+                                SecondLevelName = secondLevel.Description
+                            };
                             fifthLevel = RiskSummaryBll.Insert(fifthLevel);
                             if (fifthLevel.Id > 0)
                             {
@@ -460,7 +494,16 @@ namespace JNL.DataMigration
                         
                         if (!insertedDic.ContainsKey(summary.cid))
                         {
-                            var realBottom = new RiskSummary { Description = nameDic[summary.cid], ParentId = fifthLevel.Id, TopestTypeId = firstLevel.Id, IsBottom = true };
+                            var realBottom = new RiskSummary
+                            {
+                                Description = nameDic[summary.cid],
+                                ParentId = fifthLevel.Id,
+                                TopestTypeId = firstLevel.Id,
+                                TopestName = firstLevel.Description,
+                                SecondLevelId = secondLevel.Id,
+                                SecondLevelName = secondLevel.Description,
+                                IsBottom = true
+                            };
                             realBottom = RiskSummaryBll.Insert(realBottom);
                             if (realBottom.Id > 0)
                             {

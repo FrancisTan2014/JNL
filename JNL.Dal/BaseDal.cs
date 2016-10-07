@@ -70,6 +70,38 @@ namespace JNL.Dal
         }
 
         /// <summary>
+        /// 执行sql语句，返回DataTable
+        /// </summary>
+        /// <param name="cmdText"></param>
+        /// <returns></returns>
+        public DataTable ExecuteDataTable(string cmdText)
+        {
+            if (string.IsNullOrEmpty(cmdText))
+            {
+                throw new ArgumentNullException(nameof(cmdText));
+            }
+
+            return DbHelper.ExecuteDataTable(ConnectionString, CommandType.Text, cmdText);
+        }
+
+        /// <summary>
+        /// 执行sql语句，返回指定类型的模型集合
+        /// </summary>
+        /// <param name="cmdText"></param>
+        /// <returns></returns>
+        public IEnumerable<TSource> ExecuteModel<TSource>(string cmdText) where TSource: class, new()
+        {
+            if (string.IsNullOrEmpty(cmdText))
+            {
+                throw new ArgumentNullException(nameof(cmdText));
+            }
+
+            var table = DbHelper.ExecuteDataTable(ConnectionString, CommandType.Text, cmdText);
+
+            return EntityHelper.MapEntity<TSource>(table);
+        }
+
+        /// <summary>
         /// 判断指定类型是否是自定义类型
         /// </summary>
         /// <param name="type">指定的类型</param>

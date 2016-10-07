@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using JNL.Dal;
 using JNL.Utilities.Helpers;
 
@@ -23,6 +24,26 @@ namespace JNL.Bll
         protected BaseBll()
         {
             DalInstance = DalFactory.CreateInstance<T>();
+        }
+
+        /// <summary>
+        /// 执行sql语句，返回DataTable
+        /// </summary>
+        /// <param name="cmdText"></param>
+        /// <returns></returns>
+        public DataTable ExecuteDataTable(string cmdText)
+        {
+            return DalInstance.ExecuteDataTable(cmdText);
+        }
+
+        /// <summary>
+        /// 执行sql语句，返回指定类型的模型集合
+        /// </summary>
+        /// <param name="cmdText"></param>
+        /// <returns></returns>
+        public IEnumerable<TSource> ExecuteModel<TSource>(string cmdText) where TSource : class, new()
+        {
+            return DalInstance.ExecuteModel<TSource>(cmdText);
         }
 
         /// <summary>

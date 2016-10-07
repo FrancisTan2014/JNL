@@ -785,7 +785,67 @@
             }, options);
 
             return $(fileInputId).uploadify(opts);
-        }
+        },
+
+        /**
+         * 创建富文本编辑器，依赖插件wangEditor
+         * @param {String} editorId 不带#的编辑器element id
+         * @param {Object} options 用于初始化编辑器的配置信息
+         * @returns {wangEditor} 
+         */
+        createWangEditor: function (editorId, options) {
+            var opts = $.extend({}, {
+                html: '',
+                menus: ['source', '|', 'bold', 'underline', 'italic', 'strikethrough', 'eraser', 'forecolor', 'bgcolor', '|', 'quote', 'fontfamily', 'fontsize', 'head', 'unorderlist', 'orderlist', 'alignleft', 'aligncenter', 'alignright', '|', 'link', 'unlink', 'table', 'emotion', '|', 'img', 'video', 'location', 'insertcode', '|', 'undo', 'redo', 'fullscreen'], // | 是菜单分割线
+                zindex: 10000, // 编辑器全屏时的z-index
+                printLog: true,
+                jsFilter: true,
+                pasteFilter: true,
+                uploadImgUrl: '/Common/FileUpload?fileType=2', // 图片上传的地址，async参数是为了遵从系统规范(所有异步请求都必须带上此参数)
+                uploadSuccess: function (data, xhr) {
+                    try {
+                        data = $.parseJSON(data);
+                        if (data.code == 110) {
+                            Materialize.toast('图片上传失败，请稍后重试', 3000);
+                        } else {
+                            editor.command(null, 'insertHtml', '<img src="{0}" style="max-width:100%" />'.format(data.FileRelativePath));
+                        }
+                    } catch (e) {
+                        console.info(e);
+                    } 
+                }, // 图片上传成功的回调函数
+                uploadTimeout: function () {
+                    app.alert('连接超时，请检查您的网络');
+                }, // 图片上传超时的回调函数
+                uploadError: function () {
+                    app.alert('上传失败，请确定您选择图片是否符合要求或尝试重新上传');
+                } // 图片上传出错的回调函数
+            }, options);
+
+            wangEditor.config.printLog = opts.printLog;
+            var editor = new wangEditor(editorId);
+
+            editor.config.menus = opts.menus;
+            editor.config.zindex = opts.zindex;
+            editor.config.jsFilter = opts.jsFilter;
+            editor.config.uploadImgUrl = opts.uploadImgUrl;
+            editor.config.pasteFilter = opts.pasteFilter;
+            if (typeof (opts.uploadSuccess) === 'function') {
+                editor.config.uploadImgFns.onload = opts.uploadSuccess;
+            }
+            if (typeof (opts.uploadTimeout) === 'function') {
+                editor.config.uploadImgFns.ontimeout = opts.uploadTimeout;
+            }
+            if (typeof (opts.uploadError) === 'function') {
+                editor.config.uploadImgFns.onerror = opts.uploadError;
+            }
+
+            editor.create();
+
+            editor.$txt.html(opts.html);
+
+            return editor;
+        },
     };
 
     /**
@@ -847,12 +907,20 @@
                     j -= 1;
                 }
             }
-        } else {
+        } else if (typeof (compareFunc) === 'function') {
             for (var i = 0; i < this.length; i++) {
                 if (compareFunc(value, this[i])) {
                     this.splice(i, 1);
 
                     i -= 1;
+                }
+            }
+        } else {
+            for (var k = 0; k < this.length; k++) {
+                if (value == this[k]) {
+                    this.splice(k, 1);
+
+                    k -= 1;
                 }
             }
         }

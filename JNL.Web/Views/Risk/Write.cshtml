@@ -1,5 +1,75 @@
-﻿@{
-    ViewBag.Title = "Write";
+﻿@using JNL.Model
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var risk = (ViewRiskInfo)ViewBag.Risk;
+    var respond = (ViewRiskResponseStaff) ViewBag.Respond;
 }
 
-<h2>Write</h2>
+<style>
+    .edit-form {
+        padding-top: 20px;
+    }
+
+    #btnSubmit {
+        width: 15%;
+    }
+</style>
+
+<h5 class="title">@ViewBag.Title</h5>
+
+<form class="edit-form z-depth-5 form-validate">
+    <div class="row">
+        <div class="col s4">
+            <label>提报时间</label>
+            <p>@risk.AddTime.ToString("yyyy-MM-dd HH:mm:ss")</p>
+        </div>
+        <div class="col s4">
+            <label>来源部门</label>
+            <p>@risk.ReportStaffDepart</p>
+        </div>
+        <div class="col s4">
+            <label>责任部门</label>
+            <p>@respond.Department</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s4">
+            <label>责任人</label>
+            <p>@string.Format("{0} | {1} | {2}", respond.SalaryId, respond.Name, respond.WorkId)</p>
+        </div>
+        <div class="col s8">
+            <label>风险概述</label>
+            <p>@string.Format("【{0}-{1}】{2}", risk.RiskTopestName, risk.RiskSecondLevelName, risk.RiskSummary)</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12">
+            <label>风险详情</label>
+            <p>@risk.RiskDetails</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12 input-field">
+            <input type="hidden" value="@risk.Id" name="Id" />
+            <label>问题原因</label>
+            <textarea name="RiskReason" class="materialize-textarea" length="8000">@risk.RiskReason</textarea>
+        </div>
+    </div>
+
+    @if (risk.HasDealed)
+    {
+        <div class="row">
+            <div class="col s12 input-field">
+                <label>落实情况</label>
+                <textarea name="RiskFix" class="materialize-textarea" length="8000"></textarea>
+            </div>
+        </div>
+    }
+
+    <div class="row">
+        <button id="btnSubmit" type="button" class="btn btn-large waves-effect waves-light right">提 交</button>
+    </div>
+</form>
+
+<script src="/Scripts/page-scripts/risk-write.js"></script>

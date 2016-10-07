@@ -33,6 +33,7 @@ namespace JNL.Model
 		private string _repairmethod="";
 		private int _repairprocessid;
 		private int _livingitemid;
+	    private string _liveitem = "";
 		private DateTime _addtime= DateTime.Now;
 		private DateTime _updatetime= DateTime.Now;
 		private bool _isdelete= false;
@@ -92,6 +93,14 @@ namespace JNL.Model
 			set{ _livingitemid=value;}
 			get{return _livingitemid;}
 		}
+        /// <summary>
+        /// 活项
+        /// </summary>
+	    public string LiveItem
+	    {
+            set { _liveitem = value; }
+            get { return _liveitem; }
+	    }
 		/// <summary>
 		/// 添加时间
 		/// </summary>

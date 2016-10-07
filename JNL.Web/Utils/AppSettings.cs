@@ -36,6 +36,8 @@ namespace JNL.Web.Utils
             {
                 case 1:
                     return BasicFiles;
+                case 2:
+                    return ImagesPath;
                 default:
                     return string.Empty;
             }
@@ -50,5 +52,10 @@ namespace JNL.Web.Utils
         /// 获取安全科部门Id
         /// </summary>
         public static int SafeDepartId => GetConfig("SafeDepartId").ToInt32();
+
+        /// <summary>
+        /// 图片上传路径
+        /// </summary>
+        public static string ImagesPath => GetConfig("Images");
     }
 }

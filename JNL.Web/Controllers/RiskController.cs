@@ -238,7 +238,50 @@ namespace JNL.Web.Controllers
 
         public ActionResult Write()
         {
+            var id = RouteData.Values["id"].ToString().ToInt32();
+            var viewRiskBll = new ViewRiskInfoBll();
+            var riskInfo = viewRiskBll.QuerySingle(id);
+
+            var respondBll = new ViewRiskResponseStaffBll();
+            var respondStaff = respondBll.QueryList("RiskId=" + id).FirstOrDefault();
+
+            if (riskInfo == null || respondStaff == null)
+            {
+                return Redirect("/Error/NotFound");
+            }
+
+            ViewBag.Title = "整改处置";
+            if (riskInfo.HasDealed)
+            {
+                ViewBag.Title = "落实销号";
+            }
+
+            ViewBag.Risk = riskInfo;
+            ViewBag.Respond = respondStaff;
+
             return View();
         }
+
+        [HttpPost]
+        public JsonResult Write(string json)
+        {
+            var riskInfo = JsonHelper.Deserialize<RiskInfo>(json);
+            if (riskInfo == null)
+            {
+                return Json(ErrorModel.InputError);
+            }
+
+            var riskBll = new RiskInfoBll();
+
+            riskInfo.HasDealed = true;
+
+            var success = riskBll.Update(riskInfo, new[] {"HasDealed", "RiskFix", "RiskReason"});
+            if (success)
+            {
+                return Json(ErrorModel.OperateSuccess);
+            }
+            
+            return Json(ErrorModel.OperateFailed);
+        } 
     }
 }

@@ -56,7 +56,14 @@
                             </ul>
                         </li>
                         <li class="first-menu">
-                            <a href="javascript:void(0);" class="dropdown-button waves-effect waves-block waves-light">研判预警</a>
+                            <a href="javascript:void(0);" class="dropdown-button waves-effect waves-block waves-light" data-activates="dropdown5">研判预警</a>
+                            <ul id="dropdown5" class="dropdown-content">
+                                <li class="second-menu" data-target="#target12" id="checkWarn"><a href="javascript:void(0);">监督检查预警<i class="mdi-hardware-keyboard-arrow-right right"></i></a></li>
+                                <li class="second-menu" data-target="#target9" id="analysisWarn"><a href="javascript:void(0);">数据分析预警<i class="mdi-hardware-keyboard-arrow-right right"></i></a></li>
+                                <li class="second-menu"><a href="javascript:void(0);">职工行为预警</a></li>
+                                <li class="second-menu" data-target="#target10" id="behaviorWarn"><a href="javascript:void(0);">预警信息管理<i class="mdi-hardware-keyboard-arrow-right right"></i></a></li>
+                                <li class="second-menu" data-target="#target11" id="qualityTrack"><a href="javascript:void(0);">机车质量跟踪<i class="mdi-hardware-keyboard-arrow-right right"></i></a></li>
+                            </ul>
                         </li>
                         <li class="first-menu">
                             <a href="javascript:void(0);" class="dropdown-button waves-effect waves-block waves-light" data-activates="dropdown4">过程控制</a>
@@ -69,10 +76,19 @@
                             </ul>
                         </li>
                         <li class="first-menu">
+                            <a href="javascript:void(0);" class="dropdown-button waves-effect waves-block waves-light" data-activates="dropdown4">过程控制</a>
+                            <ul id="dropdown6" class="dropdown-content">
+                                <li class="second-menu"><a href="/Article" class="waves-effect waves-block waves-light">非正常情况处理</a></li>
+                                <li class="second-menu"><a href="/Article" class="waves-effect waves-block waves-light">应急管理</a></li>
+                                <li class="second-menu"><a href="/Article" class="waves-effect waves-block waves-light">应急预案</a></li>
+                            </ul>
+                        </li>
+                        <li class="first-menu">
                             <a class="dropdown-button waves-effect waves-block waves-light" href="javascript:void(0);" data-activates="dropdown3">后台管理</a>
                             <ul id="dropdown3" class="dropdown-content">
                                 <li><a href="/Basic/AddFile">基础文件上传</a></li>
                                 <li><a href="/Basic/AddAccident">添加典型事故</a></li>
+                                <li><a href="/Article/Add">添加应急管理</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -116,8 +132,8 @@
                     <li class="third-menu-item"><a href="/Risk/AddRisk/21">其他装备分析</a></li>
                 </ul>
                 <ul id="target6" data-source="#locoQuality" class="dropdown-content third-menu">
-                    <li class="third-menu-item"><a href="/Basic/Files/3/1">机统6活项填写</a></li>
-                    <li class="third-menu-item"><a href="/Basic/Files/3/2">机统28活项填写</a></li>
+                    <li class="third-menu-item"><a href="/Live/AddLive6">机统6活项填写</a></li>
+                    <li class="third-menu-item"><a href="/Live/AddLive28">机统28活项填写</a></li>
                 </ul>
                 <ul id="target7" data-source="#riskVerify" class="dropdown-content third-menu">
                     <li class="third-menu-item"><a href="/Risk/DepartVerify">本部门责任风险审核</a></li>
@@ -127,6 +143,33 @@
                     <li class="third-menu-item"><a href="/Risk/DepartVerify">重点甄别</a></li>
                     <li class="third-menu-item"><a href="/Risk/FinalVerify">信息追踪</a></li>
                     <li class="third-menu-item"><a href="/Risk/FinalVerify">追踪统计</a></li>
+                </ul>
+                <ul id="target9" data-source="#analysisWarn" class="dropdown-content third-menu">
+                    <li class="third-menu-item"><a href="/Analysis/Source">来源分析</a></li>
+                    <li class="third-menu-item"><a href="/Risk/DepartVerify">分布分析</a></li>
+                    <li class="third-menu-item"><a href="/Risk/DepartVerify">地域分析</a></li>
+                    <li class="third-menu-item"><a href="/Risk/DepartVerify">天气情况分析</a></li>
+                    <li class="third-menu-item"><a href="/Risk/DepartVerify">时间段分析</a></li>
+                    <li class="third-menu-item"><a href="/Risk/DepartVerify">构成分析</a></li>
+                    <li class="third-menu-item"><a href="/Risk/DepartVerify">阶段分析</a></li>
+                    <li class="third-menu-item"><a href="/Risk/DepartVerify">综合分析</a></li>
+                </ul>
+                <ul id="target10" data-source="#behaviorWarn" class="dropdown-content third-menu">
+                    <li class="third-menu-item"><a href="/Risk/DepartVerify">预警信息审核</a></li>
+                    <li class="third-menu-item"><a href="/Risk/DepartVerify">预警信息查询</a></li>
+                    <li class="third-menu-item"><a href="/Risk/DepartVerify">预警信息统计</a></li>
+                </ul>
+                <ul id="target11" data-source="#qualityTrack" class="dropdown-content third-menu">
+                    <li class="third-menu-item"><a href="/Risk/DepartVerify">数据填报统计</a></li>
+                    <li class="third-menu-item"><a href="/Risk/DepartVerify">JT6分析</a></li>
+                    <li class="third-menu-item"><a href="/Risk/DepartVerify">JT6查询</a></li>
+                    <li class="third-menu-item"><a href="/Risk/DepartVerify">JT28分析</a></li>
+                    <li class="third-menu-item"><a href="/Risk/DepartVerify">JT28查询</a></li>
+                    <li class="third-menu-item"><a href="/Risk/DepartVerify">综合查询</a></li>
+                </ul>
+                <ul id="target12" data-source="#checkWarn" class="dropdown-content third-menu">
+                    <li class="third-menu-item"><a href="/Risk/DepartVerify">添加预警信息</a></li>
+                    <li class="third-menu-item"><a href="/Risk/DepartVerify">未被响应预警信息</a></li>
                 </ul>
             </nav>
         </div>
@@ -175,8 +218,8 @@
 
         $('.second-menu').on('mouseenter', function () {
             var $target = $($(this).data('target'));
-            var top = this.offsetParent.offsetTop;
-            var left = this.offsetParent.offsetLeft + this.offsetParent.offsetParent.offsetLeft + this.clientWidth;
+            var top = common.computeOffsetTop(this);
+            var left = common.computeOffsetLeft(this) + this.clientWidth;
             $target.css({ top: top, left: left, display: 'block' }).animate({ 'opacity': 1 }, 223);
 
             $(this).addClass('active');
@@ -187,7 +230,8 @@
             var maxY = minY + $target[0].clientHeight;
             var maxX = minX + $target[0].clientWidth;
 
-            if (e.pageX >= minX && e.pageX <= maxX && e.pageY >= minY && e.pageY <= maxY) {
+            console.info(e);
+            if (e.clientX >= minX && e.clientX <= maxX && e.clientY >= minY && e.clientY <= maxY) {
                 return false;
             } else {
                 $target.hide();

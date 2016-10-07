@@ -1,0 +1,90 @@
+﻿@using JNL.Model
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var warn = (Warning) ViewBag.Warning;
+}
+
+<style>
+    .edit-form {
+        padding-top: 20px;
+    }
+
+     #btnSave {
+         width: 15%;
+     }
+
+     .depart {
+         margin: 5px 5px 0 0;
+     }
+     .depart.active,.depart:hover {
+         background: #26a69a;
+         color: #fff;
+     }
+</style>
+
+<h5 class="title">@ViewBag.Title</h5>
+
+<form class="edit-form z-depth-5 form-validate">
+    <div class="row">
+        <div class="col s4 input-field">
+            <input type="hidden" name="Id" value="@warn.Id"/>
+            <input type="hidden" value="@warn.CreateStaffId" />
+            <input type="datetime" name="WarningTime" id="WarningTime" data-field="datetime" placeholder="预警时间" value="@(warn.WarningTime == DateTime.MinValue ? "" : warn.WarningTime.ToString("dd-MM-yyyy HH:mm"))"/>
+        </div>
+        <div class="col s4 input-field">
+            <input type="datetime" name="TimeLimit" id="TimeLimit" data-field="datetime" date-format="yyyy-MM-dd hh:mm:ss" placeholder="落实时限" value="@(warn.TimeLimit == DateTime.MinValue ? "" : warn.TimeLimit.ToString("dd-MM-yyyy HH:mm"))" />
+        </div>
+        <div class="col s4 input-field">
+            <div class="select-wrapper">
+                <input type="hidden" value="@warn.WarningSource" id="defaultSource" />
+                <select class="initialized" name="WarningSource" id="WarningSource">
+                    <option value="-1">预警来源</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col s4 input-field">
+            <input type="text" placeholder="预警主题" id="WarningTitle" name="WarningTitle" value="@warn.WarningTitle" maxlength="30"/>
+        </div>
+        <div class="col s4 input-field">
+            <div class="switch">
+                <label>
+                    <input type="hidden" name="Visible" id="Visible" value="@(warn.Visible ? "true" : "false")"/>
+                    库内存储
+                    <input type="checkbox" id="Switch" @(warn.Visible ? "checked=\"checked\"" : "")>
+                    <span class="lever"></span>
+                    库外存储
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col s12 input-field" id="departs">
+            <span>落实部门：</span>
+            <input type="hidden" value="@warn.ImplementDeparts" id="defaultDeparts" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col s12 input-field">
+            <label for="WarningContent">预警内容</label>
+            <textarea class="materialize-textarea" name="WarningContent" id="WarningContent">@warn.WarningContent</textarea>
+        </div>
+        <div class="col s12 input-field">
+            <label for="ChangeRequirement">预警内容</label>
+            <textarea class="materialize-textarea" name="ChangeRequirement" id="ChangeRequirement">@warn.ChangeRequirement</textarea>
+        </div>
+    </div>
+
+    <div class="row">
+        <button id="btnSave" class="btn waves-effect waves-light btn-large right" type="button">保 存</button>
+    </div>
+</form>
+
+<div id="dtBox"></div>
+
+<script src="/Scripts/page-scripts/add-warn.js"></script>

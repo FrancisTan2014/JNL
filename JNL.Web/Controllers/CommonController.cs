@@ -74,6 +74,7 @@ namespace JNL.Web.Controllers
         /// <param name="target"></param>
         /// <returns></returns>
         [HttpPost]
+        [ValidateInput(false)]
         public JsonResult InsertData(string json, string target)
         {
             return InsertOrUpdateData(json, target, "INSERT");

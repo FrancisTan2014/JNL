@@ -94,6 +94,11 @@ namespace JNL.Model
         /// <summary>
         /// 事故发生地点
         /// </summary>
-        Place = 17
+        Place = 17,
+
+        /// <summary>
+        /// 预警来源（如：总公司预警）
+        /// </summary>
+        WarningSource = 18
     }
 }
