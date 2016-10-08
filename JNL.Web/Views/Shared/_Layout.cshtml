@@ -18,6 +18,7 @@
     <script src="/node_modules/parsleyjs/dist/parsley.min.js"></script>
     <script src="/bower_components/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="/node_modules/datetimepicker/dist/datetimepicker.min.js"></script>
+    <script src="/node_modules/jquery.cookie/jquery.cookie.js"></script>
 
     <script src="/Scripts/page-scripts/common.js"></script>
 </head>
@@ -32,7 +33,10 @@
         <div class="navbar-fixed">
             <nav>
                 <div class="nav-wrapper">
-                    <a href="javascript:void(0);" class="brand-logo right">Logo</a>
+                    <a href="javascript:void(0);" class="brand-logo right dropdown-button waves-effect waves-block waves-light" data-activates="dropdown0" id="loginName">姚智禄</a>
+                    <ul id="dropdown0" class="dropdown-content">
+                        <li><a href="/Home/Logout">退出登录</a></li>
+                    </ul>
                     <ul id="nav-mobile" class="hide-on-med-and-down">
                         <li class="first-menu">
                             <a href="/Home/Index" class="waves-effect waves-block waves-light">首 页</a>
@@ -69,18 +73,23 @@
                             <a href="javascript:void(0);" class="dropdown-button waves-effect waves-block waves-light" data-activates="dropdown4">过程控制</a>
                             <ul id="dropdown4" class="dropdown-content">
                                 <li class="second-menu" data-target="#target7" id="riskVerify"><a href="javascript:void(0);">风险审核<i class="mdi-hardware-keyboard-arrow-right right"></i></a></li>
-                                <li><a href="/Basic/Accidents">预警响应</a></li>
+                                <li><a href="/Warn/PreImplement">预警响应</a></li>
                                 <li class="second-menu" data-target="#target8" id="trackAnalysis"><a href="javascript:void(0);">追踪分析<i class="mdi-hardware-keyboard-arrow-right right"></i></a></li>
                                 <li><a href="/Risk/Reform">整改处置</a></li>
                                 <li><a href="/Risk/Fix">落实销号</a></li>
                             </ul>
                         </li>
                         <li class="first-menu">
-                            <a href="javascript:void(0);" class="dropdown-button waves-effect waves-block waves-light" data-activates="dropdown4">过程控制</a>
+                            <a href="javascript:void(0);" class="dropdown-button waves-effect waves-block waves-light" data-activates="dropdown6">应急管理</a>
                             <ul id="dropdown6" class="dropdown-content">
-                                <li class="second-menu"><a href="/Article" class="waves-effect waves-block waves-light">非正常情况处理</a></li>
-                                <li class="second-menu"><a href="/Article" class="waves-effect waves-block waves-light">应急管理</a></li>
-                                <li class="second-menu"><a href="/Article" class="waves-effect waves-block waves-light">应急预案</a></li>
+                                <li class="second-menu"><a href="/Article/List/2" class="waves-effect waves-block waves-light">非正常情况处理</a></li>
+                                <li class="second-menu"><a href="/Article/List/3" class="waves-effect waves-block waves-light">应急管理</a></li>
+                                <li class="second-menu"><a href="/Article/List/4" class="waves-effect waves-block waves-light">应急预案</a></li>
+                            </ul>
+                        </li>
+                        <li class="first-menu">
+                            <a href="javascript:void(0);" class="dropdown-button waves-effect waves-block waves-light" data-activates="dropdown7">评价体系</a>
+                            <ul id="dropdown7" class="dropdown-content">
                             </ul>
                         </li>
                         <li class="first-menu">
@@ -155,8 +164,8 @@
                     <li class="third-menu-item"><a href="/Risk/DepartVerify">综合分析</a></li>
                 </ul>
                 <ul id="target10" data-source="#behaviorWarn" class="dropdown-content third-menu">
-                    <li class="third-menu-item"><a href="/Risk/DepartVerify">预警信息审核</a></li>
-                    <li class="third-menu-item"><a href="/Risk/DepartVerify">预警信息查询</a></li>
+                    <li class="third-menu-item"><a href="/Warn/VerifyImplement">预警响应审核</a></li>
+                    <li class="third-menu-item"><a href="/Warn/Finished">预警信息查询</a></li>
                     <li class="third-menu-item"><a href="/Risk/DepartVerify">预警信息统计</a></li>
                 </ul>
                 <ul id="target11" data-source="#qualityTrack" class="dropdown-content third-menu">
@@ -168,8 +177,8 @@
                     <li class="third-menu-item"><a href="/Risk/DepartVerify">综合查询</a></li>
                 </ul>
                 <ul id="target12" data-source="#checkWarn" class="dropdown-content third-menu">
-                    <li class="third-menu-item"><a href="/Risk/DepartVerify">添加预警信息</a></li>
-                    <li class="third-menu-item"><a href="/Risk/DepartVerify">未被响应预警信息</a></li>
+                    <li class="third-menu-item"><a href="/Warn/AddWarn">添加预警信息</a></li>
+                    <li class="third-menu-item"><a href="/Warn/NotImplement">未被响应预警信息</a></li>
                 </ul>
             </nav>
         </div>
@@ -184,24 +193,29 @@
             // 关闭加载动画
             $('#loader-wrapper').parent().addClass('loaded');
 
+            // 菜单选中
+            var menuIndex = localStorage.getItem('menuIndex');
+            $('.first-menu').eq(menuIndex).addClass('active');
+
             // 菜单选中状态
-            $('nav a').each(function() {
+            $('nav a').on('click', function() {
                 var href = $(this).prop('href');
-                if (location.href.indexOf(href) >= 0) {
-                    var $parent = $(this).parent();
-                    if ($parent.hasClass('first-menu')) {
-                        $parent.addClass('active');
-                    } else if ($parent.hasClass('second-menu')) {
-                        $parent.parents('.first-menu').addClass('active');
-                    } else {
-                        $parent.hasClass('third-menu-item');
-                        $($(this).data('source')).parents('.first-menu').addClass('active');
+                if (href.indexOf('/') >= 0) {
+                    var $first = $(this).parents('.first-menu');
+                    if ($first.length === 0) {
+                        var sourceId = $(this).parents('.third-menu').data('source');
+                        $first = $(sourceId).parents('.first-menu');
                     }
+
+                    localStorage.setItem('menuIndex', $first.index());
                 }
             });
 
             // 初始化material_select
             $('select').not('.disabled').material_select();
+
+            // 登录人姓名
+            $('#loginName').text($.cookie('name'));
         });
 
         var initDropdown = function () {
@@ -230,7 +244,6 @@
             var maxY = minY + $target[0].clientHeight;
             var maxX = minX + $target[0].clientWidth;
 
-            console.info(e);
             if (e.clientX >= minX && e.clientX <= maxX && e.clientY >= minY && e.clientY <= maxY) {
                 return false;
             } else {

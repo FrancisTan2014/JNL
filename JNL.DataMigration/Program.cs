@@ -50,6 +50,8 @@ namespace JNL.DataMigration
 
         static void Main(string[] args)
         {
+            #region Finished
+
             // BasicDownload();
             // WorkFlag();
             // Rest();
@@ -75,8 +77,141 @@ namespace JNL.DataMigration
             // Stations();
             // Lines();
             // LineStations();
-            RiskInfo();
-            //WarningSource();
+            // RiskInfo();
+            // WarningSource(); 
+            //Live6();
+            #endregion
+
+            Live28();
+        }
+
+        public static void Live28()
+        {
+            var bll = new LocoQuality28Bll();
+            if (!bll.Exists("Id>10"))
+            {
+                BuildDictionary(); // 建立字典对应关系
+
+                var locoList = new DictionariesBll().QueryList("Type=14");
+                var locoDic = new Dictionary<string, int>();
+                foreach (var item in locoList)
+                {
+                    if (!locoDic.ContainsKey(item.Name))
+                    {
+                        locoDic.Add(item.Name, item.Id);
+                    }
+                }
+
+                var staffDic = new Dictionary<string, int>();
+                var staffList = new StaffBll().QueryAll().ToList();
+                staffList.ForEach(staff =>
+                {
+                    if (!staffDic.ContainsKey(staff.WorkId))
+                    {
+                        staffDic.Add(staff.WorkId, staff.Id);
+                    }
+                });
+
+                var cmdText = "SELECT * FROM LIVE28 WHERE model<>'0' AND number<>'0'";
+                var liveList = GetListFromMySql<Live28>(cmdText);
+                var sqlLiveList = new List<LocoQuality28>();
+
+                liveList.ForEach(item =>
+                {
+                    var locoMotiveId = 0;
+                    if (locoDic.ContainsKey(item.number))
+                    {
+                        locoMotiveId = locoDic[item.number];
+                    }
+
+                    var model = new LocoQuality28
+                    {
+                        LocomotiveId = locoMotiveId,
+                        ReportTime = item.report_time ?? DateTime.Now
+                    };
+
+                    model.LiveItem = item.live_item ?? string.Empty;
+                    model.LivingItemId = DicRelate[item.live_own];
+                    model.RepairMethod = item.repair_method ?? string.Empty;
+                    model.RepairProcessId = DicRelate[item.repair_process];
+                    model.RepairTeam = item.repair_team ?? string.Empty;
+
+                    sqlLiveList.Add(model);
+                });
+
+                bll.BulkInsert(sqlLiveList);
+
+                Console.WriteLine("机统28导入成功");
+                Console.ReadKey();
+            }
+        }
+
+        public static void Live6()
+        {
+            var bll = new LocoQuality6Bll();
+            if (!bll.Exists("Id>10"))
+            {
+                BuildDictionary(); // 建立字典对应关系
+
+                var locoList = new DictionariesBll().QueryList("Type=14");
+                var locoDic = new Dictionary<string, int>();
+                foreach (var item in locoList)
+                {
+                    if (!locoDic.ContainsKey(item.Name))
+                    {
+                        locoDic.Add(item.Name, item.Id);
+                    }
+                }
+
+                var staffDic = new Dictionary<string, int>();
+                var staffList = new StaffBll().QueryAll().ToList();
+                staffList.ForEach(staff =>
+                {
+                    if (!staffDic.ContainsKey(staff.WorkId))
+                    {
+                        staffDic.Add(staff.WorkId, staff.Id);
+                    }
+                });
+
+                var cmdText = "SELECT * FROM LIVE6 WHERE model<>'0' AND number<>'0'";
+                var liveList = GetListFromMySql<Live6>(cmdText);
+                var sqlLiveList = new List<LocoQuality6>();
+
+                liveList.ForEach(item =>
+                {
+                    var locoMotiveId = 0;
+                    if (locoDic.ContainsKey(item.number))
+                    {
+                        locoMotiveId = locoDic[item.number];
+                    }
+
+                    var model = new LocoQuality6
+                    {
+                        LocomotiveId = locoMotiveId,
+                        ReportTime = item.report_time ?? DateTime.Now,
+                        BrokenPlace = item.damage_palce ?? string.Empty,
+                        EndRepair = item.repair_end_time ?? DateTime.Now,
+                        LivingItemId = DicRelate[item.live_own],
+                        RepairDesc = item.repair_detail ?? string.Empty,
+                        RepairMethod = item.repair_method ?? string.Empty,
+                        StartRepair = item.repair_start_time ?? DateTime.Now
+                    };
+
+                    var staffId = 0;
+                    if (staffDic.ContainsKey(item.repair_user_id ?? string.Empty))
+                    {
+                        staffId = staffDic[item.repair_user_id ?? ""];
+                    }
+                    model.RepairStaffId = staffId;
+
+                    sqlLiveList.Add(model);
+                });
+
+                bll.BulkInsert(sqlLiveList);
+
+                Console.WriteLine("机统6导入成功");
+                Console.ReadKey();
+            }
         }
 
         private static void WarningSource()
@@ -760,7 +895,7 @@ namespace JNL.DataMigration
         /// </summary>
         private static void BuildDictionary()
         {
-            var typeDic = new Dictionary<int, int> { { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 14, 10 }, { 11, 9 }, { 10, 8 } };
+            var typeDic = new Dictionary<int, int> { { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 14, 10 }, { 11, 9 }, { 10, 8 }, {16, 12}, {15, 11} };
 
             var cmdText = "SELECT Id,Name,Type FROM dictionary";
             var dataTable = MySqlHelper.ExecuteDataTable(MySqlConnectionString, CommandType.Text, cmdText);

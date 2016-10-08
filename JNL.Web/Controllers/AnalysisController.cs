@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using JNL.Bll;
+using JNL.Model;
 using JNL.Web.Models;
 using JNL.Web.Utils;
 using WebGrease.Css.Extensions;
@@ -110,7 +111,84 @@ namespace JNL.Web.Controllers
             });
 
             return Json(ErrorModel.GetDataSuccess(analysisList));
-        } 
+        }
+        #endregion
+
+        #region 研判预警/机车质量跟踪/JT6分析 JT28分析
+
+        public ActionResult Live6()
+        { 
+            return View();
+        }
+
+        public ActionResult Live28()
+        {
+            return View();
+        }
+
+        private class TempLive
+        {
+            public string Model { get; set; }
+            public string Type { get; set; }
+            public int Gydq { get; set; }
+            public int Dydqjdxl { get; set; }
+            public int Dj { get; set; }
+            public int Dzxl { get; set; }
+            public int Zdxt { get; set; }
+            public int Zxb { get; set; }
+            public int Aqzb { get; set; }
+            public int Ctjqt { get; set; }
+            public int Cyj { get; set; }
+            public int Fzcd { get; set; }
+        }
+
+        [HttpPost]
+        public JsonResult Live6(int year, int month)
+        {
+            var cmdText =
+                "SELECT Id,LocoModelId,LocoModel,LocoType,LocoTypeId,LivingItemId,LivingItem FROM ViewLocoQuality6 WHERE LocomotiveId<>0";
+            if (year > 0)
+            {
+                cmdText += " AND DATEPART(YEAR, StartRepair)=" + year;
+            }
+            if (month > 0)
+            {
+                cmdText += " AND DATEPART(MONTH, StartRepair)=" + month;
+            }
+
+            var list = new ViewLocoQuality6Bll().ExecuteModel<ViewLocoQuality6>(cmdText);
+            var result = new List<TempLive>();
+            
+            list.GroupBy(item=>item.LocoModel).ForEach(group =>
+            {
+                var temp = new TempLive
+                {
+                    Model = group.Key
+                };
+
+                group.ForEach(item =>
+                {
+                    temp.Type = item.LocoType;
+                    switch (item.LivingItemId)
+                    {
+                        case 283: temp.Gydq++; break;
+                        case 284: temp.Dydqjdxl++; break;
+                        case 285: temp.Dj++; break;
+                        case 286: temp.Dzxl++; break;
+                        case 287: temp.Zdxt++; break;
+                        case 288: temp.Zxb++; break;
+                        case 289: temp.Aqzb++; break;
+                        case 290: temp.Ctjqt++; break;
+                        case 291: temp.Cyj++; break;
+                        case 292: temp.Fzcd++; break;
+                    }
+                });
+
+                result.Add(temp);
+            });
+
+            return Json(result);
+        }
         #endregion
     }
 }

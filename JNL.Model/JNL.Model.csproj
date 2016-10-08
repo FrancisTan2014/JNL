@@ -63,11 +63,17 @@
     <Compile Include="Partials\Staff.cs" />
     <Compile Include="Partials\Station.cs" />
     <Compile Include="Partials\TraceInfo.cs" />
+    <Compile Include="Partials\ViewArticle.cs" />
     <Compile Include="Partials\ViewLine.cs" />
+    <Compile Include="Partials\ViewLocomotive.cs" />
+    <Compile Include="Partials\ViewLocoQuality28.cs" />
+    <Compile Include="Partials\ViewLocoQuality6.cs" />
     <Compile Include="Partials\ViewRiskInfo.cs" />
     <Compile Include="Partials\ViewRiskResponse.cs" />
     <Compile Include="Partials\ViewRiskResponseStaff.cs" />
     <Compile Include="Partials\ViewStaff.cs" />
+    <Compile Include="Partials\ViewWarning.cs" />
+    <Compile Include="Partials\ViewWarningImplement.cs" />
     <Compile Include="Partials\Warning.cs" />
     <Compile Include="Partials\WarningImplement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

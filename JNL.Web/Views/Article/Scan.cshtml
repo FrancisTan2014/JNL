@@ -1,0 +1,31 @@
+﻿@using JNL.Model
+@{
+    var article = (ViewArticle)ViewBag.Model;
+    ViewBag.Title = article.Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<style>
+    .title {
+        margin-bottom: 10px !important;
+    }
+
+    .sub-title {
+        margin-bottom: 20px;
+    }
+
+    .article-content {
+        padding: 5px 20px;
+    }
+</style>
+
+<h5 class="title">@ViewBag.Title</h5>
+<div class="sub-title" style="text-align: center">
+    <label>作者：</label><label>@(article.Department + "-" + article.Creator)</label>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <label>发文时间：</label><label>@article.AddTime.ToString("yyyy-MM-dd HH:mm:ss")</label>
+</div>
+<div class="article-content">
+    @(new HtmlString(article.Content))
+</div>

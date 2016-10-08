@@ -1,0 +1,64 @@
+﻿@{
+    ViewBag.Title = "预警信息查询";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    #searchBox .col {
+        float: right;
+    }
+
+     #btnSearch {
+         margin-top: 9px;
+         width: 100%;
+     }
+</style>
+
+<h5 class="title">@ViewBag.Title</h5>
+
+<div id="searchBox" class="row">
+    <div class="col s2">
+        <button class="btn waves-effect waves-light" id="btnSearch">查 询</button>
+    </div>
+    <div class="col s2">
+        <input type="date" class="datepicker" id="searchEnd" placeholder="结束日期" />
+    </div>
+    <div class="col s2">
+        <input type="date" class="datepicker" id="searchStar" placeholder="起始日期" />
+    </div>
+    <div class="col s2">
+        <div class="select-wrapper">
+            <select class="initialized" id="searchImplement">
+                <option value="-1">落实部门</option>
+            </select>
+        </div>
+    </div>
+    <div class="col s2">
+        <div class="select-wrapper">
+            <select class="initialized" id="searchDepart">
+                <option value="-1">预警部门</option>
+                <option value="11">安全科</option>
+                <option value="12">运用科</option>
+                <option value="13">技术科</option>
+                <option value="21">行政办公室</option>
+                <option value="22">党委办公室</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<table class="bordered depart-verify">
+    <thead>
+        <tr>
+            <th>序号</th>
+            <th>预警类型</th>
+            <th>预警主题</th>
+            <th>预警时间</th>
+            <th>落实部门</th>
+            <th>明细</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script src="/Scripts/page-scripts/finished.js"></script>

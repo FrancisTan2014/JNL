@@ -1,0 +1,128 @@
+﻿@using JNL.Model
+@{
+    ViewBag.Title = "预警响应审核";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var warning = (ViewWarning)ViewBag.Warn;
+    var implements = (List<ViewWarningImplement>)ViewBag.Implements;
+    var statusText = new[] {"待审核", "已通过", "已否决"};
+}
+
+<link href="/Content/material-card.css" rel="stylesheet" />
+<style>
+    #btnSave {
+        width: 15%;
+    }
+
+    .flow-text {
+        margin-top: 0;
+    }
+
+    .card {
+        box-shadow: none !important;
+    }
+
+    .card-body {
+        padding-top: 0;
+    }
+
+    header {
+        display: inline-block;
+        padding: 11px 24px;
+        vertical-align: middle;
+        line-height: 17px;
+        font-size: 20px;
+        margin: 20px 0;
+    }
+
+    button.verify {
+        margin-top: 24px;
+        margin-right: 10px;
+    }
+
+    .status {
+        color: #ee6e73;
+    }
+</style>
+
+<h5 class="title">@ViewBag.Title</h5>
+
+<form class="edit-form z-depth-5">
+    <div class="card card-outlined style-primary">
+        <div class="card-head">
+            <header><i class="mdi-social-notifications-none"></i> 预警基本信息</header>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col s3">
+                    <p>预警主题</p>
+                    <p class="flow-text">@warning.WarningTitle</p>
+                </div>
+                <div class="col s3">
+                    <p>预警时间</p>
+                    <p class="flow-text">@warning.WarningTime.ToString("yyyy-MM-dd HH:mm:ss")</p>
+                </div>
+                <div class="col s3">
+                    <p>落实时限</p>
+                    <p class="flow-text">@warning.TimeLimit.ToString("yyyy-MM-dd HH:mm:ss")</p>
+                </div>
+                <div class="col s3">
+                    <p>预警来源</p>
+                    <p class="flow-text">@warning.WarningSourceName</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <p>预警内容</p>
+                    <p class="flow-text">@warning.WarningContent</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <p>整改要求</p>
+                    <p class="flow-text">@warning.ChangeRequirement</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @foreach (var implement in implements)
+    {
+        var guid = Guid.NewGuid().ToString();
+
+        <div class="card card-outlined style-primary">
+            <div class="card-head">
+                <header><i class="mdi-social-group"></i> @(implement.ImplementDepart)的响应内容</header>
+                @if (implement.ResponseVerifyStatus != 2)
+                {
+                    <button class="btn waves-effect waves-block waves-light right verify" data-id="@implement.Id" data-text="已通过" data-target="#@guid" data-operate="pass" type="button">通 过</button>
+
+                    if (implement.ResponseVerifyStatus == 1)
+                    {
+                        <button class="btn waves-effect waves-block waves-light right verify" data-id="@implement.Id" data-text="已否决" data-target="#@guid" data-operate="vote" type="button">否 决</button>
+                    }
+                }
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col s4">
+                        <p>响应时间</p>
+                        <p class="flow-text">@implement.RespondTime.ToString("yyyy-MM-dd HH:mm:ss")</p>
+                    </div>
+                    <div class="col s4">
+                        <p>审核状态</p>
+                        <p id="@guid" class="flow-text status">@statusText[implement.ResponseVerifyStatus - 1]</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s12">
+                        <p>响应内容</p>
+                        <p class="flow-text">@implement.ImplementDetail</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</form>
+
+<script src="/Scripts/page-scripts/verify.js"></script>

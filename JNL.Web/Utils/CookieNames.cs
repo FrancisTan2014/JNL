@@ -16,5 +16,10 @@
         /// 记录当前登录管理员的id
         /// </summary>
         public static readonly string LoginUserId = "ndgi";
+
+        /// <summary>
+        /// 记录当前登录人员的名称
+        /// </summary>
+        public static readonly string LoginUserName = "name";
     }
 }

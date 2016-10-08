@@ -44,6 +44,9 @@ namespace JNL.Web.Controllers
                         LoginStatus.WriteCookieForSession(userId);
                     }
 
+                    var loginUser = staffBll.QuerySingle(userId);
+                    CookieHelper.Set(CookieNames.LoginUserName, loginUser.Name);
+
                     return Json(ErrorModel.LoginSuccess);
                 }
 
@@ -51,6 +54,13 @@ namespace JNL.Web.Controllers
             }
 
             return Json(ErrorModel.InputError);
+        }
+
+        public ActionResult Logout()
+        {
+            LoginStatus.RemoveCookie();
+
+            return RedirectToAction("Login");
         }
     }
 }

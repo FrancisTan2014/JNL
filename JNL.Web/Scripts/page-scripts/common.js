@@ -1165,7 +1165,8 @@
                 columns: [],
                 builds: [],
                 ajaxParams: {},
-                getConditions: function () { }
+                getConditions: function () { },
+                afterLoaded: function () { }
             }, options);
 
             this.$btnLoadMore = null;
@@ -1253,7 +1254,7 @@
                         $tr.append(result);
                     }
                 } else {
-                    $tr.append('<td>{0}</td>'.format(value));
+                    $tr.append('<td>{0}</td>'.format(value || ''));
                 }
             });
 
@@ -1294,6 +1295,11 @@
                         if (res.data.length < 20) {
                             _this.$btnLoadMore.hide();
                         }
+
+                        // after loaded
+                        if ($.isFunction(_this.config.afterLoaded)) {
+                            _this.config.afterLoaded();
+                        }
                     } else {
                         noMore();
                     }
@@ -1305,16 +1311,6 @@
 
         return new CommonTable(selector, options);
     };
-})(window, jQuery);
-
-(function (window, $) {
-    /**
-     * 为select添加验证规则，使用时，给定一个默认选项，验证选中的值是否等于默认选项
-     */
-    $.validator.addMethod('notEquals', function (value, element, params) {
-        console.log(params);
-        return this.optional(element) || value != params;
-    }, 'Value must not equal default value.');
 })(window, jQuery);
 
 /*

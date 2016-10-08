@@ -29,7 +29,8 @@
     <div class="row">
         <div class="col s4 input-field">
             <input type="hidden" name="Id" value="@warn.Id"/>
-            <input type="hidden" value="@warn.CreateStaffId" />
+            <input type="hidden" value="@warn.CreateStaffId" name="CreateStaffId"/>
+            <input type="hidden" value="@warn.WarningStaffId" name="WarningStaffId" />
             <input type="datetime" name="WarningTime" id="WarningTime" data-field="datetime" placeholder="预警时间" value="@(warn.WarningTime == DateTime.MinValue ? "" : warn.WarningTime.ToString("dd-MM-yyyy HH:mm"))"/>
         </div>
         <div class="col s4 input-field">
@@ -75,7 +76,7 @@
             <textarea class="materialize-textarea" name="WarningContent" id="WarningContent">@warn.WarningContent</textarea>
         </div>
         <div class="col s12 input-field">
-            <label for="ChangeRequirement">预警内容</label>
+            <label for="ChangeRequirement">整改要求</label>
             <textarea class="materialize-textarea" name="ChangeRequirement" id="ChangeRequirement">@warn.ChangeRequirement</textarea>
         </div>
     </div>

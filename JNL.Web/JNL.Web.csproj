@@ -175,17 +175,25 @@
     <Content Include="Scripts\page-scripts\accident-detail.js" />
     <Content Include="Scripts\page-scripts\add-article.js" />
     <Content Include="Scripts\page-scripts\add-file.js" />
+    <Content Include="Scripts\page-scripts\add-implement.js" />
     <Content Include="Scripts\page-scripts\add-live6.js" />
     <Content Include="Scripts\page-scripts\add-warn.js" />
+    <Content Include="Scripts\page-scripts\analysis-live.js" />
     <Content Include="Scripts\page-scripts\analysis-source.js" />
+    <Content Include="Scripts\page-scripts\article-list.js" />
     <Content Include="Scripts\page-scripts\basic-accident.js" />
     <Content Include="Scripts\page-scripts\basic-files.js" />
     <Content Include="login-filter.config" />
     <Content Include="auth-filter.config" />
+    <Content Include="Scripts\page-scripts\finished.js" />
+    <Content Include="Scripts\page-scripts\pre-implement.js" />
+    <Content Include="Scripts\page-scripts\verify-implement.js" />
+    <Content Include="Scripts\page-scripts\verify.js" />
     <Content Include="Scripts\plugins\wangEditor\css\fonts\icomoon.eot" />
     <Content Include="Scripts\plugins\wangEditor\css\fonts\icomoon.ttf" />
     <Content Include="Scripts\plugins\wangEditor\css\fonts\icomoon.woff" />
     <Content Include="Scripts\plugins\wangEditor\js\wangEditor.min.js.map" />
+    <None Include="Properties\PublishProfiles\JNL.Web.pubxml" />
     <None Include="Scripts\_references.js" />
     <Content Include="Scripts\page-scripts\common.js" />
     <Content Include="Scripts\page-scripts\not-implement.js" />
@@ -294,6 +302,14 @@
     <Content Include="Views\Warn\NotImplement.cshtml" />
     <Content Include="Views\Analysis\Source.cshtml" />
     <Content Include="Views\Article\Add.cshtml" />
+    <Content Include="Views\Article\List.cshtml" />
+    <Content Include="Views\Article\Scan.cshtml" />
+    <Content Include="Views\Warn\AddImplement.cshtml" />
+    <Content Include="Views\Warn\PreImplement.cshtml" />
+    <Content Include="Views\Warn\VerifyImplement.cshtml" />
+    <Content Include="Views\Warn\Verify.cshtml" />
+    <Content Include="Views\Warn\Finished.cshtml" />
+    <Content Include="Views\Analysis\Live6.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

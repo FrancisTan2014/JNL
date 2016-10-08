@@ -1,12 +1,12 @@
 ﻿/**  版本信息模板在安装目录下，可自行修改。
-* WarningImplement.cs
+* ViewWarningImplement.cs
 *
 * 功 能： N/A
-* 类 名： WarningImplement
+* 类 名： ViewWarningImplement
 *
 * Ver    变更日期             负责人  变更内容
 * ───────────────────────────────────
-* V0.01  2016/9/22 13:26:39   N/A    初版
+* V0.01  2016/10/7 20:36:04   N/A    初版
 *
 * Copyright (c) 2012 Maticsoft Corporation. All rights reserved.
 *┌──────────────────────────────────┐
@@ -18,29 +18,31 @@ using System;
 namespace JNL.Model
 {
 	/// <summary>
-	/// 预警落实信息
+	/// ViewWarningImplement:实体类(属性说明自动提取数据库字段的描述信息)
 	/// </summary>
 	[Serializable]
-	public partial class WarningImplement
+	public partial class ViewWarningImplement
 	{
-		public WarningImplement()
+		public ViewWarningImplement()
 		{}
 		#region Model
 		private int _id;
 		private int _warningid;
 		private int _implementdepartmentid;
-		private bool _hasimplemented= false;
-		private bool _hasresponded= false;
-		private string _implementdetail="";
-		private DateTime _respondtime = DateTime.Now;
-		private int _responseverifystatus=1;
+		private bool _hasimplemented;
+		private bool _hasresponded;
+		private string _implementdetail;
+		private DateTime _respondtime;
+		private int _responseverifystatus;
 		private int _verifystaffid;
-		private DateTime _verifytime = DateTime.Now;
-		private DateTime _addtime= DateTime.Now;
-		private DateTime _updatetime= DateTime.Now;
-		private bool _isdelete= false;
+		private DateTime _verifytime;
+		private DateTime _addtime;
+		private DateTime _updatetime;
+		private bool _isdelete;
+		private string _implementdepart;
+		private string _verifystaff;
 		/// <summary>
-		/// 主键
+		/// 
 		/// </summary>
 		public int Id
 		{
@@ -48,7 +50,7 @@ namespace JNL.Model
 			get{return _id;}
 		}
 		/// <summary>
-		/// 预警信息Id
+		/// 
 		/// </summary>
 		public int WarningId
 		{
@@ -56,7 +58,7 @@ namespace JNL.Model
 			get{return _warningid;}
 		}
 		/// <summary>
-		/// 落实部门Id
+		/// 
 		/// </summary>
 		public int ImplementDepartmentId
 		{
@@ -64,7 +66,7 @@ namespace JNL.Model
 			get{return _implementdepartmentid;}
 		}
 		/// <summary>
-		/// 是否已落实
+		/// 
 		/// </summary>
 		public bool HasImplemented
 		{
@@ -72,7 +74,7 @@ namespace JNL.Model
 			get{return _hasimplemented;}
 		}
 		/// <summary>
-		/// 是否已响应
+		/// 
 		/// </summary>
 		public bool HasResponded
 		{
@@ -80,7 +82,7 @@ namespace JNL.Model
 			get{return _hasresponded;}
 		}
 		/// <summary>
-		/// 预警响应
+		/// 
 		/// </summary>
 		public string ImplementDetail
 		{
@@ -88,7 +90,7 @@ namespace JNL.Model
 			get{return _implementdetail;}
 		}
 		/// <summary>
-		/// 响应时间
+		/// 
 		/// </summary>
 		public DateTime RespondTime
 		{
@@ -96,7 +98,7 @@ namespace JNL.Model
 			get{return _respondtime;}
 		}
 		/// <summary>
-		/// 响应审核状态（1 未审核； 2 审核通过； 3 响应被否决）
+		/// 
 		/// </summary>
 		public int ResponseVerifyStatus
 		{
@@ -104,7 +106,7 @@ namespace JNL.Model
 			get{return _responseverifystatus;}
 		}
 		/// <summary>
-		/// 审核人Id
+		/// 
 		/// </summary>
 		public int VerifyStaffId
 		{
@@ -112,7 +114,7 @@ namespace JNL.Model
 			get{return _verifystaffid;}
 		}
 		/// <summary>
-		/// 审核时间
+		/// 
 		/// </summary>
 		public DateTime VerifyTime
 		{
@@ -120,7 +122,7 @@ namespace JNL.Model
 			get{return _verifytime;}
 		}
 		/// <summary>
-		/// 添加时间
+		/// 
 		/// </summary>
 		public DateTime AddTime
 		{
@@ -128,7 +130,7 @@ namespace JNL.Model
 			get{return _addtime;}
 		}
 		/// <summary>
-		/// 更新时间
+		/// 
 		/// </summary>
 		public DateTime UpdateTime
 		{
@@ -136,12 +138,28 @@ namespace JNL.Model
 			get{return _updatetime;}
 		}
 		/// <summary>
-		/// 删除标识
+		/// 
 		/// </summary>
 		public bool IsDelete
 		{
 			set{ _isdelete=value;}
 			get{return _isdelete;}
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		public string ImplementDepart
+		{
+			set{ _implementdepart=value;}
+			get{return _implementdepart;}
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		public string VerifyStaff
+		{
+			set{ _verifystaff=value;}
+			get{return _verifystaff;}
 		}
 		#endregion Model
 
