@@ -189,6 +189,54 @@ namespace JNL.Web.Controllers
 
             return Json(result);
         }
+
+        [HttpPost]
+        public JsonResult Live28(int year, int month)
+        {
+            var cmdText =
+                "SELECT Id,LocoModelId,LocoModel,LocoType,LocoTypeId,LivingItemId,LivingItem FROM ViewLocoQuality28 WHERE LocomotiveId<>0";
+            if (year > 0)
+            {
+                cmdText += " AND DATEPART(YEAR, ReportTime)=" + year;
+            }
+            if (month > 0)
+            {
+                cmdText += " AND DATEPART(MONTH, ReportTime)=" + month;
+            }
+
+            var list = new ViewLocoQuality28Bll().ExecuteModel<ViewLocoQuality28>(cmdText);
+            var result = new List<TempLive>();
+
+            list.GroupBy(item => item.LocoModel).ForEach(group =>
+            {
+                var temp = new TempLive
+                {
+                    Model = group.Key
+                };
+
+                group.ForEach(item =>
+                {
+                    temp.Type = item.LocoType;
+                    switch (item.LivingItemId)
+                    {
+                        case 283: temp.Gydq++; break;
+                        case 284: temp.Dydqjdxl++; break;
+                        case 285: temp.Dj++; break;
+                        case 286: temp.Dzxl++; break;
+                        case 287: temp.Zdxt++; break;
+                        case 288: temp.Zxb++; break;
+                        case 289: temp.Aqzb++; break;
+                        case 290: temp.Ctjqt++; break;
+                        case 291: temp.Cyj++; break;
+                        case 292: temp.Fzcd++; break;
+                    }
+                });
+
+                result.Add(temp);
+            });
+
+            return Json(result);
+        }
         #endregion
     }
 }

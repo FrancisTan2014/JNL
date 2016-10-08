@@ -187,6 +187,8 @@
     <Content Include="auth-filter.config" />
     <Content Include="Scripts\page-scripts\finished.js" />
     <Content Include="Scripts\page-scripts\pre-implement.js" />
+    <Content Include="Scripts\page-scripts\search-live28.js" />
+    <Content Include="Scripts\page-scripts\search-live6.js" />
     <Content Include="Scripts\page-scripts\verify-implement.js" />
     <Content Include="Scripts\page-scripts\verify.js" />
     <Content Include="Scripts\plugins\wangEditor\css\fonts\icomoon.eot" />
@@ -310,6 +312,9 @@
     <Content Include="Views\Warn\Verify.cshtml" />
     <Content Include="Views\Warn\Finished.cshtml" />
     <Content Include="Views\Analysis\Live6.cshtml" />
+    <Content Include="Views\Analysis\Live28.cshtml" />
+    <Content Include="Views\Live\Live6.cshtml" />
+    <Content Include="Views\Live\Live28.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -20,5 +20,15 @@ namespace JNL.Web.Controllers
         {
             return View();
         }
+
+        public ActionResult Live6()
+        {
+            return View();
+        }
+
+        public ActionResult Live28()
+        {
+            return View();
+        }
     }
 }

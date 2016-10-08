@@ -113,7 +113,7 @@
                             Conditions: 'Type=13 AND ParentId=' + parentId
                         };
                     },
-                    beforeBuild: function($select) {
+                    beforeBuilt: function($select) {
                         $select.find('option:not(:first)').remove();
                     },
                     afterBuilt: function ($select) {
@@ -135,7 +135,7 @@
                             Conditions: 'Type=14 AND ParentId=' + parentId
                         };
                     },
-                    beforeBuild: function ($select) {
+                    beforeBuilt: function ($select) {
                         $select.find('option:not(:first)').remove();
                     },
                     afterBuilt: function ($select) {

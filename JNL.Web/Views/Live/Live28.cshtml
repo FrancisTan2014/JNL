@@ -1,0 +1,67 @@
+﻿@{
+    ViewBag.Title = "JT28查询";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    #btnSearch {
+        width: 100%;
+        margin-top: 9px;
+    }
+
+    section {
+        margin-bottom: 50px;
+    }
+</style>
+
+<h5 class="title">机车质量跟踪系统-JT28查询</h5>
+
+<div id="searchBox" class="row">
+    <div class="col s2">
+        <div class="select-wrapper">
+            <select class="initialized" id="searchType">
+                <option value="-1">机车类型</option>
+            </select>
+        </div>
+    </div>
+    <div class="col s2">
+        <div class="select-wrapper">
+            <select class="initialized" id="searchModel">
+                <option value="-1">机车车型</option>
+            </select>
+        </div>
+    </div>
+    <div class="col s2">
+        <div class="select-wrapper">
+            <select class="initialized" id="searchNumber">
+                <option value="-1">机车号</option>
+            </select>
+        </div>
+    </div>
+    <div class="col s2">
+        <input type="date" class="datepicker" id="searchStar" placeholder="起始日期" />
+    </div>
+    <div class="col s2">
+        <input type="date" class="datepicker" id="searchEnd" placeholder="结束日期" />
+    </div>
+    <div class="col s2">
+        <button class="btn waves-effect waves-light waves-block" id="btnSearch">查 询</button>
+    </div>
+</div>
+
+<table class="bordered depart-verify">
+    <thead>
+        <tr>
+            <th>车型</th>
+            <th>车号</th>
+            <th>施修时间</th>
+            <th>施修方法</th>
+            <th>修程</th>
+            <th>活项归属</th>
+            <th>活项</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script src="/Scripts/page-scripts/search-live28.js"></script>
