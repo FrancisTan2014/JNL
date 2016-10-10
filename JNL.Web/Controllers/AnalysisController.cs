@@ -92,17 +92,17 @@ namespace JNL.Web.Controllers
 
             var analysisList = list.GroupBy(t => t.Name1).Select(group =>
             {
-                var model = new TempSourceResult { Name = group.Key};
+                var model = new TempSourceResult { Name = group.Key };
                 group.ForEach(item =>
                 {
                     switch (item.Name2)
                     {
-                        case "红线":  model.Red = item.Count;  break;
-                        case "甲Ⅰ":  model.One = item.Count;  break;
-                        case "甲Ⅱ":  model.Two = item.Count;  break;
-                        case "乙":  model.Three = item.Count;  break;
-                        case "丙":  model.Four = item.Count;  break;
-                        case "信息":  model.Info = item.Count;  break;
+                        case "红线": model.Red = item.Count; break;
+                        case "甲Ⅰ": model.One = item.Count; break;
+                        case "甲Ⅱ": model.Two = item.Count; break;
+                        case "乙": model.Three = item.Count; break;
+                        case "丙": model.Four = item.Count; break;
+                        case "信息": model.Info = item.Count; break;
                     }
                     model.Total += item.Count;
                 });
@@ -117,7 +117,7 @@ namespace JNL.Web.Controllers
         #region 研判预警/机车质量跟踪/JT6分析 JT28分析
 
         public ActionResult Live6()
-        { 
+        {
             return View();
         }
 
@@ -158,34 +158,34 @@ namespace JNL.Web.Controllers
 
             var list = new ViewLocoQuality6Bll().ExecuteModel<ViewLocoQuality6>(cmdText);
             var result = new List<TempLive>();
-            
-            list.GroupBy(item=>item.LocoModel).ForEach(group =>
-            {
-                var temp = new TempLive
-                {
-                    Model = group.Key
-                };
 
-                group.ForEach(item =>
-                {
-                    temp.Type = item.LocoType;
-                    switch (item.LivingItemId)
-                    {
-                        case 283: temp.Gydq++; break;
-                        case 284: temp.Dydqjdxl++; break;
-                        case 285: temp.Dj++; break;
-                        case 286: temp.Dzxl++; break;
-                        case 287: temp.Zdxt++; break;
-                        case 288: temp.Zxb++; break;
-                        case 289: temp.Aqzb++; break;
-                        case 290: temp.Ctjqt++; break;
-                        case 291: temp.Cyj++; break;
-                        case 292: temp.Fzcd++; break;
-                    }
-                });
+            list.GroupBy(item => item.LocoModel).ForEach(group =>
+              {
+                  var temp = new TempLive
+                  {
+                      Model = group.Key
+                  };
 
-                result.Add(temp);
-            });
+                  group.ForEach(item =>
+                  {
+                      temp.Type = item.LocoType;
+                      switch (item.LivingItemId)
+                      {
+                          case 283: temp.Gydq++; break;
+                          case 284: temp.Dydqjdxl++; break;
+                          case 285: temp.Dj++; break;
+                          case 286: temp.Dzxl++; break;
+                          case 287: temp.Zdxt++; break;
+                          case 288: temp.Zxb++; break;
+                          case 289: temp.Aqzb++; break;
+                          case 290: temp.Ctjqt++; break;
+                          case 291: temp.Cyj++; break;
+                          case 292: temp.Fzcd++; break;
+                      }
+                  });
+
+                  result.Add(temp);
+              });
 
             return Json(result);
         }
@@ -236,6 +236,139 @@ namespace JNL.Web.Controllers
             });
 
             return Json(result);
+        }
+        #endregion
+
+        #region 评价体系/安全发展趋势
+        public ActionResult SafeTrend()
+        {
+            return View();
+        }
+
+        private class TempTrend
+        {
+            public int Year { get; set; }
+            public int Month { get; set; }
+            public int RiskSecondLevelId { get; set; }
+            public int ReportStaffDepartId { get; set; }
+            public int MonthAmmount { get; set; }
+        }
+
+        [HttpPost]
+        public JsonResult SafeTrend(int year, int departId)
+        {
+            var cmdText = BuildSqlForTrend(year, departId);
+            var modelList = new ViewRiskInfoBll().ExecuteModel<TempTrend>(cmdText).ToList();
+
+            // 每月总数字典
+            var monthAmmountsDic = modelList.GroupBy(t => t.Month)
+                .ToDictionary(t => t.Key, t => t.Sum(item => item.MonthAmmount));
+
+            var groupList = modelList.GroupBy(t => t.RiskSecondLevelId).ToList();
+
+            // 红线：2 甲类：167，298 乙：657 丙：1223
+            var hx = GetSingleTypeMonthAmmounts(new List<int> {2}, groupList);
+            var jia = GetSingleTypeMonthAmmounts(new List<int> {167, 298}, groupList);
+            var yi = GetSingleTypeMonthAmmounts(new List<int> {657}, groupList);
+            var bing = GetSingleTypeMonthAmmounts(new List<int> {1223}, groupList);
+
+            // 甲类及以上占比
+            var roteList = new double[12];
+            for (var i = 0; i < 12; i++)
+            {
+                var rote = 0d;
+                var month = i + 1;
+                if (monthAmmountsDic.ContainsKey(month))
+                {
+                    var monthTotal = monthAmmountsDic[month];
+                    if (monthTotal != 0)
+                    {
+                        rote = (hx[i] + jia[i])/(monthTotal*1.0);
+                    }
+                }
+
+                roteList[i] = rote;
+            }
+
+            return Json(new
+            {
+                ammounts = new List<object>
+                {
+                    new { name = "红线", value = hx },
+                    new { name = "甲", value = jia },
+                    new { name = "乙", value = yi },
+                    new { name = "丙", value = bing }
+                },
+                rotes = new { name = "甲类及以上占比", value = roteList }
+            });
+        }
+
+        private int[] GetSingleTypeMonthAmmounts(List<int> types, IEnumerable<IGrouping<int, TempTrend>> groupList)
+        {
+            var result = new int[12];
+
+            var groups = groupList.Where(g => types.Contains(g.Key));
+            groups.ForEach(group =>
+            {
+                group.ForEach(trend =>
+                {
+                    result[trend.Month - 1] += trend.MonthAmmount;
+                });
+            });
+
+            return result;
+        }
+
+        private string BuildSqlForTrend(int year, int departId)
+        {
+            if (departId > 0)
+            {
+                return $@"SELECT [Year],[Month],[RiskSecondLevelId],ReportStaffDepartId,COUNT(Id) AS MonthAmmount FROM
+                          (SELECT DATEPART(YEAR, OccurrenceTime) AS [Year], DATEPART(MONTH, OccurrenceTime) AS [Month],Id, ReportStaffDepartId,RiskSecondLevelId FROM ViewRiskInfo) T
+                          GROUP BY [Year],[Month],RiskSecondLevelId,ReportStaffDepartId
+                          HAVING [Year]={year} AND ReportStaffDepartId={departId}";
+            }
+
+            return $@"SELECT [Year],[Month],[RiskSecondLevelId],COUNT(Id) AS MonthAmmount FROM
+                          (SELECT DATEPART(YEAR, OccurrenceTime) AS [Year], DATEPART(MONTH, OccurrenceTime) AS [Month],Id, ReportStaffDepartId,RiskSecondLevelId FROM ViewRiskInfo) T
+                          GROUP BY [Year],[Month],RiskSecondLevelId
+                          HAVING [Year]={year}";
+        }
+        #endregion
+
+        #region 研判预警/预警信息管理/预警信息统计
+
+        public ActionResult Warn()
+        {
+            return View();
+        }
+
+        private class TempWarn
+        {
+            public int DepartId { get; set; }
+            public string Depart { get; set; }
+            public int Count { get; set; }
+        }
+
+        [HttpPost]
+        public JsonResult Warn(string startTime, string endTime)
+        {
+            if (string.IsNullOrEmpty(startTime) && string.IsNullOrEmpty(endTime))
+            {
+                return Json(ErrorModel.InputError);
+            }
+        }
+
+        private string BuildSqlForWarn(string startTime, string endTime)
+        {
+            if (string.IsNullOrEmpty(endTime))
+            {
+                endTime = "2050-01-01";
+            }
+
+            return $@"SELECT ReportStaffDepartId AS DepartId,ReportStaffDepart AS Depart,COUNT(Id) AS [Count] FROM
+                     (SELECT Id,ReportStaffDepartId,ReportStaffDepart,OccurrenceTime FROM ViewRiskInfo WHERE OccurrenceTime BETWEEN '{startTime}' AND '{endTime}') T
+                     GROUP BY ReportStaffDepartId,ReportStaffDepart";
         }
         #endregion
     }

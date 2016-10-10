@@ -1,12 +1,12 @@
 ﻿/**  版本信息模板在安装目录下，可自行修改。
-* ViewStaffScore.cs
+* ViewStaffScoreTotal.cs
 *
 * 功 能： N/A
-* 类 名： ViewStaffScore
+* 类 名： ViewStaffScoreTotal
 *
 * Ver    变更日期             负责人  变更内容
 * ───────────────────────────────────
-* V0.01  2016/10/10 17:47:31   N/A    初版
+* V0.01  2016/10/10 22:10:46   N/A    初版
 *
 * Copyright (c) 2012 Maticsoft Corporation. All rights reserved.
 *┌──────────────────────────────────┐
@@ -18,34 +18,24 @@ using System;
 namespace JNL.Model
 {
 	/// <summary>
-	/// 员工扣分表
+	/// ViewStaffScoreTotal:实体类(属性说明自动提取数据库字段的描述信息)
 	/// </summary>
 	[Serializable]
-	public partial class ViewStaffScore
+	public partial class ViewStaffScoreTotal
 	{
-		public ViewStaffScore()
+		public ViewStaffScoreTotal()
 		{}
 		#region Model
-		private int _id;
 		private int _staffid;
 		private int _year;
-		private int _month;
-		private decimal _minusscore;
-		private DateTime _updatetime;
-		private bool _isdelete;
+		private decimal? _minusscore;
 		private string _staffname;
 		private int? _departmentid;
 		private string _department;
 		private int? _positionid;
 		private string _position;
-		/// <summary>
-		/// 
-		/// </summary>
-		public int Id
-		{
-			set{ _id=value;}
-			get{return _id;}
-		}
+		private string _salaryid;
+		private string _workid;
 		/// <summary>
 		/// 
 		/// </summary>
@@ -65,34 +55,10 @@ namespace JNL.Model
 		/// <summary>
 		/// 
 		/// </summary>
-		public int Month
-		{
-			set{ _month=value;}
-			get{return _month;}
-		}
-		/// <summary>
-		/// 
-		/// </summary>
-		public decimal MinusScore
+		public decimal? MinusScore
 		{
 			set{ _minusscore=value;}
 			get{return _minusscore;}
-		}
-		/// <summary>
-		/// 
-		/// </summary>
-		public DateTime UpdateTime
-		{
-			set{ _updatetime=value;}
-			get{return _updatetime;}
-		}
-		/// <summary>
-		/// 
-		/// </summary>
-		public bool IsDelete
-		{
-			set{ _isdelete=value;}
-			get{return _isdelete;}
 		}
 		/// <summary>
 		/// 
@@ -134,9 +100,22 @@ namespace JNL.Model
 			set{ _position=value;}
 			get{return _position;}
 		}
-
-	    public string WorkId { get; set; }
-	    public string SalaryId { get; set; }
+		/// <summary>
+		/// 
+		/// </summary>
+		public string SalaryId
+		{
+			set{ _salaryid=value;}
+			get{return _salaryid;}
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		public string WorkId
+		{
+			set{ _workid=value;}
+			get{return _workid;}
+		}
 		#endregion Model
 
 	}

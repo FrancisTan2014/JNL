@@ -3,8 +3,72 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<style>
+    #btnSearch {
+        width: 100%;
+    }
+</style>
+
 <h5 class="title">@ViewBag.Title</h5>
 
-<div id="searchBox">
-    
+<div id="searchBox" class="row">
+    <div class="col s2 input-field">
+        <div class="select-wrapper">
+            <select class="initialized" id="searchYear">
+                @{
+                    var year = DateTime.Now.Year;
+                    var currentMonth = DateTime.Now.Month;
+
+                    for (int i = 0; i < 10; i++)
+                    {
+                        var tempYear = year - i;
+                        <option value="@tempYear">@tempYear</option>
+                    }
+                }
+            </select>
+
+        </div>
+    </div>
+    <div class="col s1 input-field">
+        <div class="select-wrapper">
+            <select class="initialized" id="searchMonth">
+                <option value="-1">全年</option>
+                @for (int i = 0; i < 12; i++)
+                {
+                    var month = i + 1;
+                    var monthStr = month < 10 ? "0" + month : month.ToString();
+                    var selected = month == currentMonth ? "selected=\"selected\"" : "";
+
+                    <option value="@month" @selected>@monthStr</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="col s3 input-field">
+        <input type="hidden" id="searchStaff" />
+        <input type="text" id="searchName" placeholder="输入姓名/工号查询" />
+    </div>
+    <div class="col s3 input-field">
+        <div class="select-wrapper">
+            <select class="initialized" id="searchDepart">
+                <option value="-1">选择部门查询</option>
+            </select>
+        </div>
+    </div>
+    <div class="col s3 input-field"><button id="btnSearch" class="btn waves-effect waves-light waves-block" type="button">查 询</button></div>
 </div>
+
+<table class="bordered score-table">
+    <thead>
+        <tr>
+            <th>姓名</th>
+            <th>部门</th>
+            <th>工号</th>
+            <th>职务</th>
+            <th>扣分</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script src="/Scripts/page-scripts/staff-score.js"></script>

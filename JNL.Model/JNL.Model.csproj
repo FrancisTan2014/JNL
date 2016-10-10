@@ -75,6 +75,7 @@
     <Compile Include="Partials\ViewRiskResponseStaff.cs" />
     <Compile Include="Partials\ViewStaff.cs" />
     <Compile Include="Partials\ViewStaffScore.cs" />
+    <Compile Include="Partials\ViewStaffScoreTotal.cs" />
     <Compile Include="Partials\ViewWarning.cs" />
     <Compile Include="Partials\ViewWarningImplement.cs" />
     <Compile Include="Partials\Warning.cs" />

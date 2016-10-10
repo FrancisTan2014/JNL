@@ -1178,6 +1178,14 @@
             this.loadData();
         }
 
+        CommonTable.prototype.setTarget = function(newTableName) {
+            this.config.ajaxParams.TableName = newTableName;
+        };
+
+        CommonTable.prototype.setAjaxUrl = function(newUrl) {
+            this.config.ajaxUrl = newUrl;
+        };
+
         CommonTable.prototype.buildBtnLoad = function () {
             this.$btnLoadMore = $('<div style="text-align: center; margin-top: 15px;"><button class="btn waves-effect waves-light" style="width: 40%">加载更多</button></div>');
 

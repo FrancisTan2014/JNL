@@ -282,6 +282,14 @@ namespace JNL.Web.Controllers
             }
             
             return Json(ErrorModel.OperateFailed);
-        } 
+        }
+
+        /// <summary>
+        /// 评价体系/干部履责评价
+        /// </summary>
+        public ActionResult StaffScore()
+        {
+            return View();
+        }
     }
 }

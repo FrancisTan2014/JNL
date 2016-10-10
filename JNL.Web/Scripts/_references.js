@@ -5,3 +5,4 @@
 /// <reference path="/node_modules/datetimepicker/dist/datetimepicker.min.js" /> 
 /// <reference path="page-scripts/common.js" />
 /// <reference path="/node_modules/jquery.cookie/jquery.cookie.js" />
+/// <reference path="/node_modules/echarts/dist/echarts.js" />

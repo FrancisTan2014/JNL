@@ -211,8 +211,10 @@
     <Content Include="Scripts\page-scripts\exam-upload.js" />
     <Content Include="Scripts\page-scripts\finished.js" />
     <Content Include="Scripts\page-scripts\pre-implement.js" />
+    <Content Include="Scripts\page-scripts\analysis-safe-trend.js" />
     <Content Include="Scripts\page-scripts\search-live28.js" />
     <Content Include="Scripts\page-scripts\search-live6.js" />
+    <Content Include="Scripts\page-scripts\staff-score.js" />
     <Content Include="Scripts\page-scripts\verify-implement.js" />
     <Content Include="Scripts\page-scripts\verify.js" />
     <Content Include="Scripts\plugins\wangEditor\css\fonts\icomoon.eot" />
@@ -343,6 +345,8 @@
     <Content Include="Views\Exam\Upload.cshtml" />
     <Content Include="Views\Exam\Score.cshtml" />
     <Content Include="Views\Risk\StaffScore.cshtml" />
+    <Content Include="Views\Analysis\SafeTrend.cshtml" />
+    <Content Include="Views\Analysis\Warn.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
