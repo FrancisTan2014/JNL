@@ -6,6 +6,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using JNL.Web.Utils;
 
 namespace JNL.Web
 {
@@ -22,6 +23,9 @@ namespace JNL.Web
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            // 开户每日一次计算员工风险责任扣分的任务
+            StaffScoreHelper.StartTask();
         }
     }
 }

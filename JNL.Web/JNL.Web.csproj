@@ -42,9 +42,29 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NPOI, Version=2.2.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.2.1\lib\net40\NPOI.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NPOI.OOXML, Version=2.2.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.2.1\lib\net40\NPOI.OOXML.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NPOI.OpenXml4Net, Version=2.2.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.2.1\lib\net40\NPOI.OpenXml4Net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NPOI.OpenXmlFormats, Version=2.2.1.0, Culture=neutral, PublicKeyToken=0df73ec7942b34e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NPOI.2.2.1\lib\net40\NPOI.OpenXmlFormats.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -139,6 +159,7 @@
     <Compile Include="Controllers\BasicController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
+    <Compile Include="Controllers\ExamController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LiveController.cs" />
     <Compile Include="Controllers\RiskController.cs" />
@@ -161,6 +182,7 @@
     <Compile Include="Utils\RequestHelper.cs" />
     <Compile Include="Utils\ResponseHelper.cs" />
     <Compile Include="Utils\SessionNames.cs" />
+    <Compile Include="Utils\StaffScoreHelper.cs" />
     <Compile Include="Utils\UploadHelper.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -185,6 +207,8 @@
     <Content Include="Scripts\page-scripts\basic-files.js" />
     <Content Include="login-filter.config" />
     <Content Include="auth-filter.config" />
+    <Content Include="Scripts\page-scripts\exam-score.js" />
+    <Content Include="Scripts\page-scripts\exam-upload.js" />
     <Content Include="Scripts\page-scripts\finished.js" />
     <Content Include="Scripts\page-scripts\pre-implement.js" />
     <Content Include="Scripts\page-scripts\search-live28.js" />
@@ -195,6 +219,7 @@
     <Content Include="Scripts\plugins\wangEditor\css\fonts\icomoon.ttf" />
     <Content Include="Scripts\plugins\wangEditor\css\fonts\icomoon.woff" />
     <Content Include="Scripts\plugins\wangEditor\js\wangEditor.min.js.map" />
+    <Content Include="Content\exam-template.xls" />
     <None Include="Properties\PublishProfiles\JNL.Web.pubxml" />
     <None Include="Scripts\_references.js" />
     <Content Include="Scripts\page-scripts\common.js" />
@@ -315,6 +340,9 @@
     <Content Include="Views\Analysis\Live28.cshtml" />
     <Content Include="Views\Live\Live6.cshtml" />
     <Content Include="Views\Live\Live28.cshtml" />
+    <Content Include="Views\Exam\Upload.cshtml" />
+    <Content Include="Views\Exam\Score.cshtml" />
+    <Content Include="Views\Risk\StaffScore.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

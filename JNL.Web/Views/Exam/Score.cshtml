@@ -1,0 +1,53 @@
+﻿@{
+    ViewBag.Title = "成绩管理";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    #btnSearch {
+        width: 100%;
+    }
+</style>
+
+<h5 class="title">@ViewBag.Title</h5>
+
+<div id="searchBox" class="row">
+    <div class="col s3 input-field">
+        <input type="hidden" id="searchStaff" />
+        <input type="text" id="searchName" placeholder="输入姓名/工号查询"/>
+    </div>    
+    <div class="col s3 input-field">
+        <div class="select-wrapper">
+            <select class="initialized" id="searchDepart">
+                <option value="-1">选择部门查询</option>
+            </select>
+        </div>
+    </div>
+    <div class="col s3 input-field">
+        <div class="select-wrapper">
+            <select class="initialized" id="searchPost">
+                <option value="-1">选择职务查询</option>
+            </select>
+        </div>
+    </div>
+    <div class="col s3 input-field"><button id="btnSearch" class="btn waves-effect waves-light waves-block" type="button">查 询</button></div>
+</div>
+
+<table class="bordered score-table">
+    <thead>
+    <tr>
+        <th>序号</th>
+        <th>姓名</th>
+        <th>工号</th>
+        <th>职务</th>
+        <th>车间</th>
+        <th>考试主题</th>
+        <th>科目</th>
+        <th>成绩</th>
+        <th>考试时间</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script src="/Scripts/page-scripts/exam-score.js"></script>

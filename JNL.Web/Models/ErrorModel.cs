@@ -177,7 +177,7 @@
         public static object UnknownUploadFileType => new
         {
             code = 117,
-            msg = "未指定上传的文件类型"
+            msg = "不支持的文件类型"
         };
 
         /// <summary>

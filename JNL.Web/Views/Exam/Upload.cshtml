@@ -1,0 +1,31 @@
+﻿@{
+    ViewBag.Title = "上传考试成绩";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .error-msg{
+        color: #e91e63
+    }
+</style>
+
+<h5 class="title">@ViewBag.Title</h5>
+
+<form class="edit-form z-depth-5">
+    <div class="row">
+        <div class="col s12 flow-text input-field">
+            <span>请严格按照模板的格式上传，否则将会导致上传失败：</span>
+            <a href="/Content/exam-template.xls" download="模板">下载模板</a>
+        </div>
+        <div class="col s12 input-field">
+            <div class="uploadify"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12 input-field error-box">
+        </div>
+    </div>
+</form>
+
+<script src="/Scripts/plugins/uplodifive/jquery.uploadifive.min.js"></script>
+<script src="/Scripts/page-scripts/exam-upload.js"></script>

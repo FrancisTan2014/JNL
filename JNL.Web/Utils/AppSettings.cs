@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using JNL.Utilities.Extensions;
 using System.Configuration;
 using System.Linq;
+using JNL.Bll;
+using WebGrease.Css.Extensions;
 
 namespace JNL.Web.Utils
 {
@@ -38,6 +40,8 @@ namespace JNL.Web.Utils
                     return BasicFiles;
                 case 2:
                     return ImagesPath;
+                case 3:
+                    return ExamFilesPath;
                 default:
                     return string.Empty;
             }
@@ -57,5 +61,36 @@ namespace JNL.Web.Utils
         /// 图片上传路径
         /// </summary>
         public static string ImagesPath => GetConfig("Images");
+
+        public static string ExamFilesPath => GetConfig("Exam");
+
+        /// <summary>
+        /// 获取风险信息概述Id与其对应的所扣分值的字典集
+        /// </summary>
+        public static Dictionary<int, int> RiskMinusScoreDic
+        {
+            get
+            {
+                var config = GetConfig("RiskMinusScore");
+                try
+                {
+                    var couples = config.Split(',');
+                    var dic = new Dictionary<int, int>();
+                    couples.ForEach(s =>
+                    {
+                        var temp = s.Split('-');
+                        dic.Add(temp[0].ToInt32(), temp[1].ToInt32());
+                    });
+
+                    return dic;
+                }
+                catch (Exception ex)
+                {
+                    ExceptionLogBll.ExceptionPersistence(nameof(AppSettings), nameof(AppSettings), ex);
+
+                    throw ex;
+                }
+            }
+        }
     }
 }

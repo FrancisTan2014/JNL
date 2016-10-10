@@ -63,9 +63,11 @@
     <Compile Include="Partials\RiskSummaryDal.cs" />
     <Compile Include="Partials\RiskTypeDal.cs" />
     <Compile Include="Partials\StaffDal.cs" />
+    <Compile Include="Partials\StaffScoreDal.cs" />
     <Compile Include="Partials\StationDal.cs" />
     <Compile Include="Partials\TraceInfoDal.cs" />
     <Compile Include="Partials\ViewArticleDal.cs" />
+    <Compile Include="Partials\ViewExamScoreDal.cs" />
     <Compile Include="Partials\ViewLineDal.cs" />
     <Compile Include="Partials\ViewLocomotiveDal.cs" />
     <Compile Include="Partials\ViewLocoQuality28Dal.cs" />
@@ -74,6 +76,7 @@
     <Compile Include="Partials\ViewRiskResponseDal.cs" />
     <Compile Include="Partials\ViewRiskResponseStaffDal.cs" />
     <Compile Include="Partials\ViewStaffDal.cs" />
+    <Compile Include="Partials\ViewStaffScoreDal.cs" />
     <Compile Include="Partials\ViewWarningDal.cs" />
     <Compile Include="Partials\ViewWarningImplementDal.cs" />
     <Compile Include="Partials\WarningDal.cs" />
