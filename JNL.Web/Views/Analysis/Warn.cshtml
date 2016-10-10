@@ -3,18 +3,43 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<style>
+    #btnSearch {
+        width: 100%;
+    }
+
+    .datepicker {
+        width: 40% !important;
+    }
+</style>
+
 <h5 class="title">@ViewBag.Title</h5>
 
-<div id="searchBox">
-
+<div id="searchBox" class="row">
+    <div class="col s4 input-field">
+        <input type="date" class="datepicker" id="searchStart" placeholder="起始日期" />
+        &nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="date" class="datepicker" id="searchEnd" placeholder="终止日期" />
+    </div>
+    <div class="col s2 input-field">
+        <div class="btn waves-effect waves-light" id="btnSearch">查 询</div>
+    </div>
 </div>
 
-<table class="bordered">
+<table class="bordered centered data-table">
     <thead>
-        <tr></tr>
+        <tr>
+            <th>预警类型</th>
+        </tr>
     </thead>
     <tbody>
-        <tr></tr>
-        <tr></tr>
+        <tr>
+            <td>监督检查预警</td>
+        </tr>
+        <tr>
+            <td>数据分析预警</td>
+        </tr>
     </tbody>
 </table>
+
+<script src="/Scripts/page-scripts/analysis-warn.js"></script>

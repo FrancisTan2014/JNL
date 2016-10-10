@@ -350,25 +350,72 @@ namespace JNL.Web.Controllers
             public int Count { get; set; }
         }
 
+        private class TempWarnResult
+        {
+            public string Name { get; set; }
+            public int Warn { get; set; }
+            public int Risk { get; set; }
+        }
+
         [HttpPost]
         public JsonResult Warn(string startTime, string endTime)
         {
-            if (string.IsNullOrEmpty(startTime) && string.IsNullOrEmpty(endTime))
+            var warningBll = new WarningBll();
+            var riskCmdText = BuildSqlForWarn(1, startTime, endTime);
+            var riskList = warningBll.ExecuteModel<TempWarn>(riskCmdText).ToList();
+
+            var warningCmdText = BuildSqlForWarn(2, startTime, endTime);
+            var warningList = warningBll.ExecuteModel<TempWarn>(warningCmdText).ToList();
+
+            var dic = new Dictionary<int, TempWarnResult>();
+            riskList.ForEach(r =>
             {
-                return Json(ErrorModel.InputError);
-            }
+                if (!dic.ContainsKey(r.DepartId) && r.DepartId != 0)
+                {
+                    var warnModel = warningList.FirstOrDefault(w => w.DepartId == r.DepartId);
+                    dic.Add(r.DepartId, new TempWarnResult
+                    {
+                        Name = r.Depart,
+                        Risk = r.Count,
+                        Warn = warnModel?.Count ?? 0
+                    });
+                }
+            });
+            warningList.ForEach(w =>
+            {
+                if (!dic.ContainsKey(w.DepartId) && w.DepartId != 0)
+                {
+                    var riskModel = riskList.FirstOrDefault(r => r.DepartId == w.DepartId);
+                    dic.Add(w.DepartId, new TempWarnResult
+                    {
+                        Name = w.Depart,
+                        Risk = riskModel?.Count ?? 0,
+                        Warn = w.Count
+                    });
+                }
+            });
+
+            return Json(dic.Values.ToList());
         }
 
-        private string BuildSqlForWarn(string startTime, string endTime)
+        private string BuildSqlForWarn(int type, string startTime, string endTime)
         {
+            if (string.IsNullOrEmpty(startTime))
+            {
+                startTime = "1970-01-01";
+            }
             if (string.IsNullOrEmpty(endTime))
             {
                 endTime = "2050-01-01";
             }
 
-            return $@"SELECT ReportStaffDepartId AS DepartId,ReportStaffDepart AS Depart,COUNT(Id) AS [Count] FROM
+            return type == 1 
+                ? $@"SELECT ReportStaffDepartId AS DepartId,ReportStaffDepart AS Depart,COUNT(Id) AS [Count] FROM
                      (SELECT Id,ReportStaffDepartId,ReportStaffDepart,OccurrenceTime FROM ViewRiskInfo WHERE OccurrenceTime BETWEEN '{startTime}' AND '{endTime}') T
-                     GROUP BY ReportStaffDepartId,ReportStaffDepart";
+                     GROUP BY ReportStaffDepartId,ReportStaffDepart"
+                : $@"SELECT WarningDepartId AS DepartId,WarningDepart AS Depart,COUNT(Id) AS [Count] FROM
+                    (SELECT Id,WarningDepartId,WarningDepart,WarningTime FROM ViewWarning WHERE WarningTime BETWEEN '{startTime}' AND '{endTime}') T
+                    GROUP BY WarningDepartId,WarningDepart";
         }
         #endregion
     }

@@ -873,6 +873,23 @@
     };
 
     /**
+     * 对数组中对象的指定属性值求和
+     * @param {Function} selector 指定列的方法，若不传此参数，则直接将数组元素求和
+     * @returns {Number} 
+     */
+    Array.prototype.sum = function (selector) {
+        var _this = this;
+        var select = $.isFunction(selector) ? selector : function () { return _this; }
+
+        var sum = 0;
+        this.forEach(function(item) {
+            sum += +select(item);
+        });
+
+        return sum;
+    };
+
+    /**
      * 判断数组中是包包含指定元素
      * @param {} element 
      * @returns {} 
