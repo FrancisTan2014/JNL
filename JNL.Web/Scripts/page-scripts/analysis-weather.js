@@ -15,7 +15,7 @@
                     url: '?',
                     data: params
                 }).done(function (res) {
-                    if ($.isArray(res)) {
+                    if ($.isArray(res) && res.length > 0) {
                         var $tbody = $('.data-table>tbody');
                         res.forEach(function (item) {
                             var type = '【{0}-{1}】'.format(item.type, item.level);

@@ -665,8 +665,12 @@ namespace JNL.Web.Controllers
             var cmdText =
                 $@"SELECT RiskSecondLevelName AS level,RiskSummary AS summary,WeatherLike AS weather,WeatherId AS weatherId,RiskTopestName AS type, COUNT(1) AS [count] FROM
                 (SELECT RiskSecondLevelName,RiskSummary,WeatherLike,WeatherId,RiskTopestName FROM ViewRiskInfo WHERE OccurrenceTime BETWEEN '{start}' AND '{end}') T
-                GROUP BY RiskSecondLevelName,RiskSummary,WeatherLike,WeatherId,RiskTopestName
-                HAVING WeatherId='{weatherId}'";
+                GROUP BY RiskSecondLevelName,RiskSummary,WeatherLike,WeatherId,RiskTopestName";
+            if (weatherId > 0)
+            {
+                cmdText += $" HAVING WeatherId={weatherId}";
+            }
+
             var list = new ViewRiskInfoBll().ExecuteModel<TempWeather>(cmdText).OrderByDescending(t => t.count);
 
             return Json(list);
@@ -841,8 +845,8 @@ namespace JNL.Web.Controllers
                 var model = new TempStage2
                 {
                     name = temp1?.RiskSummary ?? temp2?.RiskSummary,
-                    daily1 = temp1?.Count / daySpan1 ?? 0,
-                    daily2 = temp2?.Count / daySpan2 ?? 0,
+                    daily1 = Math.Round(temp1?.Count / daySpan1 ?? 0, 2),
+                    daily2 = Math.Round(temp2?.Count / daySpan2 ?? 0, 2),
                     total1 = temp1?.Count ?? 0,
                     total2 = temp2?.Count ?? 0
                 };
@@ -888,9 +892,18 @@ namespace JNL.Web.Controllers
         {
             var config = AppSettings.StageAnalysisRiskSummaryIds;
 
-            return $@"SELECT RiskSummary,RiskSummaryId,COUNT(RiskSummaryId) AS [Count] FROM
+            if (departId > 0)
+            {
+                return $@"SELECT RiskSummary,RiskSummaryId,COUNT(RiskSummaryId) AS [Count] FROM
                         (SELECT RiskSummary,RiskSummaryId FROM ViewRiskRespondRisk 
 	                    WHERE RiskSummaryId<>0 AND OccurrenceTime BETWEEN '{start}' AND '{end}' AND DepartmentId={departId}) T
+                      GROUP BY RiskSummary,RiskSummaryId
+                      HAVING RiskSummaryId IN({string.Join(",", config)})";
+            }
+
+            return $@"SELECT RiskSummary,RiskSummaryId,COUNT(RiskSummaryId) AS [Count] FROM
+                        (SELECT RiskSummary,RiskSummaryId FROM ViewRiskRespondRisk 
+	                    WHERE RiskSummaryId<>0 AND OccurrenceTime BETWEEN '{start}' AND '{end}') T
                       GROUP BY RiskSummary,RiskSummaryId
                       HAVING RiskSummaryId IN({string.Join(",", config)})";
         }
