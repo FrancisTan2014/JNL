@@ -1,0 +1,79 @@
+﻿@using JNL.Model
+@{
+    var trace = (TraceInfo) ViewBag.Trace;
+    ViewBag.Title = trace.Id > 0 ? "修改追踪信息" : "添加追踪信息";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .edit-form {
+        padding-top: 20px;
+    }
+
+    #btnSave,#btnBack {
+        width: 100%;
+    }
+
+    .file {
+        margin-bottom: 10px;
+    }
+
+    .depart {
+        margin: 5px 5px 0 0;
+    }
+
+        .depart.active, .depart:hover {
+            background: #26a69a;
+            color: #fff;
+        }
+</style>
+
+<h5 class="title">@ViewBag.Title</h5>
+
+<form class="edit-form z-depth-5">
+    <div class="row">
+        <div class="col s3 input-field">
+            <input type="hidden" value="@trace.Id" name="Id" />
+            <input type="text" placeholder="追踪时间" id="AddTime" name="AddTime" value="@trace.AddTime.ToString("yyyy-MM-dd HH:mm:ss")" class="datepicker"/>
+        </div>
+        <div class="col s3 input-field">
+            <div class="select-wrapper">
+                <input type="hidden" value="@trace.TraceType" id="defaultType"/>
+                <select class="initialized" id="TraceType" name="TraceType">
+                    <option value="-1">追踪类别</option>
+                    <option value="1">局追</option>
+                    <option value="2">段追</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12 input-field" id="departs">
+            <span>追踪部门：</span>
+            <input type="hidden" value="@trace.ResponseDepartmentIds" id="defaultDeparts"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12 input-field">
+            <label>信息内容</label>
+            <textarea name="TraceContent" id="TraceContent" class="materialize-textarea" length="8000">@trace.TraceContent</textarea>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s4 input-field">
+            <input type="hidden" value="@trace.FilePath" name="FilePath" />
+            <input type="hidden" value="@trace.FileName" name="FileName" />
+            <div class="file"><span>附件：</span><span id="fileName">@trace.FileName</span></div>
+            <div class="uploadify"></div>
+        </div>
+        <div class="col s2 offset-s4 input-field">
+            <button type="button" id="btnSave" class="btn waves-effect waves-light waves-block">保 存</button>
+        </div>
+        <div class="col s2 input-field">
+            <button type="button" id="btnBack" class="btn waves-effect waves-light waves-block">返回</button>
+        </div>
+    </div>
+</form>
+
+<script src="/Scripts/plugins/uplodifive/jquery.uploadifive.min.js"></script>
+<script src="/Scripts/page-scripts/trace-edit.js"></script>

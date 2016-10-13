@@ -1,0 +1,86 @@
+﻿@{
+    ViewBag.Title = "综合分析";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    #btnSearch {
+        width: 100%;
+    }
+</style>
+
+<h5 class="title">@ViewBag.Title</h5>
+
+<div id="searchBox" class="row">
+    <div class="col s3">
+        <div class="select-wrapper">
+            <select class="initialized" id="searchPlatform" data-condition="RiskTypeId={{value}}">
+                <option value="-1">来源平台</option>
+            </select>
+        </div>
+    </div>
+    <div class="col s3">
+        <div class="select-wrapper">
+            <select id="searchReport" class="initialized"  data-condition="ReportStaffDepartId={{value}}">
+                <option value="-1">提报部门</option>
+            </select>
+        </div>
+    </div>
+    <div class="col s3">
+        <div class="select-wrapper">
+            <select id="searchRespond" class="initialized" data-condition="DepartmentId={{value}}">
+                <option value="-1">责任部门</option>
+            </select>
+        </div>
+    </div>
+    <div class="col s3">
+        <div class="select-wrapper">
+            <select id="searchLevel" class="initialized" data-condition="RiskSecondLevelId={{value}}">
+                <option value="-1">风险等级</option>
+            </select>
+        </div>
+    </div>
+    <div class="col s3">
+        <input type="text" placeholder="起始时间" id="searchStart" class="datepicker" data-condition="OccurrenceTime>'{{value}}'"/>
+    </div>
+    <div class="col s3">
+        <input type="text" placeholder="结束时间" id="searchEnd" class="datepicker" data-condition="OccurrenceTime<'{{value}} 23:59:59'"/>
+    </div>
+    <div class="col s2">
+        <div class="select-wrapper">
+            <select id="searchWeather" class="initialized" data-condition="WeatherId={{value}}">
+                <option value="-1">天气情况</option>
+            </select>
+        </div>
+    </div>
+    <div class="col s2">
+        <div class="select-wrapper">
+            <select id="searchLocoType" class="initialized" data-condition="LocoServiceTypeId={{value}}">
+                <option value="-1">列车类别</option>
+            </select>
+        </div>
+    </div>
+    <div class="col s2">
+        <button id="btnSearch" class="btn waves-effect waves-block waves-light" type="button">查 询</button>
+    </div>
+</div>
+
+<table class="bordered data-table">
+    <thead>
+    <tr>
+        <th>来源平台</th>
+        <th>提报部门</th>
+        <th>发生时间</th>
+        <th>天气情况</th>
+        <th>责任部门</th>
+        <th>列车类别</th>
+        <th>风险等级</th>
+        <th>风险概述</th>
+        <th>风险详情</th>
+        <th>查看</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script src="/Scripts/page-scripts/risk-queryall.js"></script>

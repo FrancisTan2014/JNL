@@ -71,6 +71,7 @@
     <Compile Include="Partials\ViewLocoQuality28.cs" />
     <Compile Include="Partials\ViewLocoQuality6.cs" />
     <Compile Include="Partials\ViewRiskInfo.cs" />
+    <Compile Include="Partials\ViewRiskRespondRisk.cs" />
     <Compile Include="Partials\ViewRiskResponse.cs" />
     <Compile Include="Partials\ViewRiskResponseStaff.cs" />
     <Compile Include="Partials\ViewStaff.cs" />

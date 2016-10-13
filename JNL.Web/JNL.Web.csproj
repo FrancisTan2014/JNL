@@ -163,6 +163,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LiveController.cs" />
     <Compile Include="Controllers\RiskController.cs" />
+    <Compile Include="Controllers\TraceController.cs" />
     <Compile Include="Controllers\WarnController.cs" />
     <Compile Include="Filters\Authority.cs" />
     <Compile Include="Filters\AuthorityFilter.cs" />
@@ -200,9 +201,16 @@
     <Content Include="Scripts\page-scripts\add-implement.js" />
     <Content Include="Scripts\page-scripts\add-live6.js" />
     <Content Include="Scripts\page-scripts\add-warn.js" />
+    <Content Include="Scripts\page-scripts\analysis-action.js" />
+    <Content Include="Scripts\page-scripts\analysis-area.js" />
+    <Content Include="Scripts\page-scripts\analysis-constitute.js" />
+    <Content Include="Scripts\page-scripts\analysis-distribute.js" />
     <Content Include="Scripts\page-scripts\analysis-live.js" />
     <Content Include="Scripts\page-scripts\analysis-source.js" />
+    <Content Include="Scripts\page-scripts\analysis-stage.js" />
+    <Content Include="Scripts\page-scripts\analysis-time-section.js" />
     <Content Include="Scripts\page-scripts\analysis-warn.js" />
+    <Content Include="Scripts\page-scripts\analysis-weather.js" />
     <Content Include="Scripts\page-scripts\article-list.js" />
     <Content Include="Scripts\page-scripts\basic-accident.js" />
     <Content Include="Scripts\page-scripts\basic-files.js" />
@@ -213,9 +221,13 @@
     <Content Include="Scripts\page-scripts\finished.js" />
     <Content Include="Scripts\page-scripts\pre-implement.js" />
     <Content Include="Scripts\page-scripts\analysis-safe-trend.js" />
+    <Content Include="Scripts\page-scripts\risk-queryall.js" />
     <Content Include="Scripts\page-scripts\search-live28.js" />
     <Content Include="Scripts\page-scripts\search-live6.js" />
     <Content Include="Scripts\page-scripts\staff-score.js" />
+    <Content Include="Scripts\page-scripts\trace-edit.js" />
+    <Content Include="Scripts\page-scripts\trace-list.js" />
+    <Content Include="Scripts\page-scripts\trace-query.js" />
     <Content Include="Scripts\page-scripts\verify-implement.js" />
     <Content Include="Scripts\page-scripts\verify.js" />
     <Content Include="Scripts\plugins\wangEditor\css\fonts\icomoon.eot" />
@@ -348,6 +360,18 @@
     <Content Include="Views\Risk\StaffScore.cshtml" />
     <Content Include="Views\Analysis\SafeTrend.cshtml" />
     <Content Include="Views\Analysis\Warn.cshtml" />
+    <Content Include="Views\Analysis\Action.cshtml" />
+    <Content Include="Views\Analysis\Distribute.cshtml" />
+    <Content Include="Views\Analysis\Area.cshtml" />
+    <Content Include="Views\Analysis\Weather.cshtml" />
+    <Content Include="Views\Analysis\TimeSection.cshtml" />
+    <Content Include="Views\Analysis\Constitute.cshtml" />
+    <Content Include="Views\Risk\QueryAll.cshtml" />
+    <Content Include="Views\Risk\Detail.cshtml" />
+    <Content Include="Views\Trace\List.cshtml" />
+    <Content Include="Views\Trace\Edit.cshtml" />
+    <Content Include="Views\Trace\Query.cshtml" />
+    <Content Include="Views\Analysis\Stage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -42,10 +42,14 @@ namespace JNL.Web.Utils
                     return ImagesPath;
                 case 3:
                     return ExamFilesPath;
+                case 4:
+                    return TraceFilesUploadPath;
                 default:
                     return string.Empty;
             }
         }
+
+        public static string TraceFilesUploadPath => GetConfig("TraceFiles");
 
         /// <summary>
         /// 获取配置的需要填写整改落实信息的风险等级
@@ -90,6 +94,40 @@ namespace JNL.Web.Utils
 
                     throw ex;
                 }
+            }
+        }
+
+        /// <summary>
+        /// 研判预警/数据分析预警/构成分析中所需要分析的风险信息Id
+        /// </summary>
+        public static int[] ConstituteAnalysisRiskSummaryIds
+        {
+            get
+            {
+                var config = GetConfig("ConstituteAnalysisRiskSummaryIds");
+                if (!string.IsNullOrEmpty(config))
+                {
+                    return config.Split(',').Select(s => s.ToInt32()).ToArray();
+                }
+
+                return new int[1];
+            }
+        }
+
+        /// <summary>
+        /// 研判预警/数据分析预警/阶段分析中所需要分析的风险信息Id
+        /// </summary>
+        public static int[] StageAnalysisRiskSummaryIds
+        {
+            get
+            {
+                var config = GetConfig("StageAnalysisRiskSummaryIds");
+                if (!string.IsNullOrEmpty(config))
+                {
+                    return config.Split(',').Select(s => s.ToInt32()).ToArray();
+                }
+
+                return new int[1];
             }
         }
     }

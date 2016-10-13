@@ -80,6 +80,9 @@
                 xAxis: [
                     {
                         type: 'category',
+                        splitLine: {
+                            show: false,
+                        },
                         data: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
                         axisTick: {
                             alignWithLabel: true
@@ -92,7 +95,7 @@
                         type: 'value',
                         name: '数量',
                         splitLine: {
-                            show: false,
+                            show: true,
                         },
                         axisLabel: {
                             formatter: '{value} 个'

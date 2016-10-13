@@ -1,5 +1,23 @@
 ﻿(function () {
     window.common = {
+        pickdate: function(selector) {
+            var _selector = selector || '.datepicker';
+            $(_selector).pickadate({
+                monthsFull: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+                monthsShort: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+                weekdaysFull: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
+                weekdaysShort: ['日', '一', '二', '三', '四', '五', '六'],
+                selectMonths: true,
+                selectYears: 15,
+                format: 'yyyy-mm-dd',
+
+                // Buttons
+                today: '今天',
+                clear: '清除',
+                close: '关闭'
+            });
+        },
+
         computeOffsetTop: function (dom) {
             function compute(dom) {
                 if (dom.offsetParent) {
@@ -175,10 +193,12 @@
             var _this = this;
             var opts = $.extend({}, {
                 url: '',
-                data: { asunc: true },
+                data: { },
                 type: 'POST',
                 dataType: 'JSON'
             }, options);
+
+            opts.data.async = true;
 
             opts.success = function (data) {
                 if (data.code == 104) {
@@ -489,7 +509,14 @@
          * @returns {Object} 
          */
         formJsonfiy: function (selector) {
-            var data = $(selector).serializeArray();
+            var $form;
+            if (selector instanceof jQuery) {
+                $form = selector;
+            } else {
+                $form = $(selector);
+            }
+
+            var data = $form.serializeArray();
             var json = {};
 
             for (var i = 0; i < data.length; i++) {
@@ -1275,6 +1302,8 @@
                     var result = onCreateCell(value, data);
                     if (typeof (result) === 'string' && result.indexOf('</td>') === -1) {
                         $tr.append('<td>{0}</td>'.format(result));
+                    } else if (!result) {
+                        $tr.append('<td></td>');
                     } else {
                         $tr.append(result);
                     }

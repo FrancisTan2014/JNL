@@ -20,11 +20,7 @@
         init: function () {
             common.loadDictionaries(this.selectConfig);
 
-            $('.datepicker').pickadate({
-                selectMonths: true,
-                selectYears: 15,
-                format: 'yyyy-mm-dd'
-            });
+            common.pickdate();
 
             var textAreaRules = {
                 required: true,

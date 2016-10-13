@@ -1,0 +1,43 @@
+﻿@{
+    ViewBag.Title = "地域分析";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    #btnSearch {
+        width: 100%;
+    }
+</style>
+
+<h5 class="title">@ViewBag.Title</h5>
+
+<div id="searchBox" class="row">
+    <div class="col s2 input-field">
+        <div class="select-wrapper">
+            <select class="initialized" id="searchType">
+                <option value="1">站场分析</option>
+                <option value="2">区间分析</option>
+            </select>
+        </div>
+    </div>
+    <div class="col s2 input-field">
+        <input type="date" value="@DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd")" class="datepicker" id="searchStart" placeholder="开始日期"/>
+    </div>
+    <div class="col s2 input-field">
+        <input type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="datepicker" id="searchEnd" placeholder="结束日期"/>
+    </div>
+    <div class="col s2 input-field">
+        <button id="btnSearch" class="btn waves-effect waves-block waves-light" type="button">查 询</button>
+    </div>
+</div>
+
+<table class="bordered data-table">
+    <thead>
+        <tr></tr>
+    </thead>
+    <tbody>
+    
+    </tbody>
+</table>
+
+<script src="/Scripts/page-scripts/analysis-area.js"></script>

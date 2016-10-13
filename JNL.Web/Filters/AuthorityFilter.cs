@@ -27,14 +27,16 @@ namespace JNL.Web.Filters
             {
                 if (!LoginStatus.IsLogin())
                 {
-                    LoginStatus.RedirectToLogin();
+                    var actionResult = LoginStatus.RedirectToLogin();
+                    filterContext.Result = actionResult;
+                    return;
                 }
             }
 
             // 访问权限验证
             if (!Authority.CanVisitThisAction(controller, action))
             {
-                filterContext.HttpContext.Response.Redirect("/Error/NoAuth");
+                filterContext.Result = new RedirectResult("/Error/NoAuth");
             }
         }
     }

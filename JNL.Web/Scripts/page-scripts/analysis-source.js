@@ -13,14 +13,14 @@
             end += " 23:59:59";
         }
 
-        var $firstTh = $('th:first');
+        var $firstTh = $('.depart-verify th:first');
         if (type == 1) {
             $firstTh.text('提报平台');
         } else {
             $firstTh.text('提报部门');
         }
 
-        var $tBody = $('tbody');
+        var $tBody = $('.depart-verify>tbody');
         $tBody.empty();
 
         common.ajax({
@@ -40,7 +40,7 @@
     }
 
     $(function () {
-        $('#dtBox').DateTimePicker();
+        common.pickdate();
 
         search();
 

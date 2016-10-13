@@ -136,6 +136,10 @@ namespace JNL.Web.Controllers
             return Json(updateRes);
         }
 
+        /// <summary>
+        /// 更新风险信息，同时，若此风险信息被置为需要进入
+        /// 每日重点甄别队列，将此风险信息COPY到TraceInfo中
+        /// </summary>
         private object UpdateRisk(RiskInfo risk, List<RiskResponseStaff> responds)
         {
             var riskBll = new RiskInfoBll();
@@ -151,6 +155,23 @@ namespace JNL.Web.Controllers
                 }
 
                 return res1 && res2;
+            }, () =>
+            {
+                if (risk.ShowInStressPage)
+                {
+                    var viewRespondBll = new ViewRiskResponseStaffBll();
+                    var respondIds = viewRespondBll.QueryList($"RiskId={risk.Id}").Select(t => t.DepartmentId ?? 0);
+                    
+                    // 插入每日重点甄别队友信息
+                    var traceInfo = new TraceInfo
+                    {
+                        ResponseDepartmentIds = string.Join(",", respondIds),
+                        TraceContent = risk.RiskDetails
+                    };
+
+                    return new TraceInfoBll().Insert(traceInfo).Id > 0;
+                }
+                return true;
             });
 
             if (success)
@@ -290,6 +311,28 @@ namespace JNL.Web.Controllers
         public ActionResult StaffScore()
         {
             return View();
+        }
+
+        /// <summary>
+        /// 研判预警/数据分析预警/综合分析
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult QueryAll()
+        {
+            return View();
+        }
+
+        public ActionResult Detail()
+        {
+            var id = RouteData.Values["id"].ToString().ToInt32();
+            var model = new ViewRiskRespondRiskBll().QuerySingle(id);
+
+            if (model == null)
+            {
+                return Redirect("/Error/NotFound");
+            }
+
+            return View(model);
         }
     }
 }

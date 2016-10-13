@@ -267,10 +267,10 @@ namespace JNL.Web.Controllers
             var groupList = modelList.GroupBy(t => t.RiskSecondLevelId).ToList();
 
             // 红线：2 甲类：167，298 乙：657 丙：1223
-            var hx = GetSingleTypeMonthAmmounts(new List<int> {2}, groupList);
-            var jia = GetSingleTypeMonthAmmounts(new List<int> {167, 298}, groupList);
-            var yi = GetSingleTypeMonthAmmounts(new List<int> {657}, groupList);
-            var bing = GetSingleTypeMonthAmmounts(new List<int> {1223}, groupList);
+            var hx = GetSingleTypeMonthAmmounts(new List<int> { 2 }, groupList);
+            var jia = GetSingleTypeMonthAmmounts(new List<int> { 167, 298 }, groupList);
+            var yi = GetSingleTypeMonthAmmounts(new List<int> { 657 }, groupList);
+            var bing = GetSingleTypeMonthAmmounts(new List<int> { 1223 }, groupList);
 
             // 甲类及以上占比
             var roteList = new double[12];
@@ -283,7 +283,7 @@ namespace JNL.Web.Controllers
                     var monthTotal = monthAmmountsDic[month];
                     if (monthTotal != 0)
                     {
-                        rote = (hx[i] + jia[i])/(monthTotal*1.0);
+                        rote = (hx[i] + jia[i]) / (monthTotal * 1.0);
                     }
                 }
 
@@ -409,7 +409,7 @@ namespace JNL.Web.Controllers
                 endTime = "2050-01-01";
             }
 
-            return type == 1 
+            return type == 1
                 ? $@"SELECT ReportStaffDepartId AS DepartId,ReportStaffDepart AS Depart,COUNT(Id) AS [Count] FROM
                      (SELECT Id,ReportStaffDepartId,ReportStaffDepart,OccurrenceTime FROM ViewRiskInfo WHERE OccurrenceTime BETWEEN '{startTime}' AND '{endTime}') T
                      GROUP BY ReportStaffDepartId,ReportStaffDepart"
@@ -417,6 +417,484 @@ namespace JNL.Web.Controllers
                     (SELECT Id,WarningDepartId,WarningDepart,WarningTime FROM ViewWarning WHERE WarningTime BETWEEN '{startTime}' AND '{endTime}') T
                     GROUP BY WarningDepartId,WarningDepart";
         }
+        #endregion
+
+        #region 研判预警/职工行为预警
+
+        public ActionResult Action()
+        {
+            return View();
+        }
+
+        private class TempAction
+        {
+            public int StaffId { get; set; }
+            public int DepartmentId { get; set; }
+            public string Department { get; set; }
+            public int Year { get; set; }
+            public decimal MinusScore { get; set; }
+        }
+
+        [HttpPost]
+        public JsonResult Action(int year)
+        {
+            var cmdText =
+                $@"SELECT StaffId,DepartmentId,Department,[Year],SUM(MinusScore) AS MinusScore FROM ViewStaffScore
+                   GROUP BY StaffId,DepartmentId,Department,[Year]
+                   HAVING [Year]={year}";
+            var list = new ViewRiskInfoBll().ExecuteModel<TempAction>(cmdText);
+
+            var result = list.GroupBy(t => t.Department).Select(group =>
+            {
+                var yellow = group.Count(t => t.MinusScore >= 300 && t.MinusScore < 400);
+                var orange = group.Count(t => t.MinusScore >= 400 && t.MinusScore < 500);
+                var red = group.Count(t => t.MinusScore >= 500);
+
+                return new
+                {
+                    name = group.Key,
+                    yellow,
+                    orange,
+                    red
+                };
+            });
+
+            return Json(result);
+        }
+        #endregion
+
+        #region 研判预警/数据分析预警/分布分析
+
+        public ActionResult Distribute()
+        {
+            return View();
+        }
+
+        private class TempDistribute
+        {
+            public string Name { get; set; }
+            public decimal Hx { get; set; }
+            public decimal Jy { get; set; }
+            public decimal Je { get; set; }
+            public decimal Yi { get; set; }
+            public decimal Bi { get; set; }
+            public decimal Xx { get; set; }
+            public decimal Hj { get; set; }
+
+            public decimal Zj { get; set; }
+            public decimal Wj { get; set; }
+        }
+
+        private class TempDistributeModel1
+        {
+            public string RiskSecondLevelName { get; set; }
+            public string ReportStaffDepart { get; set; }
+            public int Count { get; set; }
+        }
+
+        [HttpPost]
+        public JsonResult Distribute(int type, string start, string end)
+        {
+            var cmdText = BuildSqlForDistribute(type, start, end);
+
+            object result = null;
+            switch (type)
+            {
+                case 1: result = AbsoluteCount(cmdText); break;
+                case 2: result = AbsolutePercent(cmdText); break;
+            }
+
+            return Json(result);
+        }
+
+        private object AbsolutePercent(string cmdText)
+        {
+            var countList = AbsoluteCount(cmdText) as List<TempDistribute>;
+            if (countList != null)
+            {
+                var hxTotal = countList.Sum(t => t.Hx);
+                var jyTotal = countList.Sum(t => t.Jy);
+                var jeTotal = countList.Sum(t => t.Je);
+                var yiTotal = countList.Sum(t => t.Yi);
+                var biTotal = countList.Sum(t => t.Bi);
+                var xxTotal = countList.Sum(t => t.Xx);
+                var hjTotal = countList.Sum(t => t.Hj);
+
+                countList.ForEach(t =>
+                {
+                    t.Hx = hxTotal == 0 ? 0 : Math.Round(t.Hx / hxTotal, 4);
+                    t.Jy = jyTotal == 0 ? 0 : Math.Round(t.Jy / jyTotal, 4);
+                    t.Je = jeTotal == 0 ? 0 : Math.Round(t.Je / jeTotal, 4);
+                    t.Yi = yiTotal == 0 ? 0 : Math.Round(t.Yi / yiTotal, 4);
+                    t.Bi = biTotal == 0 ? 0 : Math.Round(t.Bi / biTotal, 4);
+                    t.Xx = xxTotal == 0 ? 0 : Math.Round(t.Xx / xxTotal, 4);
+                    t.Hj = hjTotal == 0 ? 0 : Math.Round(t.Hj / hjTotal, 4);
+                });
+
+                return countList;
+            }
+
+            return ErrorModel.InputError;
+        }
+
+        private object AbsoluteCount(string cmdText)
+        {
+            var list = new ViewRiskInfoBll().ExecuteModel<TempDistributeModel1>(cmdText);
+            var result = list.GroupBy(t => t.ReportStaffDepart).Select(group =>
+            {
+                var model = new TempDistribute { Name = group.Key };
+                group.ForEach(item =>
+                {
+                    switch (item.RiskSecondLevelName)
+                    {
+                        case "红线": model.Hx = item.Count; break;
+                        case "甲Ⅰ": model.Jy = item.Count; break;
+                        case "甲Ⅱ": model.Je = item.Count; break;
+                        case "乙": model.Yi = item.Count; break;
+                        case "丙": model.Bi = item.Count; break;
+                        case "信息": model.Xx = item.Count; break;
+                    }
+
+                    model.Hj += item.Count;
+                });
+
+                return model;
+            }).ToList();
+
+            return result;
+        }
+
+        private string BuildSqlForDistribute(int type, string start, string end)
+        {
+            switch (type)
+            {
+                case 1:
+                case 2:
+                    return $@"SELECT RiskSecondLevelId,RiskSecondLevelName,ReportStaffDepartId,ReportStaffDepart,COUNT(1) AS [Count] FROM
+                              (SELECT RiskSecondLevelId,RiskSecondLevelName,ReportStaffDepartId,ReportStaffDepart FROM ViewRiskInfo WHERE OccurrenceTime>'{start}' AND OccurrenceTime<'{end}') AS NEWT
+                              GROUP BY RiskSecondLevelId,RiskSecondLevelName,ReportStaffDepartId,ReportStaffDepart
+                              HAVING RiskSecondLevelName IN('红线','甲Ⅰ','甲Ⅱ','乙','丙','信息')";
+                default:
+                    return "";
+            }
+        }
+        #endregion
+
+        #region 研判预警/数据分析预警/地域分析
+
+        public ActionResult Area()
+        {
+            return View();
+        }
+
+        private class TempArea1
+        {
+            public string station { get; set; }
+            public int count { get; set; }
+        }
+
+        private class TempArea2
+        {
+            public string first { get; set; }
+            public string last { get; set; }
+            public int count { get; set; }
+        }
+
+        [HttpPost]
+        public JsonResult Area(int type, string start, string end)
+        {
+            var cmdText =
+                $@"SELECT FirstStationName,LastStationName FROM ViewRiskInfo WHERE (FirstStationName IS NOT NULL OR LastStationName IS NOT NULL) AND OccurrenceTime BETWEEN '{start}' AND '{end}'";
+            var list = new ViewRiskInfoBll().ExecuteModel<ViewRiskInfo>(cmdText);
+
+            object result;
+            if (type == 1)
+            {
+                result =
+                    list.Where(t => !string.IsNullOrEmpty(t.FirstStationName) && (string.IsNullOrEmpty(t.LastStationName) || t.FirstStationName == t.LastStationName))
+                    .GroupBy(t => t.FirstStationName)
+                    .Select(group => new TempArea1 { station = group.Key, count = group.Count() })
+                    .OrderByDescending(t => t.count);
+            }
+            else
+            {
+                var tempList = new List<TempArea2>();
+                list.Where(
+                    t =>
+                        !string.IsNullOrEmpty(t.FirstStationName) && !string.IsNullOrEmpty(t.LastStationName) &&
+                        t.FirstStationName != t.LastStationName)
+                    .GroupBy(t => t.FirstStationName)
+                    .ForEach(group =>
+                    {
+                        tempList.AddRange(
+                            group.GroupBy(t => t.LastStationName)
+                            .Select(g => new TempArea2
+                            {
+                                first = group.Key,
+                                last = g.Key,
+                                count = g.Count()
+                            }));
+                    });
+                result = tempList.OrderByDescending(t => t.count);
+            }
+
+            return Json(result);
+        }
+        #endregion
+
+        #region 研判预警/数据分析预警/天气情况分析
+
+        public ActionResult Weather()
+        {
+            return View();
+        }
+
+        private class TempWeather
+        {
+            public string type { get; set; }
+            public string level { get; set; }
+            public string summary { get; set; }
+            public int weatherId { get; set; }
+            public string weather { get; set; }
+            public int count { get; set; }
+        }
+
+        [HttpPost]
+        public JsonResult Weather(int weatherId, string start, string end)
+        {
+            var cmdText =
+                $@"SELECT RiskSecondLevelName AS level,RiskSummary AS summary,WeatherLike AS weather,WeatherId AS weatherId,RiskTopestName AS type, COUNT(1) AS [count] FROM
+                (SELECT RiskSecondLevelName,RiskSummary,WeatherLike,WeatherId,RiskTopestName FROM ViewRiskInfo WHERE OccurrenceTime BETWEEN '{start}' AND '{end}') T
+                GROUP BY RiskSecondLevelName,RiskSummary,WeatherLike,WeatherId,RiskTopestName
+                HAVING WeatherId='{weatherId}'";
+            var list = new ViewRiskInfoBll().ExecuteModel<TempWeather>(cmdText).OrderByDescending(t => t.count);
+
+            return Json(list);
+        }
+        #endregion
+
+        #region 研判预警/数据分析预警/时间段分析
+
+        public ActionResult TimeSection()
+        {
+            return View();
+        }
+
+        private class TempTimeSection
+        {
+            public string RiskSecondLevelName { get; set; }
+            public int Hour { get; set; }
+        }
+
+        [HttpPost]
+        public JsonResult TimeSection(string start, string end)
+        {
+            var cmdText =
+                $@"SELECT RiskSecondLevelName,DATEPART(HOUR, OccurrenceTime) AS [Hour] FROM ViewRiskInfo WHERE RiskSecondLevelName IS NOT NULL AND RiskSecondLevelName IN('红线','甲Ⅰ','甲Ⅱ','乙','丙','信息') AND OccurrenceTime BETWEEN '{start}' AND '{end}'";
+            var list = new ViewRiskInfoBll().ExecuteModel<TempTimeSection>(cmdText).ToList();
+
+            var result = new List<TempDistribute>();
+            for (int i = 0; i < 24; i++)
+            {
+                var hour = i;
+                var model = new TempDistribute { Name = hour + "时" };
+                var subList = list.Where(t => t.Hour == hour);
+                subList.ForEach(item =>
+                {
+                    switch (item.RiskSecondLevelName)
+                    {
+                        case "红线": model.Hx++; break;
+                        case "甲Ⅰ": model.Jy++; break;
+                        case "甲Ⅱ": model.Je++; break;
+                        case "乙": model.Yi++; break;
+                        case "丙": model.Bi++; break;
+                        case "信息": model.Xx++; break;
+                    }
+                    model.Hj++;
+                });
+
+                result.Add(model);
+            }
+
+            return Json(result.Select(t => new
+            {
+                t.Name,
+                t.Hx,
+                t.Jy,
+                t.Je,
+                t.Yi,
+                t.Bi,
+                t.Xx,
+                t.Hj
+            }));
+        }
+        #endregion
+
+        #region 研判预警/数据分析预警/构成分析
+
+        public ActionResult Constitute()
+        {
+            return View();
+        }
+
+        private class TempConstitute
+        {
+            public int RiskSummaryId { get; set; }
+            public string RiskSummary { get; set; }
+            public int Count { get; set; }
+        }
+
+        [HttpPost]
+        public JsonResult Constitute(int departId, string start, string end)
+        {
+            var cmdText = BuildSqlFormConstitute(departId, start, end);
+            var list = new ViewRiskInfoBll().ExecuteModel<TempConstitute>(cmdText).ToList();
+            var totalCount = list.Sum(t => t.Count);
+
+            if (totalCount > 0)
+            {
+                var constituteConfig = AppSettings.ConstituteAnalysisRiskSummaryIds;
+
+                var rest = totalCount;
+                var result = new List<object>();
+
+                list.ForEach(t =>
+                {
+                    if (constituteConfig.Contains(t.RiskSummaryId))
+                    {
+                        rest = rest - t.Count;
+                        result.Add(new
+                        {
+                            name = t.RiskSummary,
+                            value = Math.Round(t.Count / (totalCount * 1.0), 4) * 100
+                        });
+                    }
+                });
+
+                result.Add(new
+                {
+                    name = "其他",
+                    value = Math.Round(rest / (totalCount * 1.0), 4) * 100
+                });
+
+                return Json(result);
+            }
+
+            return Json(ErrorModel.InputError);
+        }
+
+        private string BuildSqlFormConstitute(int departId, string start, string end)
+        {
+            if (departId <= 0)
+            {
+                return $@"SELECT RiskSummaryId,RiskSummary,COUNT(RiskSummaryId) AS [Count] FROM 
+                          (SELECT RiskSummaryId,RiskSummary FROM ViewRiskInfo WHERE OccurrenceTime BETWEEN '{start}' AND '{end}' AND IsDelete=0) T
+                          GROUP BY RiskSummaryId,RiskSummary";
+            }
+
+            return $@"SELECT RiskSummaryId,RiskSummary,COUNT(RiskSummaryId) AS [Count] FROM 
+                      (SELECT RiskSummaryId,RiskSummary FROM ViewRiskRespondRisk WHERE OccurrenceTime BETWEEN '{start}' AND '{end}' AND DepartmentId={departId} AND IsDelete=0) T
+                      GROUP BY RiskSummaryId,RiskSummary";
+        }
+        #endregion
+
+        #region 研判预警/数据分析预警/阶段分析
+
+        public ActionResult Stage()
+        {
+            return View();
+        }
+
+        private class TempStage1
+        {
+            public int RiskSummaryId { get; set; }
+            public string RiskSummary { get; set; }
+            public int Count { get; set; }
+        }
+
+        private class TempStage2
+        {
+            public string name { get; set; }
+            public double daily1 { get; set; }
+            public double daily2 { get; set; }
+            public int total1 { get; set; }
+            public int total2 { get; set; }
+        }
+        
+        [HttpPost]
+        public JsonResult Stage(int departId)
+        {
+            double daySpan1, daySpan2;
+            var stage1 = GetStage1(departId, out daySpan1);
+            var stage2 = GetStage2(departId, out daySpan2);
+
+            var summaryIdList = new List<int>();
+            summaryIdList.AddRange(stage1.Select(t => t.RiskSummaryId));
+            summaryIdList.AddRange(stage2.Select(t => t.RiskSummaryId));
+
+            var result = new List<TempStage2>();
+            summaryIdList.Distinct().ForEach(id =>
+            {
+                var temp1 = stage1.FirstOrDefault(t => t.RiskSummaryId == id);
+                var temp2 = stage2.FirstOrDefault(t => t.RiskSummaryId == id);
+
+                var model = new TempStage2
+                {
+                    name = temp1?.RiskSummary ?? temp2?.RiskSummary,
+                    daily1 = temp1?.Count / daySpan1 ?? 0,
+                    daily2 = temp2?.Count / daySpan2 ?? 0,
+                    total1 = temp1?.Count ?? 0,
+                    total2 = temp2?.Count ?? 0
+                };
+
+                result.Add(model);
+            });
+
+            return Json(result);
+        }
+
+        private List<TempStage1> GetStage1(int departId, out double daySpan)
+        {
+            var start = Request["start1"];
+            var end = Request["end1"];
+            var cmdText = BuildSqlForStage(departId, start, end);
+
+            daySpan = GetDaySpan(start, end);
+
+            return new ViewRiskInfoBll().ExecuteModel<TempStage1>(cmdText).ToList();
+        }
+
+        private List<TempStage1> GetStage2(int departId, out double daySpan)
+        {
+            var start = Request["start2"];
+            var end = Request["end2"];
+            var cmdText = BuildSqlForStage(departId, start, end);
+
+            daySpan = GetDaySpan(start, end);
+
+            return new ViewRiskInfoBll().ExecuteModel<TempStage1>(cmdText).ToList();
+        }
+
+        private double GetDaySpan(string startTime, string endTime)
+        {
+            var start = DateTime.Parse(startTime);
+            var end = DateTime.Parse(endTime);
+            var timeSpan = end - start;
+
+            return timeSpan.TotalDays;
+        }
+
+        private string BuildSqlForStage(int departId, string start, string end)
+        {
+            var config = AppSettings.StageAnalysisRiskSummaryIds;
+
+            return $@"SELECT RiskSummary,RiskSummaryId,COUNT(RiskSummaryId) AS [Count] FROM
+                        (SELECT RiskSummary,RiskSummaryId FROM ViewRiskRespondRisk 
+	                    WHERE RiskSummaryId<>0 AND OccurrenceTime BETWEEN '{start}' AND '{end}' AND DepartmentId={departId}) T
+                      GROUP BY RiskSummary,RiskSummaryId
+                      HAVING RiskSummaryId IN({string.Join(",", config)})";
+        }
+        
         #endregion
     }
 }

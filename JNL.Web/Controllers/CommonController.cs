@@ -92,6 +92,24 @@ namespace JNL.Web.Controllers
             return InsertOrUpdateData(json, target, "UPDATE");
         }
 
+        [HttpPost]
+        public JsonResult DeleteData(string target, int id)
+        {
+            dynamic bllInstance = BllFactory.GetBllInstance(target);
+            if (bllInstance == null)
+            {
+                return Json(ErrorModel.InputError);
+            }
+
+            var success = bllInstance.DeleteSoftly(id);
+            if (success)
+            {
+                return Json(ErrorModel.OperateSuccess);
+            }
+
+            return Json(ErrorModel.OperateFailed);
+        }
+
         /// <summary>
         /// 反射获取指定表的Model类型
         /// </summary>

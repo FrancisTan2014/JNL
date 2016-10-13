@@ -293,7 +293,6 @@ namespace JNL.DataMigration
                     }
                 });
 
-
                 // make type dictionary
                 BuildDictionary();
 
@@ -356,6 +355,14 @@ namespace JNL.DataMigration
                         verifyTime = new DateTime(1970, 1, 1).AddMilliseconds(risk.audit_time);
                     }
 
+                    var verifyStatus = 1;
+                    switch (risk.audit_status)
+                    {
+                        case 1: verifyStatus = 1; break;
+                        case 2: verifyStatus = 4; break;
+                        case 3: verifyStatus = 3; break;
+                    }
+
                     return new RiskNode
                     {
                         RiskInfo = new RiskInfo
@@ -372,6 +379,7 @@ namespace JNL.DataMigration
                             Visible = risk.risk_store == 1,
                             RiskTypeId = risk.menu_type + 2,
                             VerifyTime = verifyTime,
+                            VerifyStatus = verifyStatus,
                             NeedRoomSign = risk.room_sign == 1,
                             NeedLeaderSign = risk.leader_sign == 1,
                             NeedStressTrack = risk.stress_trace == 1,

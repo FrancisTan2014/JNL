@@ -1,0 +1,44 @@
+﻿@{
+    ViewBag.Title = "天气情况分布分析";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    #btnSearch {
+        width: 100%;
+    }
+</style>
+
+<h5 class="title">@ViewBag.Title</h5>
+
+<div id="searchBox" class="row">
+    <div class="col s2 input-field">
+        <div class="select-wrapper">
+            <select class="initialized" id="searchWeather">
+            </select>
+        </div>
+    </div>
+    <div class="col s2 input-field">
+        <input type="date" value="@DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd")" class="datepicker" id="searchStart" placeholder="开始日期" />
+    </div>
+    <div class="col s2 input-field">
+        <input type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="datepicker" id="searchEnd" placeholder="结束日期" />
+    </div>
+    <div class="col s2 input-field">
+        <button id="btnSearch" class="btn waves-effect waves-block waves-light" type="button">查 询</button>
+    </div>
+</div>
+
+<table class="bordered data-table">
+    <thead>
+    <tr>
+        <th>风险等级</th>
+        <th>天气状况</th>
+        <th>风险概述</th>
+        <th>数量</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script src="/Scripts/page-scripts/analysis-weather.js"></script>

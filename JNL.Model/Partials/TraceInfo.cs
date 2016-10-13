@@ -27,9 +27,10 @@ namespace JNL.Model
 		{}
 		#region Model
 		private int _id;
-		private int _tracetype;
-		private int _responsedepartmentid;
+		private int _tracetype=2;
+		private string _responsedepartmentids;
 		private string _tracecontent;
+	    private string _filename = "";
 		private string _filepath="";
 		private DateTime _addtime= DateTime.Now;
 		private DateTime _updatetime= DateTime.Now;
@@ -53,10 +54,10 @@ namespace JNL.Model
 		/// <summary>
 		/// 责任部门Id
 		/// </summary>
-		public int ResponseDepartmentId
+		public string ResponseDepartmentIds
 		{
-			set{ _responsedepartmentid=value;}
-			get{return _responsedepartmentid;}
+			set{ _responsedepartmentids=value;}
+			get{return _responsedepartmentids;}
 		}
 		/// <summary>
 		/// 追踪内容
@@ -66,6 +67,14 @@ namespace JNL.Model
 			set{ _tracecontent=value;}
 			get{return _tracecontent;}
 		}
+        /// <summary>
+        /// 附件文件名称
+        /// </summary>
+	    public string FileName
+	    {
+            set { _filename = value; }
+            get { return _filename; }
+	    }
 		/// <summary>
 		/// 附件文件路径
 		/// </summary>

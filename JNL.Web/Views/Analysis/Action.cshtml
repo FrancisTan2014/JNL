@@ -1,0 +1,52 @@
+﻿@{
+    ViewBag.Title = "职工行为预警";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    #btnSearch {
+        width: 100%;
+    }
+</style>
+
+<h5 class="title">@ViewBag.Title</h5>
+
+<div id="searchBox" class="row">
+    <div class="col s2 input-field">
+        <div class="select-wrapper">
+            <select class="initialized" id="searchYear">
+                @{
+                    var year = DateTime.Now.Year;
+                    for (int i = 0; i < 10; i++)
+                    {
+                        <option value="@(year-i)">@(year-i)</option>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+    <div class="col s2 input-field">
+        <div class="btn waves-effect waves-light" id="btnSearch">查 询</div>
+    </div>
+</div>
+
+<table class="bordered centered data-table">
+    <thead>
+    <tr>
+        <th>预警等级</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>黄色300分</td>
+    </tr>
+    <tr>
+        <td>橙色400分</td>
+    </tr>
+    <tr>
+        <td>红色500分</td>
+    </tr>
+    </tbody>
+</table>
+
+<script src="/Scripts/page-scripts/analysis-action.js"></script>

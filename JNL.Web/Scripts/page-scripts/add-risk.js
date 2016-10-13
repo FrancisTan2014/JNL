@@ -166,13 +166,15 @@
                 }
 
                 var valid = true;
-                $('select.initialized').each(function() {
-                    var error = '请选择' + $(this).find('option:first').text();
-                    if ($(this).val() <= 0) {
-                        valid = false;
+                $('select.initialized').each(function () {
+                    if ($(this).prop('name') !== 'LastStationId') {
+                        var error = '请选择' + $(this).find('option:first').text();
+                        if ($(this).val() <= 0) {
+                            valid = false;
 
-                        Materialize.toast(error, 3000);
-                        return false;
+                            Materialize.toast(error, 3000);
+                            return false;
+                        }
                     }
                 });
 

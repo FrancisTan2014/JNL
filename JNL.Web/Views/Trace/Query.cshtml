@@ -1,0 +1,41 @@
+﻿@{
+    ViewBag.Title = "每日重点安全追踪信息分析统计";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h5 class="title">@ViewBag.Title</h5>
+
+<div id="searchBox" class="row">
+    <div class="col s2 input-field">
+        <div class="select-wrapper">
+            <select class="initialized" id="searchDepart">
+                <option value="-1">追踪部门</option>
+            </select>
+        </div>
+    </div>
+    <div class="col s2 input-field">
+        <input type="text" id="searchStart" class="datepicker" placeholder="起始时间"/>
+    </div>
+    <div class="col s2 input-field">
+        <input type="text" id="searchEnd" class="datepicker" placeholder="结束时间"/>
+    </div>
+    <div class="col s2 input-field">
+        <button id="btnSearch" type="button" class="btn waves-effect waves-light waves-block">查 询</button>
+    </div>
+</div>
+
+<table class="bordered data-table">
+    <thead>
+        <tr>
+            <th>追踪时间</th>
+            <th>追踪类别</th>
+            <th>责任部门</th>
+            <th>信息内容</th>
+            <th>附件</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+<script src="/Scripts/page-scripts/trace-query.js"></script>

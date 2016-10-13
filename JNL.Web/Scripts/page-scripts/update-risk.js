@@ -41,7 +41,8 @@
                 afterBuilt: function ($select) {
                     var defaultLineId = $('#defaultOccurrenceLineId').val();
                     $select.find('option[value={0}]'.format(defaultLineId)).prop('selected', true);
-                    $select.change();
+
+                    _this.initStationSelect(defaultLineId);
 
                     $select.material_select();
                 }
@@ -139,6 +140,29 @@
             $('.btn-group button').prop('disabled', !disbled);
         },
 
+        initStationSelect: function(lineId) {
+            $.initSelect({
+                selectors: ['#FirstStationId', '#LastStationId'],
+                ajaxUrl: '/Common/GetList',
+                textField: 'StationName',
+                valueField: 'StationId',
+                getAjaxParams: function () {
+                    return {
+                        TableName: 'ViewLine',
+                        Conditions: 'Id=' + lineId,
+                        OrderField: 'Sort',
+                        Desending: false
+                    };
+                },
+                beforeBuilt: function ($select) {
+                    $select.find('option:not(:first)').remove();
+                },
+                afterBuilt: function ($select) {
+                    $select.material_select();
+                }
+            });
+        },
+       
         bindEvents: function () {
             var _this = this;
 
@@ -151,26 +175,7 @@
             $('#OccurrenceLineId').on('change', function () {
                 var lineId = $(this).val();
 
-                $.initSelect({
-                    selectors: ['#FirstStationId', '#LastStationId'],
-                    ajaxUrl: '/Common/GetList',
-                    textField: 'StationName',
-                    valueField: 'StationId',
-                    getAjaxParams: function () {
-                        return {
-                            TableName: 'ViewLine',
-                            Conditions: 'Id=' + lineId,
-                            OrderField: 'Sort',
-                            Desending: true
-                        };
-                    },
-                    beforeBuilt: function ($select) {
-                        $select.find('option:not(:first)').remove();
-                    },
-                    afterBuilt: function ($select) {
-                        $select.material_select();
-                    }
-                });
+                _this.initStationSelect(lineId);
             });
 
             $('.edit-shadow').on('click', function () {
@@ -235,6 +240,11 @@
                 var valid = true;
                 $('select.initialized').each(function () {
                     var name = $(this).prop('name');
+                    var defaultFirstId = $('#defaultFirstStationId').val();
+                    if (name == 'FirstStationId' && defaultFirstId <= 0) {
+                        return;
+                    }
+
                     if (name != 'LastStationId') {
                         var error = '请选择' + $(this).find('option:first').text();
                         if ($(this).val() <= 0) {

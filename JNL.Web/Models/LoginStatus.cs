@@ -1,4 +1,5 @@
 ﻿using System.Web;
+using System.Web.Mvc;
 using JNL.Bll;
 using JNL.Model;
 using JNL.Utilities.Extensions;
@@ -91,7 +92,7 @@ namespace JNL.Web.Models
         /// <summary>
         /// 将当前请求终止，并重定向到登录页面
         /// </summary>
-        public static void RedirectToLogin()
+        public static ActionResult RedirectToLogin()
         {
             var context = HttpContext.Current;
             var requestUrl = context.Request.Url.ToString();
@@ -101,13 +102,16 @@ namespace JNL.Web.Models
                 var msg = ErrorModel.NeedLoginFirst(requestUrl);
                 var json = JsonHelper.Serialize(msg);
 
-                context.Response.Write(json);
-                context.Response.End();
+                return new JsonResult
+                {
+                    ContentType = "application/json",
+                    Data = msg
+                };
             }
             else
             {
                 var redirectUrl = $"/Home/Login?backUrl={requestUrl}";
-                context.Response.Redirect(redirectUrl);
+                return new RedirectResult(redirectUrl);
             }
         }
     }

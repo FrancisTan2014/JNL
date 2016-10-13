@@ -1,0 +1,88 @@
+﻿@model JNL.Model.ViewRiskRespondRisk
+
+@{
+    ViewBag.Title = "风险信息详情";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .depart {
+        color: #f50057;
+    }
+
+    .col>p:first-child {
+        margin: 0;
+    }
+    .col>p:last-child {
+        margin-top: 10px;
+    }
+
+    #btnBack {
+        width: 15%;
+    }
+</style>
+
+<h5 class="title">@ViewBag.Title</h5>
+
+<div class="row">
+    <div class="col s6">
+        <p>提报人</p>
+        <p class="flow-text"><span class="depart">【@Model.ReportStaffDepart】</span> <br/>@Model.ReportStaffSalaryId | @Model.ReportStaffName | @Model.ReportStaffWorkId</p>
+    </div>
+    <div class="col s6">
+        <p>责任人</p>
+        <p class="flow-text">
+            <span class="depart">【@Model.Department】</span> <br/>@Model.SalaryId | @Model.Name | @Model.WorkId
+        </p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col s4">
+        <p>发生时间</p>
+        <p class="flow-text">@(Model.OccurrenceTime == null ? "未知" : Model.OccurrenceTime.Value.ToString("yyyy-MM-dd HH:mm:ss"))</p>
+    </div>
+    <div class="col s4">
+        <p>列车类别</p>
+        <p class="flow-text">@(Model.LocoServiceType ?? "未知")</p>
+    </div>
+    <div class="col s4">
+        <p>天气情况</p>
+        <p class="flow-text">@(Model.WeatherLike ?? "未知")</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col s4">
+        <p>发生线路</p>
+        <p class="flow-text">@(Model.OccurrenceLineName ?? "未知")</p>
+    </div>
+    <div class="col s4">
+        <p>起始站</p>
+        <p class="flow-text">@(Model.FirstStationName ?? "未知")</p>
+    </div>
+    <div class="col s4">
+        <p>终点站</p>
+        <p class="flow-text">@(Model.LastStationName ?? "未知")</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col s12">
+        <p>风险概述</p>
+        <p class="flow-text">@(Model.RiskSummary ?? "未知")</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col s12">
+        <p>风险详情</p>
+        <p class="flow-text">@(Model.RiskDetails ?? "无")</p>
+    </div>
+</div>
+
+<div class="row">
+    <a href="javascript:history.back();" class="btn btn-large waves-effect waves-block waves-light" id="btnBack">返 回</a>
+</div>
+
+

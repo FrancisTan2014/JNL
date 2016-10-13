@@ -15,10 +15,10 @@
         </div>
     </div>
     <div class="col s2 input-field">
-        <input type="date" value="@DateTime.Now.AddDays(-30).ToString("dd-MM-yyyy")" id="searchStart" />
+        <input type="date" value="@DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd")" class="datepicker" id="searchStart" />
     </div>
     <div class="col s2 input-field">
-        <input type="date" value="@DateTime.Now.ToString("dd-MM-yyyy")" id="searchEnd"/>
+        <input type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="datepicker" id="searchEnd"/>
     </div>
     <div class="col s2 input-field">
         <button id="btnSearchResult" class="btn waves-effect waves-light" type="button">查 询</button>

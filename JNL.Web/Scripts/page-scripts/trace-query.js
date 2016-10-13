@@ -8,16 +8,16 @@
         commonTable: null,
         departs: [],
 
-        columns: ['Id', 'Id', 'WarningTitle', 'WarningTime', 'ImplementDeparts', 'Id'],
+        columns: ['AddTime', 'TraceType', 'ResponseDepartmentIds', 'TraceContent', 'FilePath'],
         builds: [
         {
             targets: [1],
             onCreateCell: function (columnValue) {
-                return '监督检查预警';
+                return columnValue == 1 ? '局追' : '段追';
             }
         },
         {
-            targets: [4],
+            targets: [2],
             onCreateCell: function (columnValue) {
                 var ids = [];
                 if (columnValue) {
@@ -32,9 +32,23 @@
             }
         },
         {
-            targets: [5],
-            onCreateCell: function (columnValue) {
-                return '<td><a href="/Warn/Verify/{0}" title="点击查看明细">查看明细</a></td>'.format(columnValue);
+            targets: [3],
+            onCreateCell: function (value) {
+                if (value && value.length > 60) {
+                    return value.substr(0, 60) + '...';
+                }
+
+                return value;
+            }
+        },
+        {
+            targets: [4],
+            onCreateCell: function (columnValue, model) {
+                if (!columnValue) {
+                    return '无附件';
+                }
+
+                return '<td><a href="{0}" download="{1}"><i class="small mdi-file-file-download"></i></a></td>'.format(columnValue, model.FileName);
             }
         }],
 
@@ -44,27 +58,22 @@
         },
 
         getConditions: function () {
-            var conditions = ['HasImplementedAll=1'];
+            var conditions = [];
 
-            var implementDepart = $('#searchImplement').val();
-            if (implementDepart > 0) {
-                conditions.push('(ImplementDeparts LIKE \'{0},%\' OR ImplementDeparts LIKE \'%,{0},%\' OR ImplementDeparts LIKE \'%,{0}\')'.format(implementDepart));
+            var depart = $('#searchDepart').val();
+            if (depart > 0) {
+                conditions.push('(ResponseDepartmentIds LIKE \'%,{0},%\' OR ResponseDepartmentIds LIKE \'{0},%\' OR ResponseDepartmentIds LIKE \'%,{0}\')'.format(depart));
             }
 
-            var warnDepart = $('#searchDepart').val();
-            if (warnDepart > 0) {
-                conditions.push('WarningDepartId='+warnDepart);
-            }
-
-            var start = $('#searchStar').val();
+            var start = $('#searchStart').val();
             if (start) {
-                conditions.push('WarningTime>\'{0}\''.format(start));
+                conditions.push('AddTime>\'{0}\''.format(start));
             }
 
             var end = $('#searchEnd').val();
             if (end) {
                 end += ' 23:59:59';
-                conditions.push('WarningTime<\'{0}\''.format(end));
+                conditions.push('AddTime<\'{0}\''.format(end));
             }
 
             return conditions;
@@ -72,36 +81,47 @@
 
         init: function () {
             var _this = this;
+
+            common.pickdate();
+
+            $.initSelect({
+                selectors: ['#searchDepart'],
+                ajaxUrl: '/Common/GetList',
+                textField: 'Name',
+                valueField: 'Id',
+                getAjaxParams: function() {
+                    return {
+                        TableName: 'Department'
+                    };
+                },
+                afterBuilt: function($select) {
+                    $select.material_select();
+                }
+            });
+
             common.ajax({
                 url: '/Common/GetList',
                 data: { TableName: 'Department' }
             }).done(function (res) {
                 if (res.code == 108) {
                     _this.departs = res.data;
-
-                    res.data.forEach(function(depart) {
-                        $('#searchImplement').append('<option value="{0}">{1}</option>'.format(depart.Id, depart.Name));
-                    });
-
-                    $('#searchImplement').material_select();
                 }
             }).done(function () {
-                _this.ajaxParams.TableName = 'ViewWarning';
+                _this.ajaxParams.TableName = 'TraceInfo';
                 _this.ajaxParams.PageIndex = 1;
                 _this.ajaxParams.PageSize = 20;
-                _this.commonTable = $.commonTable('.depart-verify', {
+                _this.commonTable = $.commonTable('.data-table', {
                     columns: _this.columns,
                     builds: _this.builds,
                     ajaxParams: _this.ajaxParams,
                     getConditions: _this.getConditions
                 });
             });
-
-            common.pickdate();
         },
 
         bindEvents: function () {
             var _this = this;
+
             $('#btnSearch').on('click', function () {
                 _this.commonTable.setPageIndex(1);
                 _this.commonTable.loadData();
