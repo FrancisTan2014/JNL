@@ -6,3 +6,5 @@
 /// <reference path="page-scripts/common.js" />
 /// <reference path="/node_modules/jquery.cookie/jquery.cookie.js" />
 /// <reference path="/node_modules/echarts/dist/echarts.js" />
+/// <reference path="/node_modules/select2/dist/js/select2.js" />
+/// <reference path="plugins/tgh.materialize-multiselect/tgh.materialize-multiselect.js" />

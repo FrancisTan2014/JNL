@@ -1,0 +1,30 @@
+﻿.material-multiselect .material-multiselect-input {
+        color: #000 !important;
+        cursor: pointer;
+        margin-bottom: 0;
+        border-bottom: 1px solid #9e9e9e !important;
+    }
+    .material-multiselect .material-multiselect-down {
+        color: initial;
+        position: absolute;
+        right: 10px;
+        top: 8px;
+        font-size: 20px;
+    }
+    .material-multiselect .dropdown-content {
+        width: 100%;
+    }
+    .material-multiselect .dropdown-content.visible {
+        display: block;
+        opacity: 1;
+    }
+    .material-multiselect .dropdown-content>li.active {
+        color: #26a69a;
+        background: #fff;
+    }
+    .material-multiselect .dropdown-content>li.active:hover {
+        background: #eee;
+    }
+    .material-multiselect .dropdown-content>li.active label {
+        color: #26a69a;
+    }

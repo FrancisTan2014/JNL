@@ -8,6 +8,7 @@
     "jquery.cookie": "1.4.1",
     "materialize-css": "^0.97.5",
     "parsleyjs": "^2.4.4",
+    "select2": "^4.0.3",
     "uploadify": "^1.0.7"
   },
   "dependencies": {

@@ -473,35 +473,52 @@ namespace JNL.Web.Controllers
         private class TempDistribute
         {
             public string Name { get; set; }
-            public decimal Hx { get; set; }
-            public decimal Jy { get; set; }
-            public decimal Je { get; set; }
-            public decimal Yi { get; set; }
-            public decimal Bi { get; set; }
-            public decimal Xx { get; set; }
-            public decimal Hj { get; set; }
+            public double Hx { get; set; }
+            public double Jy { get; set; }
+            public double Je { get; set; }
+            public double Yi { get; set; }
+            public double Bi { get; set; }
+            public double Xx { get; set; }
+            public double Hj { get; set; }
 
-            public decimal Zj { get; set; }
-            public decimal Wj { get; set; }
+            public double Zj { get; set; }
+            public double Wj { get; set; }
         }
 
         private class TempDistributeModel1
         {
+            public int DepartmentId { get; set; }
+            public string Department { get; set; }
+            public int RiskSecondLevelId { get; set; }
             public string RiskSecondLevelName { get; set; }
-            public string ReportStaffDepart { get; set; }
             public int Count { get; set; }
         }
 
-        [HttpPost]
-        public JsonResult Distribute(int type, string start, string end)
+        private class TempDistributeModel2
         {
-            var cmdText = BuildSqlForDistribute(type, start, end);
+            public int DepartmentId { get; set; }
+            public string Department { get; set; }
+            public int ReportStaffDepartId { get; set; }
+        }
+
+        private class TempDistributeModel3
+        {
+            public int DepartmentId { get; set; }
+            public int StaffCount { get; set; }
+        }
+
+        [HttpPost]
+        public JsonResult Distribute(int type, string start, string end, string departs)
+        {
+            var cmdText = BuildSqlForDistribute(type, start, end, departs);
 
             object result = null;
             switch (type)
             {
                 case 1: result = AbsoluteCount(cmdText); break;
                 case 2: result = AbsolutePercent(cmdText); break;
+                case 3: result = RelateCount(cmdText, start, end); break;
+                case 4: result = RelateScore(cmdText); break;
             }
 
             return Json(result);
@@ -522,13 +539,13 @@ namespace JNL.Web.Controllers
 
                 countList.ForEach(t =>
                 {
-                    t.Hx = hxTotal == 0 ? 0 : Math.Round(t.Hx / hxTotal, 4);
-                    t.Jy = jyTotal == 0 ? 0 : Math.Round(t.Jy / jyTotal, 4);
-                    t.Je = jeTotal == 0 ? 0 : Math.Round(t.Je / jeTotal, 4);
-                    t.Yi = yiTotal == 0 ? 0 : Math.Round(t.Yi / yiTotal, 4);
-                    t.Bi = biTotal == 0 ? 0 : Math.Round(t.Bi / biTotal, 4);
-                    t.Xx = xxTotal == 0 ? 0 : Math.Round(t.Xx / xxTotal, 4);
-                    t.Hj = hjTotal == 0 ? 0 : Math.Round(t.Hj / hjTotal, 4);
+                    t.Hx = hxTotal.Equals(0) ? 0 : Math.Round(t.Hx / hxTotal, 4);
+                    t.Jy = jyTotal.Equals(0) ? 0 : Math.Round(t.Jy / jyTotal, 4);
+                    t.Je = jeTotal.Equals(0) ? 0 : Math.Round(t.Je / jeTotal, 4);
+                    t.Yi = yiTotal.Equals(0) ? 0 : Math.Round(t.Yi / yiTotal, 4);
+                    t.Bi = biTotal.Equals(0) ? 0 : Math.Round(t.Bi / biTotal, 4);
+                    t.Xx = xxTotal.Equals(0) ? 0 : Math.Round(t.Xx / xxTotal, 4);
+                    t.Hj = hjTotal.Equals(0) ? 0 : Math.Round(t.Hj / hjTotal, 4);
                 });
 
                 return countList;
@@ -540,7 +557,7 @@ namespace JNL.Web.Controllers
         private object AbsoluteCount(string cmdText)
         {
             var list = new ViewRiskInfoBll().ExecuteModel<TempDistributeModel1>(cmdText);
-            var result = list.GroupBy(t => t.ReportStaffDepart).Select(group =>
+            var result = list.GroupBy(t => t.Department).Select(group =>
             {
                 var model = new TempDistribute { Name = group.Key };
                 group.ForEach(item =>
@@ -564,16 +581,113 @@ namespace JNL.Web.Controllers
             return result;
         }
 
-        private string BuildSqlForDistribute(int type, string start, string end)
+        private object RelateCount(string cmdText, string startTime, string endTime)
+        {
+            var list = new RiskInfoBll().ExecuteModel<TempDistributeModel2>(cmdText);
+
+            var daySpan = GetDaySpan(startTime, endTime);
+            var result = list.GroupBy(t => t.Department).Select(group =>
+            {
+                var name = group.Key;
+
+                var selfTotal = group.Count(t => t.DepartmentId == t.ReportStaffDepartId);
+                var self = Math.Round(selfTotal / daySpan, 2);
+
+                var otherTotal = group.Count(t => t.DepartmentId != t.ReportStaffDepartId);
+                var other = Math.Round(otherTotal / daySpan, 2);
+
+                return new { name, self, other };
+            });
+
+            return result;
+        }
+
+        private object RelateScore(string cmdText)
+        {
+            var list = new RiskInfoBll().ExecuteModel<TempDistributeModel1>(cmdText);
+
+            // 各部门部门Id及其人数的字典集
+            var staffCountDic = new RiskInfoBll().ExecuteModel<TempDistributeModel3>("SELECT DepartmentId,COUNT(1) AS StaffCount FROM Staff GROUP BY DepartmentId,IsDelete HAVING IsDelete=0").ToDictionary(t => t.DepartmentId, t => t.StaffCount);
+
+            // 风险信息Id及其对应的扣分值字典
+            var minusScoreDic = AppSettings.RiskMinusScoreDic;
+
+            var result = list.GroupBy(t => t.DepartmentId).Select(group =>
+            {
+                var staffCount = staffCountDic[group.Key];
+
+                var model = new TempDistribute {Name = group.FirstOrDefault()?.Department ?? string.Empty};
+
+                var hxModel = group.FirstOrDefault(t => t.RiskSecondLevelName == "红线");
+                if (hxModel != null)
+                {
+                    var levelId = hxModel.RiskSecondLevelId;
+                    var minus = minusScoreDic.ContainsKey(levelId) ? minusScoreDic[levelId] : 0;
+                    model.Hx = minus * hxModel.Count / (staffCount * 1.0);
+                    model.Hx = Math.Round(model.Hx, 2);
+                }
+
+                var jyModel = group.FirstOrDefault(t => t.RiskSecondLevelName == "甲Ⅰ");
+                if (jyModel != null)
+                {
+                    var levelId = jyModel.RiskSecondLevelId;
+                    var minus = minusScoreDic.ContainsKey(levelId) ? minusScoreDic[levelId] : 0;
+                    model.Jy = minus * jyModel.Count / (staffCount * 1.0);
+                    model.Jy = Math.Round(model.Hx, 2);
+                }
+
+                var jeModel = group.FirstOrDefault(t => t.RiskSecondLevelName == "甲Ⅱ");
+                if (jeModel != null)
+                {
+                    var levelId = jeModel.RiskSecondLevelId;
+                    var minus = minusScoreDic.ContainsKey(levelId) ? minusScoreDic[levelId] : 0;
+                    model.Je = minus * jeModel.Count / (staffCount * 1.0);
+                    model.Je = Math.Round(model.Je);
+                }
+
+                var yiModel = group.FirstOrDefault(t => t.RiskSecondLevelName == "乙");
+                if (yiModel != null)
+                {
+                    var levelId = yiModel.RiskSecondLevelId;
+                    var minus = minusScoreDic.ContainsKey(levelId) ? minusScoreDic[levelId] : 0;
+                    model.Yi = minus * yiModel.Count / (staffCount * 1.0);
+                    model.Yi = Math.Round(model.Yi, 2);
+                }
+
+                var biModel = group.FirstOrDefault(t => t.RiskSecondLevelName == "丙");
+                if (biModel != null)
+                {
+                    var levelId = biModel.RiskSecondLevelId;
+                    var minus = minusScoreDic.ContainsKey(levelId) ? minusScoreDic[levelId] : 0;
+                    model.Yi = minus * biModel.Count / (staffCount * 1.0);
+                    model.Yi = Math.Round(model.Yi, 2);
+                }
+
+                model.Hj = model.Hx + model.Jy + model.Je + model.Yi + model.Bi;
+
+                return model;
+            });
+
+            return result;
+        }
+
+        private string BuildSqlForDistribute(int type, string start, string end, string departs)
         {
             switch (type)
             {
                 case 1:
                 case 2:
-                    return $@"SELECT RiskSecondLevelId,RiskSecondLevelName,ReportStaffDepartId,ReportStaffDepart,COUNT(1) AS [Count] FROM
-                              (SELECT RiskSecondLevelId,RiskSecondLevelName,ReportStaffDepartId,ReportStaffDepart FROM ViewRiskInfo WHERE OccurrenceTime>'{start}' AND OccurrenceTime<'{end}') AS NEWT
-                              GROUP BY RiskSecondLevelId,RiskSecondLevelName,ReportStaffDepartId,ReportStaffDepart
+                case 4:
+                    return $@"SELECT RiskSecondLevelId,RiskSecondLevelName,DepartmentId,Department,COUNT(1) AS [Count] FROM
+                              (SELECT RiskSecondLevelId,RiskSecondLevelName,Department,DepartmentId FROM ViewRiskRespondRisk WHERE OccurrenceTime>'{start}' AND OccurrenceTime<'{end}') AS NEWT
+                              GROUP BY RiskSecondLevelId,RiskSecondLevelName,DepartmentId,Department
                               HAVING RiskSecondLevelName IN('红线','甲Ⅰ','甲Ⅱ','乙','丙','信息')";
+
+                case 3:
+                    var lastCondition = string.IsNullOrEmpty(departs) ? string.Empty : $"AND DepartmentId IN({departs})";
+                    return
+                        $@"SELECT DepartmentId,Department,ReportStaffDepartId FROM ViewRiskRespondRisk WHERE OccurrenceTime BETWEEN '{start}' AND '{end}' AND IsDelete=0 {lastCondition}";
+
                 default:
                     return "";
             }
@@ -824,7 +938,7 @@ namespace JNL.Web.Controllers
             public int total1 { get; set; }
             public int total2 { get; set; }
         }
-        
+
         [HttpPost]
         public JsonResult Stage(int departId)
         {
@@ -907,7 +1021,7 @@ namespace JNL.Web.Controllers
                       GROUP BY RiskSummary,RiskSummaryId
                       HAVING RiskSummaryId IN({string.Join(",", config)})";
         }
-        
+
         #endregion
     }
 }

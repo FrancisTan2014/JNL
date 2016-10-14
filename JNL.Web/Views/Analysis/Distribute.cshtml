@@ -3,6 +3,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<link href="/Scripts/plugins/tgh.materialize-multiselect/tgh.materialize-multiselect.css" rel="stylesheet" />
 <style>
     #btnSearch {
         width: 100%;
@@ -29,6 +30,18 @@
         </div>
     </div>
     <div class="col s2 input-field">
+        <input type="text" id="searchDepart" />
+        @*<div class="material-multiselect">
+            <input type="text" placeholder="责任部门" class="material-multiselect-input" readonly="readonly"/><i class="mdi-hardware-keyboard-arrow-down material-multiselect-down"></i>
+            <ul class="dropdown-content visible">
+                <li id="test"><input type="checkbox" id="test1" /><label>集宁机务段</label></li>
+                <li><input type="checkbox" id="test2" /><label for="test2">集宁机务段</label></li>
+                <li><input type="checkbox" id="test3" /><label for="test3">集宁机务段</label></li>
+                <li><input type="checkbox" id="test4" /><label for="test4">集宁机务段</label></li>
+            </ul>
+        </div>*@
+    </div>
+    <div class="col s2 input-field">
         <input type="date" value="@DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd")" class="datepicker" id="searchStart" placeholder="开始日期"/>
     </div>
     <div class="col s2 input-field">
@@ -47,8 +60,9 @@
 </table>
 
 <div class="chart-container">
-    
+
 </div>
 
 <script src="/node_modules/echarts/dist/echarts.js"></script>
+<script src="/Scripts/plugins/tgh.materialize-multiselect/tgh.materialize-multiselect.js"></script>
 <script src="/Scripts/page-scripts/analysis-distribute.js"></script>

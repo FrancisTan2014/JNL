@@ -25,8 +25,30 @@
                 });
             }
         });
-
+        
         $('#btnSearch').click();
+    });
+
+    window.page = {};
+    window.page.multi = new Multiselect('searchDepart', {
+        placeholder: '责任部门',
+        textKey: 'Name',
+        valueKey: 'Id',
+        loadData: function(callback, multiObj) {
+            common.ajax({
+                url: '/Common/GetList',
+                data: {
+                    TableName: 'Department'
+                }
+            }).done(function(res) {
+                var data = [];
+                if (res.code == 108) {
+                    data = res.data;
+                }
+
+                callback(data, multiObj);
+            });
+        }
     });
 
     // 获取异步请求参数
@@ -44,8 +66,10 @@
         }
         end += ' 23:59:59';
 
+        var departs = window.page.multi.selected.select(function (item) { return item.value }).join();
+
         return {
-            type: type, start: start, end: end
+            type: type, start: start, end: end, departs: departs
         };
     }
 
@@ -94,11 +118,41 @@
     // 相对数量分布
     function relateCount(data) {
 
+        initRows(2);
+
+        // 初始化表头
+        var titles = ['对比项', '自查均量', '外检均量'];
+        initColumnTitle(titles);
+
+        data.forEach(function(item) {
+            fillColumn(item, ['name', 'self', 'other']);
+        });
+
+        var departs = data.select(function (item) { return item.name });
+        var selves = data.select(function (item) { return item.self });
+        var others = data.select(function (item) { return item.other });
+
+        var legends = ['自查', '外检'];
+        var series = [
+            createBarSeries(legends[0], selves),
+            createBarSeries(legends[1], others)
+        ];
+
+        var chartDom = $('<div class="chart-canvas"></div>')[0];
+        $('.chart-container').append(chartDom);
+
+        buildBar(chartDom, legends, departs, series);
     }
 
     // 相对分值分布
     function relateScore(data) {
+        initRows(6);
 
+        var columnTitle = ['风险类别', '红线', '甲Ⅰ', '甲Ⅱ', '乙', '丙', '合计'];
+        initColumnTitle(columnTitle);
+        data.forEach(function(item) {
+            fillColumn(item, ['Name', 'Hx', 'Jy', 'Je', 'Yi', 'Bi', 'Hj'])
+        });
     }
 
     /**********************图表相关操作************************/
@@ -141,6 +195,52 @@
                 }
             ]
         });
+    }
+
+    // 创建柱状图
+    function buildBar(dom, legends, yAxis, series) {
+        var chart = echarts.init(dom);
+        chart.setOption({
+            tooltip : {
+                trigger: 'axis',
+                axisPointer : {            
+                    type : 'shadow'        
+                }
+            },
+            legend: {
+                data: legends
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis:  {
+                type: 'value'
+            },
+            yAxis: {
+                type: 'category',
+                data: yAxis
+            },
+            series: series
+        });
+    }
+
+    // 创建画柱状态所需要的数据序列
+    function createBarSeries(name, data) {
+        return {
+            name: name,
+            type: 'bar',
+            stack: '总量',
+            label: {
+                normal: {
+                    show: true,
+                    position: 'insideRight'
+                }
+            },
+            data: data
+        };
     }
 
     /**********************表格相关操作************************/

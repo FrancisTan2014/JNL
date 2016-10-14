@@ -230,12 +230,17 @@
     <Content Include="Scripts\page-scripts\trace-query.js" />
     <Content Include="Scripts\page-scripts\verify-implement.js" />
     <Content Include="Scripts\page-scripts\verify.js" />
+    <Content Include="Scripts\plugins\multiselect\jquery.multiselect.js" />
+    <Content Include="Scripts\plugins\multiselect\jquery.multiselect.min.js" />
+    <Content Include="Scripts\plugins\multiselect\jquery.multiselect.zh-cn.js" />
+    <Content Include="Scripts\plugins\tgh.materialize-multiselect\tgh.materialize-multiselect.css" />
     <Content Include="Scripts\plugins\wangEditor\css\fonts\icomoon.eot" />
     <Content Include="Scripts\plugins\wangEditor\css\fonts\icomoon.ttf" />
     <Content Include="Scripts\plugins\wangEditor\css\fonts\icomoon.woff" />
     <Content Include="Scripts\plugins\wangEditor\js\wangEditor.min.js.map" />
     <Content Include="Content\exam-template.xls" />
     <None Include="Properties\PublishProfiles\JNL.Web.pubxml" />
+    <Content Include="Scripts\plugins\tgh.materialize-multiselect\tgh.materialize-multiselect.js" />
     <None Include="Scripts\_references.js" />
     <Content Include="Scripts\page-scripts\common.js" />
     <Content Include="Scripts\page-scripts\not-implement.js" />
