@@ -38,10 +38,10 @@ namespace JNL.Web.Controllers
         }
 
         /// <summary>
-        /// 新增员工
+        /// 保存员工信息
         /// </summary>
         [HttpPost]
-        public JsonResult AddStaff(string json)
+        public JsonResult SaveStaff(string json)
         {
             var model = JsonHelper.Deserialize<Staff>(json);
             if (model == null)
@@ -53,9 +53,18 @@ namespace JNL.Web.Controllers
             model.Password = model.SalaryId.GetMd5();
 
             var bll = new StaffBll();
-            bll.Insert(model);
 
+            bool success;
             if (model.Id > 0)
+            {
+                success = bll.Update(model);
+            }
+            else
+            {
+                success = bll.Insert(model).Id > 0;
+            }
+
+            if (success)
             {
                 return Json(ErrorModel.OperateSuccess);
             }

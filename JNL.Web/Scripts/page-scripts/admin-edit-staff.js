@@ -47,14 +47,14 @@
             $('.form-validate').validate({
                 rules: {
                     Name: { required: true },
-                    SalaryId: { required: true },
+                    SalaryId: { required: true, minlength: 6 },
                     WorkId: { required: true },
                     HireDate: { required: true },
                     Identity: { checkIdentity: true }
                 },
                 messages: {
                     Name: { required: '姓名不能为空' },
-                    SalaryId: { required: '工号不能为空' },
+                    SalaryId: { required: '工号至少有6位', minlength: '工号至少有6位' },
                     WorkId: { required: '工作证号不能为空' },
                     HireDate: { required: '入职日期不能为空' }
                 },
@@ -144,14 +144,12 @@
         save: function() {
 
             var _this = this,
-                model = common.formJsonfiy('.form-validate'),
-                ajaxUrl = model.Id > 0 ? '/Common/UpdateData' : '/Admin/AddStaff';
+                model = common.formJsonfiy('.form-validate');
 
             _this.btnToggleDisable();
             common.ajax({
-                url: ajaxUrl,
+                url: '/Admin/SaveStaff',
                 data: {
-                    target: 'Staff',
                     json: JSON.stringify(model)
                 }
             }).done(function(res) {
