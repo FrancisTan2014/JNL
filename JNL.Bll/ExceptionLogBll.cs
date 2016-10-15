@@ -15,11 +15,13 @@ namespace JNL.Bll
         /// <param name="exception">异常信息对象</param>
         public static void ExceptionPersistence(string fileName, string className, Exception exception)
         {
+            var message = exception.Message + exception.InnerException?.Message;
+
             var exceptionLog = new ExceptionLog
             {
                 FileName = fileName,
                 ClassName = className,
-                Message = exception.Message,
+                Message = message,
                 Source = 1,
                 MethodName = exception.TargetSite.ToString(),
                 Instance = exception.Source,

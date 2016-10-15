@@ -1230,6 +1230,14 @@
             this.config.ajaxUrl = newUrl;
         };
 
+        CommonTable.prototype.changeAjaxParams = function (params) {
+            for (var key in params) {
+                if (params.hasOwnProperty(key)) {
+                    this.config.ajaxParams[key] = params[key];
+                }
+            }
+        };
+
         CommonTable.prototype.buildBtnLoad = function () {
             this.$btnLoadMore = $('<div style="text-align: center; margin-top: 15px;"><button class="btn waves-effect waves-light" style="width: 40%">加载更多</button></div>');
 
@@ -1303,7 +1311,7 @@
                     if (typeof (result) === 'string' && result.indexOf('</td>') === -1) {
                         $tr.append('<td>{0}</td>'.format(result));
                     } else if (!result) {
-                        $tr.append('<td></td>');
+                        $tr.append('<td>{0}</td>'.format(result));
                     } else {
                         $tr.append(result);
                     }
@@ -1621,4 +1629,19 @@
 
         $modal.openModal();
     };
+})(window, jQuery);
+
+/**
+ * 为jquery.validate插件添加自定义验证方法
+ */
+(function(window, $) {
+
+    // 为jquery.validate插件添加验证身份证的方法
+    $.validator.addMethod("checkIdentity", function (value, element, param) {
+        var isMatch = value == '' || /(^[1-9]\d{5}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$)|(^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$)/.test(value);
+
+        return this.optional(element) || isMatch;
+    }, $.validator.format("请输入有效的身份证号码"));
+
+
 })(window, jQuery);

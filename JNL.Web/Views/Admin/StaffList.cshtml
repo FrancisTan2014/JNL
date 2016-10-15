@@ -1,0 +1,99 @@
+﻿@{
+    ViewBag.Title = "人员管理";
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    #btnSearch {
+        width: 100%;
+        margin-top: 9px;
+    }
+</style>
+
+<h5 class="title">@ViewBag.Title</h5>
+
+<div id="searchBox" class="row">
+    <div class="col s2">
+        <div class="select-wrapper">
+            <select class="initialized condition" id="searchDepart" data-condition="DepartmentId={{value}}">
+                <option value="-1">所有部门</option>
+            </select>
+        </div>
+    </div>
+    <div class="col s2">
+        <div class="select-wrapper">
+            <select id="searchFlag" class="initialized condition" data-condition="WorkFlagId={{value}}">
+                <option value="-1">所有干部工人标识</option>
+            </select>
+        </div>
+    </div>
+    <div class="col s2">
+        <div class="select-wrapper">
+            <select id="searchType" class="initialized condition" data-condition="WorkTypeId={{value}}">
+                <option value="-1">所有工种</option>
+            </select>
+        </div>
+    </div>
+    <div class="col s2">
+        <div class="select-wrapper">
+            <select id="searchPosition" class="initialized condition" data-condition="PositionId={{value}}">
+                <option value="-1">所有职务</option>
+            </select>
+        </div>
+    </div>
+    <div class="col s2">
+        <div class="select-wrapper">
+            <select id="searchPolitical" class="initialized condition" data-condition="PoliticalStatusId={{value}}">
+                <option value="-1">所有政治面貌</option>
+            </select>
+        </div>
+    </div>
+    <div class="col s2">
+        <div class="select-wrapper">
+            <select id="searchGender" class="initialized condition" data-condition="Gender='{{value}}'">
+                <option value="男">男</option>
+                <option value="女">女</option>
+            </select>
+        </div>
+    </div>
+    <div class="col s2">
+        <input type="text" class="condition datepicker" data-condition="HireDate>'{{value}}'" placeholder="入职时间起始"/>
+    </div>
+    <div class="col s2">
+        <input type="text" class="condition datepicker" data-condition="HireDate<'{{value}} 23:59:59'" placeholder="入职时间结束"/>
+    </div>
+    <div class="col s2">
+        <input type="text" class="condition" data-condition="SalaryId LIKE '%{{value}}%'" placeholder="部分工号" title="可输入工号的其中几位进行模糊搜索" />
+    </div>
+    <div class="col s2">
+        <input type="text" class="condition" data-condition="WorkId LIKE '%{{value}}%'" placeholder="部分工作证号" title="可输入工作证号的其中几位进行模糊搜索"/>
+    </div>
+    <div class="col s2">
+        <input type="text" class="condition" data-condition="Name LIKE '%{{value}}%'" placeholder="姓 名" title="可输入姓名的其中一个或几个字进行模糊搜索" />
+    </div>
+    <div class="col s2">
+        <button class="btn waves-effect waves-light waves-block" id="btnSearch">查 询</button>
+    </div>
+</div>
+
+<table class="bordered data-table">
+    <thead>
+    <tr>
+        <th>姓名</th>
+        <th>性别</th>
+        <th>工号</th>
+        <th>工作证号</th>
+        <th>部门</th>
+        <th>工种</th>
+        <th>职位</th>
+        <th>入职日期</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+</table>
+
+<script src="/Scripts/page-scripts/admin-staff-list.js"></script>

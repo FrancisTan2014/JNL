@@ -18,23 +18,44 @@ namespace JNL.Web.Utils
                 while (true)
                 {
                     ComputeStaffScore();
-                    Thread.Sleep(24*60*60*1000); // 每天执行一次
+                    Thread.Sleep(24 * 60 * 60 * 1000); // 每天执行一次
                 }
             });
         }
 
         /// <summary>
+        /// 计算整年各月份的员工扣分
+        /// </summary>
+        /// <param name="year"></param>
+        public static void ComputeWholeYearStaffScore(int year)
+        {
+            for (int i = 0; i < 12; i++)
+            {
+                ComputeStaffScore(year, i + 1);
+            }
+        }
+
+        /// <summary>
         /// 计算本月每个风险责任人所扣的分数
         /// </summary>
-        public static void ComputeStaffScore()
+        public static void ComputeStaffScore(int year = 0, int month = 0)
         {
+            if (year <= 0)
+            {
+                year = DateTime.Now.Year;
+            }
+            if (month <= 0)
+            {
+                month = DateTime.Now.Month;
+            }
+
             try
             {
                 // 查询本月风险信息集合
                 var riskBll = new ViewRiskInfoBll();
                 var monthRisks =
                     riskBll.QueryList(
-                        $"DATEPART(YEAR, OccurrenceTime)={DateTime.Now.Year} AND DATEPART(MONTH, OccurrenceTime)={DateTime.Now.Month}",
+                        $"DATEPART(YEAR, OccurrenceTime)={year} AND DATEPART(MONTH, OccurrenceTime)={month}",
                         new[] { "Id", "RiskSecondLevelId" }).ToList();
                 if (!monthRisks.Any())
                 {
@@ -46,8 +67,6 @@ namespace JNL.Web.Utils
                 var riskIdList = monthRisks.Select(r => r.Id);
                 var respondList = respondBll.QueryList($"RiskId IN({string.Join(",", riskIdList)})", new[] { "RiskId", "ResponseStaffId" });
 
-                var year = DateTime.Now.Year;
-                var month = DateTime.Now.Month;
                 var minusScoreDic = AppSettings.RiskMinusScoreDic;
 
                 // 计算每个责任人所扣的分数
@@ -66,16 +85,22 @@ namespace JNL.Web.Utils
                 });
 
                 var staffScoreBll = new StaffScoreBll();
-                staffScoreBll.ExecuteTransation(() =>
-                {
-                    if (staffScoreBll.Delete($"Year={year} AND Month={month}"))
+                staffScoreBll.ExecuteTransation(
+                    () =>
+                    {
+                        var condition = $"Year={year} AND Month={month}";
+                        if (staffScoreBll.Exists(condition))
+                        {
+                            return staffScoreBll.Delete(condition);
+                        }
+
+                        return true;
+                    },
+                    () =>
                     {
                         staffScoreBll.BulkInsert(staffScoreList);
                         return true;
-                    }
-
-                    return false;
-                });
+                    });
             }
             catch (Exception ex)
             {

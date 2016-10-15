@@ -26,6 +26,9 @@ namespace JNL.Web
 
             // 开户每日一次计算员工风险责任扣分的任务
             StaffScoreHelper.StartTask();
+
+            //StaffScoreHelper.ComputeWholeYearStaffScore(2016);
+            //StaffScoreHelper.ComputeWholeYearStaffScore(2015);
         }
     }
 }

@@ -171,7 +171,7 @@ namespace JNL.Dal
                         ParameterName = "@" + propName,
                         Value = propValue
                     });
-                    propNameList.Add(propName);
+                    propNameList.Add($"[{propName}]");
                     paraNameList.Add("@" + propName);
                 }
             }
@@ -181,7 +181,7 @@ namespace JNL.Dal
                 return model;
             }
 
-            var outParamName = "@identity";
+            var outParamName = "@__identity";
             var outParamSqlType = SqlDbType.Int;
             if (primaryKeyProp.PropertyType == typeof(long))
             {
@@ -269,7 +269,7 @@ namespace JNL.Dal
                             ParameterName = "@" + propName,
                             Value = propValue
                         });
-                        paraNameList.Add(string.Format("{0}=@{0}", propName));
+                        paraNameList.Add(string.Format("[{0}]=@{0}", propName));
                     }
                 }
             }

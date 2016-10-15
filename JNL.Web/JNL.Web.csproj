@@ -154,6 +154,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\AnalysisController.cs" />
     <Compile Include="Controllers\ArticleController.cs" />
     <Compile Include="Controllers\BasicController.cs" />
@@ -201,6 +202,8 @@
     <Content Include="Scripts\page-scripts\add-implement.js" />
     <Content Include="Scripts\page-scripts\add-live6.js" />
     <Content Include="Scripts\page-scripts\add-warn.js" />
+    <Content Include="Scripts\page-scripts\admin-edit-staff.js" />
+    <Content Include="Scripts\page-scripts\admin-staff-list.js" />
     <Content Include="Scripts\page-scripts\analysis-action.js" />
     <Content Include="Scripts\page-scripts\analysis-area.js" />
     <Content Include="Scripts\page-scripts\analysis-constitute.js" />
@@ -377,6 +380,8 @@
     <Content Include="Views\Trace\Edit.cshtml" />
     <Content Include="Views\Trace\Query.cshtml" />
     <Content Include="Views\Analysis\Stage.cshtml" />
+    <Content Include="Views\Admin\StaffList.cshtml" />
+    <Content Include="Views\Admin\EditStaff.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

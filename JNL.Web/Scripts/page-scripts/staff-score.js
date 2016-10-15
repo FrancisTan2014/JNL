@@ -88,9 +88,19 @@
 
             $('#btnSearch').on('click', function () {
                 var month = $('#searchMonth').val();
-                var tableName = month > 0 ? 'ViewStaffScore' : 'ViewStaffScoreTotal';
 
-                _this.commonTable.setTarget(tableName);
+                var params = {};
+                if (month > 0) {
+                    params.TableName = 'ViewStaffScore';
+                    params.OrderField = 'Id';
+                    params.Desending = false;
+                } else {
+                    params.TableName = 'ViewStaffScoreTotal';
+                    params.OrderField = 'MinusScore';
+                    params.Desending = true;
+                }
+
+                _this.commonTable.changeAjaxParams(params);
                 _this.commonTable.setPageIndex(1);
                 _this.commonTable.loadData();
             });

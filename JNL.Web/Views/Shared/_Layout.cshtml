@@ -102,6 +102,7 @@
                                 <li><a href="/Basic/AddAccident">添加典型事故</a></li>
                                 <li><a href="/Article/Add">添加应急管理</a></li>
                                 <li><a href="/Exam/Upload">上传考试成绩</a></li>
+                                <li class="second-menu" data-target="#target13" id="adminStaff"><a href="javascript:void(0);">人员管理<i class="mdi-hardware-keyboard-arrow-right right"></i></a></li>
                             </ul>
                         </li>
                     </ul>
@@ -183,6 +184,10 @@
                 <ul id="target12" data-source="#checkWarn" class="dropdown-content third-menu">
                     <li class="third-menu-item"><a href="/Warn/AddWarn">添加预警信息</a></li>
                     <li class="third-menu-item"><a href="/Warn/NotImplement">未被响应预警信息</a></li>
+                </ul>
+                <ul class="dropdown-content third-menu" id="target13" data-source="#adminStaff">
+                    <li class="third-menu-item"><a href="/Admin/StaffList" class="waves-effect waves-light waves-block">员工列表</a></li>
+                    <li class="third-menu-item"><a href="/Admin/EditStaff" class="waves-effect waves-light waves-block">添加员工</a></li>
                 </ul>
             </nav>
         </div>

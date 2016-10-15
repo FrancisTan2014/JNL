@@ -1,0 +1,136 @@
+﻿@model JNL.Model.Staff
+
+@{
+    ViewBag.Title = Model.Id > 0 ? "编辑人员信息" : "添加员工";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .edit-form {
+        padding-top: 20px; 
+    }
+
+    input[disabled] {
+        color: #9e9e9e !important;
+        border-bottom: 1px solid #9e9e9e !important;
+    }
+</style>
+
+<h5 class="title">@ViewBag.Title</h5>
+
+<form class="edit-form z-depth-5 form-validate">
+
+    <div class="row">
+
+        <div class="col s4 input-field">
+            <input type="hidden" value="@Model.Id" name="Id"/>
+            <input type="hidden" value="@((Model.AddTime == DateTime.MinValue ? DateTime.Now : Model.AddTime).ToString("s"))" name="AddTime"/>
+            <input type="hidden" value="@Model.Password" name="Password"/>
+
+            <label for="Name">姓 名</label>
+            <input type="text" value="@Model.Name" name="Name" id="Name" maxlength="10" />
+        </div>
+
+        <div class="col s4 input-field">
+            <label for="SalaryId">工 号</label>
+            <input type="text" value="@Model.SalaryId" name="SalaryId" id="SalaryId" maxlength="20" />
+        </div>
+
+        <div class="col s4 input-field">
+            <label for="WorkId">工作证号</label>
+            <input type="text" value="@Model.WorkId" name="WorkId" id="WorkId" maxlength="15" />
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col s4 input-field">
+            <label class="active">性 别</label>
+            <div class="select-wrapper">
+                <select class="initialized" name="Gender" id="Gender" data-default="@Model.Gender">
+                    <option value="男">男</option>
+                    <option value="女">女</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="col s4 input-field">
+            <label class="active">干部工人标识</label>
+            <div class="select-wrapper">
+                <select class="initialized" name="WorkFlagId" id="WorkFlagId" data-default="@Model.WorkFlagId">
+                    <option value="-1">请选择</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="col s4 input-field">
+            <label class="active">工 种</label>
+            <div class="select-wrapper">
+                <select class="initialized" name="WorkTypeId" id="WorkTypeId" data-default="@Model.WorkTypeId">
+                    <option value="-1">请选择</option>
+                </select>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col s4 input-field">
+            <label class="active" for="DepartmentId">所在部门</label>
+            <div class="select-wrapper">
+                <select class="initialized" name="DepartmentId" id="DepartmentId" data-default="@Model.DepartmentId">
+                    <option value="-1">请选择</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="col s4 input-field">
+            <label class="active" for="PositionId">职 务</label>
+            <div class="select-wrapper">
+                <select class="initialized" name="PositionId" id="PositionId" data-default="@Model.PositionId">
+                    <option value="-1">请选择</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="col s4 input-field">
+            <label class="active" for="PoliticalStatusId">政治面貌</label>
+            <div class="select-wrapper">
+                <select class="initialized" name="PoliticalStatusId" id="PoliticalStatusId" data-default="@Model.PoliticalStatusId">
+                    <option value="-1">请选择</option>
+                </select>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col s4 input-field">
+            <label for="HireDate">入职日期</label>
+            <input type="text" value="@(Model.HireDate == DateTime.MinValue ? "" : Model.HireDate.ToString("yyyy-MM-dd"))" class="datepicker" name="HireDate" id="HireDate" />
+        </div>
+
+        <div class="col s4 input-field">
+            <label for="Identity">身份证号码（可选）</label>
+            <input type="number" value="@Model.Identity" name="Identity" id="Identity" maxlength="18"/>
+        </div>
+
+        <div class="col s4 input-field">
+            <label for="BirthDate" class="active">生 日（根据身份证号自动填充）</label>
+            <input type="hidden" value="@(Model.BirthDate == DateTime.MinValue ? "" : Model.BirthDate.ToString("yyyy-MM-dd"))" name="BirthDate" />
+            <input type="text" value="@(Model.BirthDate == DateTime.MinValue ? "" : Model.BirthDate.ToString("yyyy-MM-dd"))" id="BirthDate" disabled="disabled" />
+        </div>
+
+    </div>
+
+    <div class="row">
+        <button type="button" class="btn btn-large waves-effect waves-light waves-block right w15p mr10 mt20" id="btnBack">返 回</button>
+        <button type="submit" class="btn btn-large waves-effect waves-light waves-block right w15p mr10 mt20" id="btnSave">保 存</button>
+    </div>
+
+</form>
+
+<script src="/Scripts/page-scripts/admin-edit-staff.js"></script>
