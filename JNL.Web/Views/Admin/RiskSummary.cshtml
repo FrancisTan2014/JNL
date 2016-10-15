@@ -1,0 +1,158 @@
+﻿@using JNL.Model
+@{
+    ViewBag.Title = "风险概述管理";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var summaryList = (List<RiskSummary>)ViewBag.SummaryList;
+}
+
+<style>
+     .collapsible-body {
+         padding: 10px 0 10px 20px;
+     }
+
+    .collapsible {
+        box-shadow: none;
+    }
+
+    .collapsible .collapsible {
+        border-right: none;
+    }
+
+    .collapsible-header i.edit {
+        float: none;
+        display: none;
+        margin-right: 0;
+        width: 40px;
+    }
+
+    .collapsible-header {
+        height: 50px;
+        line-height: 50px;
+    }
+
+    .collapsible-header i.edit:hover {
+        background: #26a69a;
+        color: #fff;
+    }
+
+    .collapsible-header:hover .edit {
+        display: inline-block;
+    }
+
+    .summary-title {
+        display: inline-block;
+        line-height: 3rem;
+        float: left;
+        text-align: center;
+        margin-right: 1rem;
+    }
+
+    .collapsible-body {
+        background: #fff;
+    }
+
+    .tree-bottom {
+        padding: 10px;
+        cursor: pointer;
+    }
+
+    .tree-bottom:hover {
+        background: #f0f0f0;
+    }
+
+    .modal-close:hover {
+        background: #26a69a;
+        color: #fff;
+    }
+
+    .error {
+        color: #e53935;
+    }
+</style>
+
+<h5 class="title">@ViewBag.Title</h5>
+
+<ul class="collapsible collapsible-accordion" data-collapsible="accordion">
+
+    @foreach (var summary in summaryList)
+    {
+        <li data-id="@summary.Id" data-tid="0" data-tname="" data-sid="0" data-sname="">
+            <div class="collapsible-header">
+                <i class="expand mdi-content-add" title="展开"></i>
+                <span class="summary-title description">@summary.Description</span>
+
+                <i class="edit mdi-action-note-add ml100" title="添加子级"></i>
+                <i class="edit mdi-editor-mode-edit" title="更改名称"></i>
+            </div>
+            <div class="collapsible-body">
+
+            </div>
+        </li>
+    }
+</ul>
+
+<!-- 模态框 -->
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <h4 id="editTitle">添加</h4>
+        <div class="input-field">
+            <textarea class="materialize-textarea validate" required="required" id="editInput"></textarea>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="left ml24 mt15 error">错误消息！</a>
+        <a href="javascript:void(0);" class="btn modal-action modal-close waves-effect btn-flat" id="btnSave">保 存</a>
+        <a href="javascript:void(0);" class="btn modal-action modal-close waves-effect btn-flat">取 消</a>
+    </div>
+</div>
+
+<!-- Loading动画 -->
+<div id="loading" style="margin-left: 47%; display: none;" class="preloader-wrapper big active">
+    <div class="spinner-layer spinner-blue">
+        <div class="circle-clipper left">
+            <div class="circle"></div>
+        </div>
+        <div class="gap-patch">
+            <div class="circle"></div>
+        </div>
+        <div class="circle-clipper right">
+            <div class="circle"></div>
+        </div>
+    </div>
+    <div class="spinner-layer spinner-red">
+        <div class="circle-clipper left">
+            <div class="circle"></div>
+        </div>
+        <div class="gap-patch">
+            <div class="circle"></div>
+        </div>
+        <div class="circle-clipper right">
+            <div class="circle"></div>
+        </div>
+    </div>
+    <div class="spinner-layer spinner-yellow">
+        <div class="circle-clipper left">
+            <div class="circle"></div>
+        </div>
+        <div class="gap-patch">
+            <div class="circle"></div>
+        </div>
+        <div class="circle-clipper right">
+            <div class="circle"></div>
+        </div>
+    </div>
+    <div class="spinner-layer spinner-green">
+        <div class="circle-clipper left">
+            <div class="circle"></div>
+        </div>
+        <div class="gap-patch">
+            <div class="circle"></div>
+        </div>
+        <div class="circle-clipper right">
+            <div class="circle"></div>
+        </div>
+    </div>
+</div>
+
+<script src="/Scripts/page-scripts/admin-risk-summary.js"></script>

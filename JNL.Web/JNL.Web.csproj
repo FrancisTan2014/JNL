@@ -203,6 +203,7 @@
     <Content Include="Scripts\page-scripts\add-live6.js" />
     <Content Include="Scripts\page-scripts\add-warn.js" />
     <Content Include="Scripts\page-scripts\admin-edit-staff.js" />
+    <Content Include="Scripts\page-scripts\admin-risk-summary.js" />
     <Content Include="Scripts\page-scripts\admin-staff-list.js" />
     <Content Include="Scripts\page-scripts\analysis-action.js" />
     <Content Include="Scripts\page-scripts\analysis-area.js" />
@@ -382,6 +383,7 @@
     <Content Include="Views\Analysis\Stage.cshtml" />
     <Content Include="Views\Admin\StaffList.cshtml" />
     <Content Include="Views\Admin\EditStaff.cshtml" />
+    <Content Include="Views\Admin\RiskSummary.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

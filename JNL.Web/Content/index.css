@@ -22,7 +22,18 @@ nav {
 .mr10 { margin-right: 10px;}
 
 .mt10 { margin-top: 10px; }
+.mt15 { margin-top: 15px; }
 .mt20 { margin-top: 20px; }
+
+.ml10 { margin-left: 10px; }
+.ml24 { margin-left: 24px; }
+.ml50 { margin-left: 50px; }
+.ml100 { margin-left: 100px; }
+.ml200 { margin-left: 200px; }
+
+.ml90p { margin-left: 90%; }
+
+.hide { display: none }
 
 /* 所有录入表单的统一样式 */
 .edit-form {

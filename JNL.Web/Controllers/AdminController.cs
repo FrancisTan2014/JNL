@@ -8,6 +8,7 @@ using JNL.Model;
 using JNL.Utilities.Extensions;
 using JNL.Utilities.Helpers;
 using JNL.Web.Models;
+using NPOI.OpenXmlFormats;
 
 namespace JNL.Web.Controllers
 {
@@ -71,5 +72,68 @@ namespace JNL.Web.Controllers
 
             return Json(ErrorModel.OperateFailed);
         }
+
+        /// <summary>
+        /// 风险概述管理
+        /// </summary>
+        public ActionResult RiskSummary()
+        {
+            var riskSummaryBll = new RiskSummaryBll();
+            var riskSummaryList = riskSummaryBll.QueryList("ParentId=0").ToList();
+
+            ViewBag.SummaryList = riskSummaryList;
+
+            return View();
+        }
+
+        /// <summary>
+        /// 更新风险概述信息
+        /// </summary>
+        [HttpPost]
+        public JsonResult UpdateSummary(int id, string desc)
+        {
+            var model = new RiskSummary
+            {
+                Id = id,
+                Description = desc
+            };
+            
+            var bll = new RiskSummaryBll();
+            var success = bll.Update(model, new[] {"Description", "UpdateTime"});
+            if (success)
+            {
+                return Json(ErrorModel.OperateSuccess);
+            }
+
+            return Json(ErrorModel.OperateFailed);
+        }
+
+        /// <summary>
+        /// 添加风险概述信息
+        /// </summary>
+        [HttpPost]
+        public JsonResult AddSummary(string json)
+        {
+            var model = JsonHelper.Deserialize<RiskSummary>(json);
+            if (model == null)
+            {
+                return Json(ErrorModel.InputError);
+            }
+
+            var bll = new RiskSummaryBll();
+            model.IsBottom = bll.IsChildrenBottom(model.ParentId);
+
+            var success = bll.Insert(model).Id > 0;
+
+            if (success)
+            {
+                return Json(ErrorModel.OperateSuccess);
+            }
+
+            return Json(ErrorModel.OperateFailed);
+        }
+
+        
+
     }
 }
