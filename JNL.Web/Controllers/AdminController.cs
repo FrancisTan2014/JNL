@@ -97,9 +97,9 @@ namespace JNL.Web.Controllers
                 Id = id,
                 Description = desc
             };
-            
+
             var bll = new RiskSummaryBll();
-            var success = bll.Update(model, new[] {"Description", "UpdateTime"});
+            var success = bll.Update(model, new[] { "Description", "UpdateTime" });
             if (success)
             {
                 return Json(ErrorModel.OperateSuccess);
@@ -127,13 +127,14 @@ namespace JNL.Web.Controllers
 
             if (success)
             {
-                return Json(ErrorModel.OperateSuccess);
+                return Json(ErrorModel.GetDataSuccess(new
+                {
+                    id = model.Id, bottom = model.IsBottom
+                }));
             }
 
             return Json(ErrorModel.OperateFailed);
         }
-
-        
 
     }
 }

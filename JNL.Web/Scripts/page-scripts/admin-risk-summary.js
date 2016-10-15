@@ -187,37 +187,7 @@
             var $list = $('<ul class="collapsible collapsible-accordion" data-collapsible="accordion"></ul>');
 
             data.forEach(function (item) {
-                var $li = $('<li data-id="{0}" data-tid="{1}" data-tname="{2}" data-sid="{3}" data-sname="4"></li>'.format(item.Id, item.TopestTypeId, item.TopestName, item.SecondLevelId, item.SecondLevelName)),
-                    $header = $('<div class="collapsible-header"></div>'),
-                    $body = $('<div class="collapsible-body"></div>');
-
-                var $expandIcon = $('<i class="expand mdi-content-add" title="展开"></i>');
-                var $title = $('<span class="summary-title description">{0}</span>'.format(item.Description));
-
-                // 创建添加图标并绑定事件
-                var $addIcon = $('<i class="edit mdi-action-note-add ml100" title="添加子级"></i>');
-                $addIcon.on('click', function (e) {
-                    e.stopPropagation();
-                    _this.openModal($li, true);
-                });
-
-                // 创建修改图标并绑定事件
-                var $editIcon = $('<i class="edit mdi-editor-mode-edit" title="更改名称"></i>');
-                $editIcon.on('click', function (e) {
-                    e.stopPropagation();
-                    _this.openModal($li, false);
-                });
-
-                $header.append([$expandIcon, $title, $addIcon, $editIcon]);
-
-                $li.append([$header, $body]);
-                $li.on('click', function (e) {
-
-                    e.stopPropagation();
-                    e.preventDefault();
-
-                    _this.itemClick($(this));
-                });
+                var $li = _this.addNonBottomChild(item);
 
                 $list.append($li);
 
@@ -238,20 +208,70 @@
             var $list = $('<ul></ul>');
             data.forEach(function (item) {
 
-                var $li = $('<li data-id="{0}" data-tid="{1}" data-tname="{2}" data-sid="{3}" data-sname="4" class="tree-bottom tooltipped" data-position="bottom" data-delay="50" data-tooltip="点击可进行编辑"><span class="description">{5}</span></li>'.format(item.Id, item.TopestTypeId, item.TopestName, item.SecondLevelId, item.SecondLevelName, item.Description));
-
-                $li.on('click', function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-
-                    _this.openModal($(this), false);
-                });
+                var $li = _this.addBottomChild(item);
 
                 $list.append($li);
             });
 
             return $list;
 
+        },
+
+        // 为指定项添加非底层子级项
+        addNonBottomChild: function(data) {
+            
+            var _this = this;
+
+            var $li = $('<li data-id="{0}" data-tid="{1}" data-tname="{2}" data-sid="{3}" data-sname="4"></li>'.format(data.Id, data.TopestTypeId, data.TopestName, data.SecondLevelId, data.SecondLevelName)),
+                    $header = $('<div class="collapsible-header"></div>'),
+                    $body = $('<div class="collapsible-body"></div>');
+
+            var $expandIcon = $('<i class="expand mdi-content-add" title="展开"></i>');
+            var $title = $('<span class="summary-title description">{0}</span>'.format(data.Description));
+
+            // 创建添加图标并绑定事件
+            var $addIcon = $('<i class="edit mdi-action-note-add ml100" title="添加子级"></i>');
+            $addIcon.on('click', function (e) {
+                e.stopPropagation();
+                _this.openModal($li, true);
+            });
+
+            // 创建修改图标并绑定事件
+            var $editIcon = $('<i class="edit mdi-editor-mode-edit" title="更改名称"></i>');
+            $editIcon.on('click', function (e) {
+                e.stopPropagation();
+                _this.openModal($li, false);
+            });
+
+            $header.append([$expandIcon, $title, $addIcon, $editIcon]);
+
+            $li.append([$header, $body]);
+            $li.on('click', function (e) {
+
+                e.stopPropagation();
+                e.preventDefault();
+
+                _this.itemClick($(this));
+            });
+
+            return $li;
+        },
+
+        // 为指定项添加底层子级项
+        addBottomChild: function(data) {
+            
+            var _this = this;
+
+            var $li = $('<li data-id="{0}" data-tid="{1}" data-tname="{2}" data-sid="{3}" data-sname="4" class="tree-bottom tooltipped" data-position="bottom" data-delay="50" data-tooltip="点击可进行编辑"><span class="description">{5}</span></li>'.format(data.Id, data.TopestTypeId, data.TopestName, data.SecondLevelId, data.SecondLevelName, data.Description));
+
+            $li.on('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                _this.openModal($(this), false);
+            });
+
+            return $li;
         },
 
         // 加载指定项的子级
@@ -335,6 +355,30 @@
                         url: '/Admin/AddSummary',
                         data: { json: JSON.stringify(model) }
                     }).done(function(res) {
+
+                        if (res.code != 111) {
+
+                            model.Id = res.data.id;
+
+                            var $li;
+                            if (res.data.bottom == 'true' || res.data.bottom == 'True') {
+                                $li = _this.addBottomChild(model);
+                            } else {
+                                $li = _this.addNonBottomChild(model);
+                            }
+
+                            _this.$editItem.find('.collapsible-body:first .collapsible:first').append($li);
+
+                            // 若当前项没有展开，则展开它
+                            if (!_this.$editItem.data('expanded')) {
+                                _this.$editItem.click();
+                            }
+
+                            Materialize.toast('添加成功:(=', 3000);
+
+                        } else {
+                            Materialize.toast(res.msg, 3000);
+                        }
 
                     });
 
