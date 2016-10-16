@@ -1636,12 +1636,13 @@
  */
 (function(window, $) {
 
-    // 为jquery.validate插件添加验证身份证的方法
-    $.validator.addMethod("checkIdentity", function (value, element, param) {
-        var isMatch = value == '' || /(^[1-9]\d{5}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$)|(^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$)/.test(value);
+    if ($.validator) {
+        // 为jquery.validate插件添加验证身份证的方法
+        $.validator.addMethod("checkIdentity", function (value, element, param) {
+            var isMatch = value == '' || /(^[1-9]\d{5}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$)|(^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$)/.test(value);
 
-        return this.optional(element) || isMatch;
-    }, $.validator.format("请输入有效的身份证号码"));
-
+            return this.optional(element) || isMatch;
+        }, $.validator.format("请输入有效的身份证号码"));
+    }
 
 })(window, jQuery);
