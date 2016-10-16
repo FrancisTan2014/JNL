@@ -8,6 +8,7 @@ using JNL.Model;
 using JNL.Utilities.Extensions;
 using JNL.Utilities.Helpers;
 using JNL.Web.Models;
+using JNL.Web.Utils;
 using NPOI.OpenXmlFormats;
 
 namespace JNL.Web.Controllers
@@ -129,11 +130,31 @@ namespace JNL.Web.Controllers
             {
                 return Json(ErrorModel.GetDataSuccess(new
                 {
-                    id = model.Id, bottom = model.IsBottom
+                    id = model.Id,
+                    bottom = model.IsBottom
                 }));
             }
 
             return Json(ErrorModel.OperateFailed);
+        }
+
+        /// <summary>
+        /// 计算最近三年的得分
+        /// </summary>
+        /// <returns></returns>
+        public JsonResult ComputeStaffScore(string password)
+        {
+            if (password != "yaozhilu")
+            {
+                return Json(ErrorModel.NoAuth, JsonRequestBehavior.AllowGet);
+            }
+
+            var currentYear = DateTime.Now.Year;
+            StaffScoreHelper.ComputeWholeYearStaffScore(currentYear);
+            StaffScoreHelper.ComputeWholeYearStaffScore(currentYear - 1);
+            StaffScoreHelper.ComputeWholeYearStaffScore(currentYear - 2);
+
+            return Json(ErrorModel.OperateSuccess, JsonRequestBehavior.AllowGet);
         }
 
     }

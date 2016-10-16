@@ -27,13 +27,17 @@ namespace JNL.DataMigration
         public int cat2 { get; set; }
         public int cat3 { get; set; }
         public int cid { get; set; }
+        public int count { get; set; }
+        public int sqlId { get; set; }
+        public string desc { get; set; }
+        public int floor { get; set; }
     }
 
     public class Node
     {
         public int Id { get; set; }
         public RiskSummary RiskSummary { get; set; }
-        public List<RiskSummary> ChildrenSummaries { get; set; } 
+        public List<RiskSummary> ChildrenSummaries { get; set; }
         public List<Node> Children { get; set; }
 
     }
@@ -80,7 +84,7 @@ namespace JNL.DataMigration
             // Stations();
             // Lines();
             // LineStations();
-            // RiskInfo();
+            RiskInfo();
             // WarningSource(); 
             //Live6();
             //Live28();
@@ -269,7 +273,7 @@ namespace JNL.DataMigration
             {
                 var cmdText = "SELECT Name FROM dictionary WHERE Type=18";
                 var list = GetListFromMySql<Dictionaries>(cmdText);
-                list.ForEach(s=>s.Type=18);
+                list.ForEach(s => s.Type = 18);
 
                 dictionaryBll.BulkInsert(list);
 
@@ -296,7 +300,7 @@ namespace JNL.DataMigration
                 // make type dictionary
                 BuildDictionary();
 
-                var riskSummaryDic = NewRiskSummary();
+                var riskSummaryDic = RiskSummaryMigration();
 
                 var cmdText = "SELECT * FROM risk";
                 var table = MySqlHelper.ExecuteDataTable(MySqlConnectionString, CommandType.Text, cmdText);
@@ -344,7 +348,7 @@ namespace JNL.DataMigration
                     }
 
                     var riskSummaryId = 0;
-                    if (risk.risk_outline_id > 0)
+                    if (risk.risk_outline_id > 0 && riskSummaryDic.ContainsKey(risk.risk_outline_id.Value))
                     {
                         riskSummaryId = riskSummaryDic[risk.risk_outline_id.Value];
                     }
@@ -433,7 +437,7 @@ namespace JNL.DataMigration
 
             if (!linestationBll.Exists())
             {
-                
+
 
                 var lineStations = GetListFromMySql<LineStations>("SELECT station_id AS StationId, line_id AS LineId, POSITION AS Sort FROM line_stop");
                 lineStations.ForEach(item =>
@@ -511,12 +515,16 @@ namespace JNL.DataMigration
             }
         }
 
-        private static List<T> GetListFromMySql<T>(string cmdText) where T: class, new()
+        private static List<T> GetListFromMySql<T>(string cmdText) where T : class, new()
         {
             var table = MySqlHelper.ExecuteDataTable(MySqlConnectionString, CommandType.Text, cmdText);
             return EntityHelper.MapEntity<T>(table).ToList();
-        } 
+        }
 
+        /// <summary>
+        /// 导入的风险概述信息有问题
+        /// </summary>
+        /// <returns></returns>
         private static Dictionary<int, int> NewRiskSummary()
         {
             var mysqlRiskSummaryIdDic = new Dictionary<int, int>();
@@ -545,7 +553,7 @@ namespace JNL.DataMigration
                     RiskSummary firstLevel;
                     if (!insertedDic.ContainsKey(summary.type))
                     {
-                        firstLevel = new RiskSummary {Description = nameDic[summary.type]};
+                        firstLevel = new RiskSummary { Description = nameDic[summary.type] };
                         firstLevel = RiskSummaryBll.Insert(firstLevel);
                         if (firstLevel.Id > 0)
                         {
@@ -575,7 +583,7 @@ namespace JNL.DataMigration
                             insertedDic.Add(summary.level, secondLevel);
                             mysqlRiskSummaryIdDic.Add(summary.level, secondLevel.Id);
                         }
-                            
+
                         else
                             return;
                     }
@@ -602,7 +610,7 @@ namespace JNL.DataMigration
                             insertedDic.Add(summary.cat1, thirdLevel);
                             mysqlRiskSummaryIdDic.Add(summary.cat1, thirdLevel.Id);
                         }
-                            
+
                     }
                     else
                     {
@@ -679,10 +687,10 @@ namespace JNL.DataMigration
                                 return;
                         }
                         else
-                        {   
+                        {
                             fifthLevel = insertedDic[summary.cat3];
                         }
-                        
+
                         if (!insertedDic.ContainsKey(summary.cid))
                         {
                             var realBottom = new RiskSummary
@@ -713,6 +721,203 @@ namespace JNL.DataMigration
         }
 
         /// <summary>
+        /// 正确的导入风险概述信息方法
+        /// </summary>
+        /// <returns></returns>
+        private static Dictionary<int, int> RiskSummaryMigration()
+        {
+            var mysqlRiskSummaryIdDic = new Dictionary<int, int>();
+
+            if (!RiskSummaryBll.Exists())
+            {
+                #region 创建字典
+
+                var dicCmdText = "SELECT * FROM dictionary WHERE type IN(12, 20, 21, 22, 23, 24)";
+                DataTable table = MySqlHelper.ExecuteDataTable(MySqlConnectionString, CommandType.Text, dicCmdText);
+                var nameDic = new Dictionary<int, string>();
+                foreach (DataRow row in table.Rows)
+                {
+                    var id = row["id"].ToString().ToInt32();
+                    var name = row["name"].ToString();
+                    nameDic.Add(id, name);
+                }
+
+                #endregion
+
+                var cmdText = "SELECT * FROM risk_summary";
+                var dataTable = MySqlHelper.ExecuteDataTable(MySqlConnectionString, CommandType.Text, cmdText);
+                var summaryList = EntityHelper.MapEntity<MySqlRiskSummary>(dataTable).ToList();
+
+
+                var summaryDic = new List<MySqlRiskSummary>();
+
+                #region 一级分类
+                cmdText = "SELECT type,COUNT(type) AS `count` FROM risk_summary GROUP BY type";
+                var firstList = GetListFromMySql<MySqlRiskSummary>(cmdText);
+                firstList.ForEach(t =>
+                {
+                    var s = new RiskSummary { Description = nameDic[t.type] };
+                    RiskSummaryBll.Insert(s);
+
+                    t.sqlId = s.Id;
+                    t.desc = s.Description;
+                    t.floor = 1;
+                    summaryDic.Add(t);
+                });
+                #endregion
+
+                #region 二级分类
+                cmdText = "SELECT type,level,COUNT(1) AS `count` FROM risk_summary GROUP BY type,level";
+                var secondList = GetListFromMySql<MySqlRiskSummary>(cmdText);
+                secondList.ForEach(t =>
+                {
+                    var s = new RiskSummary { Description = nameDic[t.level] };
+                    var parent = summaryDic.SingleOrDefault(item => item.type == t.type && item.floor == 1);
+                    s.ParentId = parent.sqlId;
+
+                    RiskSummaryBll.Insert(s);
+
+                    t.sqlId = s.Id;
+                    t.desc = s.Description;
+                    t.floor = 2;
+                    summaryDic.Add(t);
+                });
+                #endregion
+
+                #region 三级分类
+                cmdText = "SELECT type,level,cat1,COUNT(1) AS `count` FROM risk_summary GROUP BY type,level,cat1";
+                var thirdList = GetListFromMySql<MySqlRiskSummary>(cmdText);
+                thirdList.ForEach(t =>
+                {
+                    var s = new RiskSummary { Description = nameDic[t.cat1] };
+                    var parent = summaryDic.SingleOrDefault(item => item.type == t.type && item.level == t.level && item.floor == 2);
+                    var topest = summaryDic.SingleOrDefault(item => item.type == t.type && item.floor == 1);
+
+                    s.ParentId = parent.sqlId;
+                    s.TopestTypeId = topest.sqlId;
+                    s.TopestName = topest.desc;
+                    s.SecondLevelId = parent.sqlId;
+                    s.SecondLevelName = parent.desc;
+
+                    RiskSummaryBll.Insert(s);
+
+                    t.sqlId = s.Id;
+                    t.desc = s.Description;
+                    t.floor = 3;
+                    summaryDic.Add(t);
+                });
+                #endregion
+
+                #region 四级分类
+                cmdText = "SELECT type,level,cat1,cat2,COUNT(1) AS `count` FROM risk_summary GROUP BY type,level,cat1,cat2";
+                var fourthList = GetListFromMySql<MySqlRiskSummary>(cmdText);
+                fourthList.ForEach(t =>
+                {
+                    var s = new RiskSummary { Description = nameDic[t.cat2] };
+                    var parent =
+                        summaryDic.SingleOrDefault(
+                            item => item.type == t.type && item.level == t.level && item.cat1 == t.cat1 && item.floor == 3);
+                    var topest = summaryDic.SingleOrDefault(item => item.type == t.type && item.floor == 1);
+                    var second =
+                        summaryDic.SingleOrDefault(
+                            item =>
+                                item.type == t.type && item.level == t.level && item.floor == 2);
+
+                    s.ParentId = parent.sqlId;
+                    s.TopestTypeId = topest.sqlId;
+                    s.TopestName = topest.desc;
+                    s.SecondLevelId = second.sqlId;
+                    s.SecondLevelName = second.desc;
+
+                    RiskSummaryBll.Insert(s);
+
+                    t.sqlId = s.Id;
+                    t.desc = s.Description;
+                    t.floor = 4;
+                    summaryDic.Add(t);
+                });
+                #endregion
+
+                #region 五级分类
+                cmdText = "SELECT type,level,cat1,cat2,cat3,COUNT(1) AS `count` FROM risk_summary GROUP BY type,level,cat1,cat2,cat3";
+                var fifthList = GetListFromMySql<MySqlRiskSummary>(cmdText);
+                fifthList.Where(t => t.cat3 != 0).ToList().ForEach(t =>
+                {
+                    var s = new RiskSummary {Description = nameDic[t.cat3]};
+                    var parent =
+                        summaryDic.SingleOrDefault(
+                            item =>
+                                item.type == t.type && item.level == t.level && item.cat1 == t.cat1 &&
+                                item.cat2 == t.cat2 && item.floor == 4);
+                    var topest = summaryDic.SingleOrDefault(item => item.type == t.type && item.floor == 1);
+                    var second =
+                        summaryDic.SingleOrDefault(
+                            item =>
+                                item.type == t.type && item.level == t.level && item.floor == 2);
+
+                    s.ParentId = parent.sqlId;
+                    s.TopestTypeId = topest.sqlId;
+                    s.TopestName = topest.desc;
+                    s.SecondLevelId = second.sqlId;
+                    s.SecondLevelName = second.desc;
+
+                    RiskSummaryBll.Insert(s);
+
+                    t.sqlId = s.Id;
+                    t.desc = s.Description;
+                    t.floor = 5;
+                    summaryDic.Add(t);
+                });
+                #endregion
+
+                #region 风险概述
+                cmdText = "SELECT id,type,level,cat1,cat2,cat3,cid,COUNT(1) AS `count` FROM risk_summary GROUP BY id,type,level,cat1,cat2,cat3,cid";
+                var riskList = GetListFromMySql<MySqlRiskSummary>(cmdText);
+                riskList.ForEach(t =>
+                {
+                    var s = new RiskSummary {Description = nameDic[t.cid]};
+                    MySqlRiskSummary parent;
+                    if (t.cat3 == 0)
+                    {
+                        parent = summaryDic.SingleOrDefault(
+                            item =>
+                                item.type == t.type && item.level == t.level && item.cat1 == t.cat1 &&
+                                item.cat2 == t.cat2 && item.floor == 4);
+                    }
+                    else
+                    {
+                        parent = summaryDic.SingleOrDefault(
+                            item =>
+                                item.type == t.type && item.level == t.level && item.cat1 == t.cat1 &&
+                                item.cat2 == t.cat2 && item.cat3 == t.cat3 && item.floor == 5);
+                    }
+
+                    var topest = summaryDic.SingleOrDefault(item => item.type == t.type && item.floor == 1);
+                    var second =
+                        summaryDic.SingleOrDefault(
+                            item =>
+                                item.type == t.type && item.level == t.level && item.floor == 2);
+
+                    s.ParentId = parent.sqlId;
+                    s.TopestTypeId = topest.sqlId;
+                    s.TopestName = topest.desc;
+                    s.SecondLevelId = second.sqlId;
+                    s.SecondLevelName = second.desc;
+                    s.IsBottom = true;
+
+                    RiskSummaryBll.Insert(s);
+
+                    mysqlRiskSummaryIdDic.Add(t.id, s.Id);
+                });
+                #endregion
+
+                Console.WriteLine("风险概述信息导入成功");
+            }
+
+            return mysqlRiskSummaryIdDic;
+        }
+
+        /// <summary>
         /// 风险概述信息（代码略复杂）
         /// </summary>
         private static void RiskSummary()
@@ -726,7 +931,7 @@ namespace JNL.DataMigration
                 var id = row["id"].ToString().ToInt32();
                 var name = row["name"].ToString();
                 nameDic.Add(id, name);
-            } 
+            }
             #endregion
 
             var cmdText = "SELECT * FROM risk_summary";
@@ -744,12 +949,12 @@ namespace JNL.DataMigration
 
             rootNode.Children.ForEach(rootLevel =>
             {
-                
+
                 rootLevel.Children =
                     summaryList.Where(s => s.type == rootLevel.Id)
                         .Select(s => s.level)
                         .Distinct()
-                        .Select(s => new Node {Id = s, RiskSummary = new RiskSummary { Description = nameDic[s] } })
+                        .Select(s => new Node { Id = s, RiskSummary = new RiskSummary { Description = nameDic[s] } })
                         .ToList();
 
                 rootLevel.Children.ForEach(firstLevel =>
@@ -758,7 +963,7 @@ namespace JNL.DataMigration
                         summaryList.Where(m => m.type == rootLevel.Id && m.level == firstLevel.Id)
                             .Select(m => m.cat1)
                             .Distinct()
-                            .Select(m => new Node {Id = m, RiskSummary = new RiskSummary { Description = nameDic[m]}})
+                            .Select(m => new Node { Id = m, RiskSummary = new RiskSummary { Description = nameDic[m] } })
                             .ToList();
 
                     firstLevel.Children.ForEach(secondLevel =>
@@ -767,7 +972,7 @@ namespace JNL.DataMigration
                             summaryList.Where(m => m.type == rootLevel.Id && m.level == firstLevel.Id && m.cat1 == secondLevel.Id)
                                 .Select(m => m.cat2)
                                 .Distinct()
-                                .Select(m => new Node {Id = m, RiskSummary = new RiskSummary { Description = nameDic[m]}})
+                                .Select(m => new Node { Id = m, RiskSummary = new RiskSummary { Description = nameDic[m] } })
                                 .ToList();
 
                         secondLevel.Children.ForEach(thirdLevel =>
@@ -777,19 +982,19 @@ namespace JNL.DataMigration
                                     m =>
                                         m.type == rootLevel.Id && m.level == firstLevel.Id && m.cat1 == secondLevel.Id &&
                                         m.cat2 == thirdLevel.Id).ToList();
-                            
+
                             subList.ForEach(sub =>
                             {
                                 if (sub.cat3 == 0)
                                 {
                                     thirdLevel.ChildrenSummaries =
                                         subList.Where(m => m.cat2 == thirdLevel.Id)
-                                            .Select(m => new RiskSummary {IsBottom = true, Description = nameDic[m.cid]}).ToList();
+                                            .Select(m => new RiskSummary { IsBottom = true, Description = nameDic[m.cid] }).ToList();
                                 }
                                 else
                                 {
                                     thirdLevel.Children =
-                                        subList.Where( m => m.cat3 == sub.cat3 )
+                                        subList.Where(m => m.cat3 == sub.cat3)
                                             .Select(m => m.cat3)
                                             .Distinct()
                                             .Select(
@@ -797,14 +1002,14 @@ namespace JNL.DataMigration
                                                     new Node
                                                     {
                                                         Id = m,
-                                                        RiskSummary = new RiskSummary {Description = nameDic[m]}
+                                                        RiskSummary = new RiskSummary { Description = nameDic[m] }
                                                     })
                                             .ToList();
 
 
                                     thirdLevel.Children.ForEach(forthLevel =>
                                     {
-                                        forthLevel.ChildrenSummaries = subList.Where(m => m.cid == rootLevel.Id).Select(m=>new RiskSummary {IsBottom = true, Description = nameDic[m.cid]}).ToList();
+                                        forthLevel.ChildrenSummaries = subList.Where(m => m.cid == rootLevel.Id).Select(m => new RiskSummary { IsBottom = true, Description = nameDic[m.cid] }).ToList();
                                     });
                                 }
                             });
@@ -951,7 +1156,7 @@ namespace JNL.DataMigration
         /// </summary>
         private static void BuildDictionary()
         {
-            var typeDic = new Dictionary<int, int> { { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 14, 10 }, { 11, 9 }, { 10, 8 }, {16, 12}, {15, 11} };
+            var typeDic = new Dictionary<int, int> { { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 14, 10 }, { 11, 9 }, { 10, 8 }, { 16, 12 }, { 15, 11 } };
 
             var cmdText = "SELECT Id,Name,Type FROM dictionary";
             var dataTable = MySqlHelper.ExecuteDataTable(MySqlConnectionString, CommandType.Text, cmdText);
