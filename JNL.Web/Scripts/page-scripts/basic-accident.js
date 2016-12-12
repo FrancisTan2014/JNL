@@ -12,9 +12,11 @@
             targets: [5],
             onCreateCell: function (columnValue) {
                 columnValue = columnValue + '';
-                if (columnValue && columnValue.length > 30) {
-                    columnValue = columnValue.substr(0, 30) + '...';
-                }
+
+                // @FrancisTan 2016-12-11 展示事故概况全文
+                //if (columnValue && columnValue.length > 30) {
+                //    columnValue = columnValue.substr(0, 30) + '...';
+                //}
 
                 //return columnValue;
                 return '<td style="justify-content:space-between">{0}</td>'.format(columnValue);

@@ -1,0 +1,174 @@
+﻿@{
+    ViewBag.Title = "字典维护";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var typeDic = new Dictionary<int, string>
+    {
+        { 7, "事故类别" },
+        { 8, "列车类别" },
+        { 9, "天气情况" },
+        { 10, "活项归属" },
+        { 11, "修程" },
+        { 12, "机车类别" },
+        { 15, "机务段名称" },
+        { 16, "铁路局名称" },
+        { 17, "事故发生地点" },
+        { 18, "预警来源" },
+        { 1, "干部工人标识" },
+        { 2, "劳动班制" },
+        { 3, "工种" },
+        { 4, "政治面貌" },
+        { 5, "职务级别" },
+        { 6, "职务名称" }
+    };
+}
+
+<style>
+    .collapsible-body {
+        padding: 10px 0 10px 20px;
+    }
+
+    .collapsible {
+        box-shadow: none;
+    }
+
+        .collapsible .collapsible {
+            border-right: none;
+        }
+
+    .collapsible-header i.edit {
+        float: none;
+        display: none;
+        margin-right: 0;
+        width: 40px;
+    }
+
+    .collapsible-header {
+        height: 50px;
+        line-height: 50px;
+    }
+
+        .collapsible-header i.edit:hover {
+            background: #26a69a;
+            color: #fff;
+        }
+
+        .collapsible-header:hover .edit {
+            display: inline-block;
+        }
+
+    .summary-title {
+        display: inline-block;
+        line-height: 3rem;
+        float: left;
+        text-align: center;
+        margin-right: 1rem;
+    }
+
+    .collapsible-body {
+        background: #fff;
+    }
+
+    .tree-bottom {
+        padding: 10px;
+        cursor: pointer;
+    }
+
+        .tree-bottom:hover {
+            background: #f0f0f0;
+        }
+
+    .modal-close:hover {
+        background: #26a69a;
+        color: #fff;
+    }
+
+    .error {
+        color: #e53935;
+    }
+</style>
+
+<h5 class="title">@ViewBag.Title</h5>
+
+<ul class="collapsible collapsible-accordion" data-collapsible="accordion">
+
+    @foreach (KeyValuePair<int, string> couple in typeDic)
+    {
+        <li data-type="@couple.Key" data-id="0" data-parent="0" data-level="0" data-loaded="false" data-childtype="@couple.Key">
+            <div class="collapsible-header">
+                <i class="expand mdi-content-add" title="展开"></i>
+                <span class="summary-title description">@couple.Value</span>
+                <i class="edit mdi-action-note-add ml100" title="添加子级"></i>
+            </div>
+            <div class="collapsible-body">
+
+            </div>
+        </li>
+    }
+
+</ul>
+
+<!-- 模态框 -->
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <h4 id="editTitle">添加</h4>
+        <div class="input-field">
+            <textarea class="materialize-textarea validate" required="required" id="editInput"></textarea>
+        </div>
+    </div>
+    <div class="modal-footer">
+        @*<a class="left ml24 mt15 error">错误消息！</a>*@
+        <a href="javascript:void(0);" class="btn modal-action modal-close waves-effect btn-flat" id="btnSave">保 存</a>
+        <a href="javascript:void(0);" class="btn modal-action modal-close waves-effect btn-flat">取 消</a>
+    </div>
+</div>
+
+<!-- Loading动画 -->
+<div id="loading" style="margin-left: 47%; display: none;" class="preloader-wrapper big active">
+    <div class="spinner-layer spinner-blue">
+        <div class="circle-clipper left">
+            <div class="circle"></div>
+        </div>
+        <div class="gap-patch">
+            <div class="circle"></div>
+        </div>
+        <div class="circle-clipper right">
+            <div class="circle"></div>
+        </div>
+    </div>
+    <div class="spinner-layer spinner-red">
+        <div class="circle-clipper left">
+            <div class="circle"></div>
+        </div>
+        <div class="gap-patch">
+            <div class="circle"></div>
+        </div>
+        <div class="circle-clipper right">
+            <div class="circle"></div>
+        </div>
+    </div>
+    <div class="spinner-layer spinner-yellow">
+        <div class="circle-clipper left">
+            <div class="circle"></div>
+        </div>
+        <div class="gap-patch">
+            <div class="circle"></div>
+        </div>
+        <div class="circle-clipper right">
+            <div class="circle"></div>
+        </div>
+    </div>
+    <div class="spinner-layer spinner-green">
+        <div class="circle-clipper left">
+            <div class="circle"></div>
+        </div>
+        <div class="gap-patch">
+            <div class="circle"></div>
+        </div>
+        <div class="circle-clipper right">
+            <div class="circle"></div>
+        </div>
+    </div>
+</div>
+
+<script src="/Scripts/page-scripts/admin-dictionaries.js"></script>

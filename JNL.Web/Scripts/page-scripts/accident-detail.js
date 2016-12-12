@@ -20,7 +20,9 @@
         init: function () {
             common.loadDictionaries(this.selectConfig);
 
-            common.pickdate();
+            //common.pickdate();
+
+            $('#dtBox').DateTimePicker();
 
             var textAreaRules = {
                 required: true,

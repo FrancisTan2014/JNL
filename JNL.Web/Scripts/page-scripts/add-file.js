@@ -11,6 +11,7 @@
         init: function () {
             this.$parsley = $('#fileForm').parsley();
 
+            $('#dtBox').DateTimePicker();
         },
 
         setFilePath: function (fileName, filePath) {

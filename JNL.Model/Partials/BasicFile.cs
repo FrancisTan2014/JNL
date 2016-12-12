@@ -32,6 +32,7 @@ namespace JNL.Model
 		private string _filepath;
 		private int _filetype;
 		private int _publishlevel;
+	    private DateTime _publishtime=DateTime.Now;
 		private DateTime _addtime= DateTime.Now;
 		private bool _isdelete;
 		/// <summary>
@@ -82,10 +83,18 @@ namespace JNL.Model
 			set{ _publishlevel=value;}
 			get{return _publishlevel;}
 		}
-		/// <summary>
-		/// 添加时间
-		/// </summary>
-		public DateTime AddTime
+        /// <summary>
+        /// 发文日期
+        /// </summary>
+	    public DateTime PublishTime
+	    {
+	        set { _publishtime = value; }
+            get { return _publishtime; }
+	    }
+        /// <summary>
+        /// 添加时间
+        /// </summary>
+        public DateTime AddTime
 		{
 			set{ _addtime=value;}
 			get{return _addtime;}

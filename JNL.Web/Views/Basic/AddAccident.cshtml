@@ -20,8 +20,10 @@
 <form class="z-depth-5 edit-form form-validate">
     <div class="row">
         <div class="input-field col s4">
-            <input type="hidden" value="@ViewBag.RiskType" name="-" />
-            <input type="text" name="OccurrenceTime" class="datepicker" required placeholder="事故发生时间"/>
+            <input type="hidden" value="@ViewBag.RiskType" name="-"/>
+            @*<input type="text" name="OccurrenceTime" class="datepicker" required placeholder="事故发生时间"/>*@
+
+            <input class="datepicker" name="OccurrenceTime" type="datetime" data-field="datetime" data-format="yyyy-MM-dd hh:mm:ss" placeholder="事故发生时间" id="OccurrenceTime"/>
         </div>
         <div class="input-field col s4">
             <div class="select-wrapper">
@@ -55,7 +57,7 @@
         <div class="input-field col s4">
             <div class="select-wrapper">
                 <select class="initialized" name="LocoType" id="LocoType">
-                    <option value="">请选择机车类别</option>
+                    <option value="">请选择列车类别</option>
                 </select>
             </div>
         </div>
@@ -96,6 +98,7 @@
         </div>
     </div>
 </form>
+<div id="dtBox"></div>
 <div class="bottom"></div>
 
 <script src="/Scripts/page-scripts/accident-detail.js"></script>

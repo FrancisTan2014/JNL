@@ -157,5 +157,77 @@ namespace JNL.Web.Controllers
             return Json(ErrorModel.OperateSuccess, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// 字典维护
+        /// </summary>
+        public ActionResult Dictionaries()
+        {
+            return View();
+        }
+
+        public JsonResult GetDictories(int? type, int parent)
+        {
+            var condition = type == null 
+                ? $"ParentId={parent}" 
+                : $"Type={type} AND ParentId={parent}";
+
+            var bll = new DictionariesBll();
+            var data = bll.QueryList(condition);
+            var jsonArray = data.Select(item =>
+            {
+                var childType = 0;
+                if (item.HasChildren)
+                {
+                    var children = bll.QueryList($"ParentId={item.Id}").First();
+                    childType = children.Type;
+                }
+
+                return new
+                {
+                    item.Id,
+                    item.HasChildren,
+                    item.Type,
+                    item.AddTime,
+                    item.IsDelete,
+                    item.Name,
+                    item.ParentId,
+                    childType
+                };
+            });
+
+            return Json(ErrorModel.GetDataSuccess(jsonArray));
+        }
+
+        /// <summary>
+        /// 更新字典表数据
+        /// </summary>
+        [HttpPost]
+        public JsonResult EditDictionary(string json)
+        {
+            var model = JsonHelper.Deserialize<Dictionaries>(json);
+            if (model == null)
+            {
+                return Json(ErrorModel.InputError);
+            }
+
+            var bll = new DictionariesBll();
+
+            bool success;
+            if (model.Id > 0)
+            {
+                success = bll.Update(model, new[] {"Name"});
+            }
+            else
+            {
+                success = bll.Insert(model).Id > 0;
+            }
+
+            if (success)
+            {
+                return Json(ErrorModel.GetDataSuccess(model));
+            }
+
+            return Json(ErrorModel.GetDataFailed);
+        }
     }
 }

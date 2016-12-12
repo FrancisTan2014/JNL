@@ -8,6 +8,7 @@
         init: function () {
             var _this = this;
 
+            
             $('#dtBox').DateTimePicker();
 
             // input intelligence
@@ -161,7 +162,10 @@
                     return;
                 }
                 if (riskInfo.RespondStaffId <= 0) {
-                    Materialize.toast('责任人没有从提示下拉框中选择，不能提交', 3000);
+                    //Materialize.toast('责任人没有从提示下拉框中选择，不能提交', 3000);
+
+                    // @FrancisTan 2016-12-11 修改提示信息內容
+                    Materialize.toast('请输入：责任人不清楚待查找确定', 3000);
                     return;
                 }
 
@@ -187,26 +191,29 @@
                     return;
                 }
 
-                // save
-                var forbidden = common.submitForbidden('#btnSave', '正在保存');
-                common.ajax({
-                    url: '/Risk/AddRisk',
-                    data: {
-                        responds: riskInfo.RespondStaffId,
-                        risk: JSON.stringify(riskInfo)
-                    }
-                }).done(function(res) {
-                    if (res.code == 100) {
-                        Materialize.toast('保存成功', 1000, '', function() {
-                            location.reload();
-                        });
+                if (confirm('确认保存？')) {
+                    // save
+                    var forbidden = common.submitForbidden('#btnSave', '正在保存');
+                    common.ajax({
+                        url: '/Risk/AddRisk',
+                        data: {
+                            responds: riskInfo.RespondStaffId,
+                            risk: JSON.stringify(riskInfo)
+                        }
+                    }).done(function (res) {
+                        if (res.code == 100) {
+                            Materialize.toast('保存成功', 1000, '', function () {
+                                location.reload();
+                            });
 
-                        return;
-                    }
+                            return;
+                        }
 
-                    forbidden.enabled();
-                    Materialize.toast('保存失败，请稍后重试！', 3000);
-                });
+                        forbidden.enabled();
+                        Materialize.toast('保存失败，请稍后重试！', 3000);
+                    });
+                }
+
             } else {
                 Materialize.toast('请完善信息！！！', 3000);
             }

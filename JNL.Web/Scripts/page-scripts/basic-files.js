@@ -6,7 +6,7 @@
 
     window.page = {
         commonTable: null,
-        columns: ['Id', 'FileName', 'FileNumber', 'AddTime', 'FilePath'],
+        columns: ['Id', 'FileName', 'FileNumber', 'PublishTime', 'FilePath'],
         builds: [
         {
             targets: [4],
@@ -34,7 +34,7 @@
             var searchStart = $('#searchStar').val();
             if (searchStart) {
                 var startDate = new Date(searchStart).format('yyyy-MM-dd');
-                conditions.push('AddTime > \'{0}\''.format(startDate));
+                conditions.push('PublishTime > \'{0}\''.format(startDate));
             }
             var searchEnd = $('#searchEnd').val();
             if (searchEnd) {
@@ -42,13 +42,24 @@
                 endDate.setHours(23);
                 endDate.setMinutes(59);
                 endDate.setSeconds(59);
-                conditions.push('AddTime < \'{0}\''.format(endDate.format('yyyy-MM-dd HH:mm:ss')));
+                conditions.push('PublishTime < \'{0}\''.format(endDate.format('yyyy-MM-dd HH:mm:ss')));
             }
 
             return conditions;
         },
         
+        tips: [
+            { name: '总公司', url: 'http://10.1.4.39/xxlr/ywxt/kejiaosi/gzwd/index.asp' },
+            { name: '铁路局', url: 'http://10.94.4.75/Rules/' },
+            { name: '机务段', url: 'http://10.94.4.75/Rules/' }
+        ],
+
         init: function () {
+
+            var level = $('[name=PublishLevel]').val() - 0,
+                urlTips = this.tips[level - 1];
+            $('#levelTips').text(urlTips.name).next()
+                .text(urlTips.url).prop('href', urlTips.url);
 
             this.ajaxParams.TableName = 'BasicFile';
             this.ajaxParams.PageIndex = 1;

@@ -30,6 +30,7 @@ namespace JNL.Model
         private int _type;
         private string _name;
         private int _parentid;
+        private bool _haschildren;
         private DateTime _addtime = DateTime.Now;
         private bool _isdelete = false;
         /// <summary>
@@ -63,6 +64,14 @@ namespace JNL.Model
         {
             get { return _parentid; }
             set { _parentid = value; }
+        }
+        /// <summary>
+        /// 是否包含子级
+        /// </summary>
+        public bool HasChildren
+        {
+            get { return _haschildren; }
+            set { _haschildren = value; }
         }
         /// <summary>
         /// 添加时间
