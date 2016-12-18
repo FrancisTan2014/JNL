@@ -200,6 +200,11 @@
                 });
             });
 
+            // 选择终点站（确保终点站与起点站挨着）
+            $('#LastStationId').on('change.neighbor', function () {
+                _this.lastStationChange();
+            });
+
             $('#Switch').on('change', function() {
                 $('#Visible').val($(this).is(':checked'));
             });
@@ -207,6 +212,27 @@
             $('#btnSave').on('click', function () {
                 _this.save();
             });
+        },
+
+        lastStationChange: function() {
+            var $firstStation = $('#FirstStationId'),
+                startId = $firstStation.val(),
+                $selectedOption = $firstStation.find('option[value=' + startId + ']'),
+                prevId = $selectedOption.prev().val() || -2,
+                nextId = $selectedOption.next().val() || -2,
+                $lastSelect = $('#LastStationId'),
+                lastId = $lastSelect.val(),
+                _this = this;
+
+            if (![prevId, startId, nextId].contains(lastId)) {
+                Materialize.toast('终点站必须是与起点站相邻最近的那一个车站，请重新选择:(=', 3000);
+
+                $lastSelect.off('change.neighbor');
+                $lastSelect.prev().find('li:first').click();
+                $lastSelect.on('change.neighbor', function() {
+                    _this.lastStationChange();
+                });
+            }
         },
 
         respExsits: function(staffid) {
