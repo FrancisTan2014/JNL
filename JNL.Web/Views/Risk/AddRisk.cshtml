@@ -37,6 +37,23 @@
         font-size: 20px;
         margin: 20px 0;
     }
+
+    .add-resp {
+        margin-left: 20px;
+    }
+    .add-resp:hover {
+        color: #26a69a;
+        cursor: pointer;
+    }
+
+    .resp-name {
+        margin-left: 10px;
+        font-size: 16px;
+    }
+    .resp-name:hover,.resp-name.active {
+        cursor: pointer;
+        color: #26a69a;
+    }
 </style>
 
 <h5 class="title">@ViewBag.Title</h5>
@@ -68,13 +85,18 @@
         <div class="col s6">
             <div class="card card-outlined style-primary">
                 <div class="card-head">
-                    <header><i class="mdi-social-person"></i> 责任人</header>
+                    <header>
+                        <i class="mdi-social-person"></i>
+                        责任人
+                        <i class="mdi-content-add small add-resp" title="添加责任人"></i>
+                        @*<span class="resp-name" title="点击修改">姚智禄</span>*@
+                    </header>
                 </div><!--end .card-head -->
                 <div class="card-body">
                     <div class="row">
                         <div class="input-field col s7">
                             <input type="hidden" name="RespondStaffId" />
-                            <input type="text" placeholder="输入人名/工号搜索" id="RespondStaffId" name="RespondStaff" />
+                            <input type="text" placeholder="输入人名/工号搜索" id="RespondStaffId" name="RespondStaff" data-complete="false" data-staffid="0" />
                         </div>
                         <div class="input-field col s5">
                             <input type="text" placeholder="责任部门" readonly="readonly" />

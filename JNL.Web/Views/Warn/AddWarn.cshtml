@@ -31,10 +31,10 @@
             <input type="hidden" name="Id" value="@warn.Id"/>
             <input type="hidden" value="@warn.CreateStaffId" name="CreateStaffId"/>
             <input type="hidden" value="@warn.WarningStaffId" name="WarningStaffId" />
-            <input type="datetime" name="WarningTime" id="WarningTime" data-field="datetime" placeholder="预警时间" value="@(warn.WarningTime == DateTime.MinValue ? "" : warn.WarningTime.ToString("dd-MM-yyyy HH:mm"))"/>
+            <input type="datetime" name="WarningTime" id="WarningTime" data-field="datetime" placeholder="预警时间" value="@(warn.WarningTime == DateTime.MinValue ? "" : warn.WarningTime.ToString("yyyy-MM-dd HH:mm:ss"))"/>
         </div>
         <div class="col s4 input-field">
-            <input type="datetime" name="TimeLimit" id="TimeLimit" data-field="datetime" date-format="yyyy-MM-dd hh:mm:ss" placeholder="落实时限" value="@(warn.TimeLimit == DateTime.MinValue ? "" : warn.TimeLimit.ToString("dd-MM-yyyy HH:mm"))" />
+            <input type="datetime" name="TimeLimit" id="TimeLimit" data-field="datetime" date-format="yyyy-MM-dd hh:mm:ss" placeholder="落实时限" value="@(warn.TimeLimit == DateTime.MinValue ? "" : warn.TimeLimit.ToString("yyyy-MM-dd HH:mm:ss"))" />
         </div>
         <div class="col s4 input-field">
             <div class="select-wrapper">

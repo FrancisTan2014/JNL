@@ -86,9 +86,16 @@
             buildDropdownItem: function(data) {
                 return '{0} | {1} | {2}'.format(data.SalaryId, data.Name, data.WorkId);
             },
-            afterSelected: function(data, $input) {
-                $input.prev().val(data.Id)
-                    .parent().next().find('input').val(data.Department || '未知部门');
+            afterSelected: function (data, $input) {
+                if ($input.prop('name') === 'ReportStaff') {
+                    // 提报人
+                    $input.prev().val(data.Id)
+                        .parent().next().find('input').val(data.Department || '未知部门');
+                } else {
+                    // 责任人
+                    var text = '{0} | {1} | {2}'.format(data.SalaryId, data.Name, data.WorkId);
+                    page.fillRespInput(data.Id, text, data.Department, data.Name);
+                }
             }
         },
 
@@ -119,6 +126,54 @@
         bindEvents: function() {
             var _this = this;
 
+            // 点击添加责任人
+            $('.add-resp').on('click', function() {
+                var $input = $('#RespondStaffId'),
+                    completed = $input.data('complete'),
+                    staffId = $input.data('staffid'),
+                    text = $input.data('text'),
+                    depart = $input.data('depart'),
+                    name = $input.data('name'),
+                    $addBtn = $(this);
+
+                if (completed) {
+                    if (!_this.respExsits(staffId)) {
+                        var $resName = $('<span class="resp-name" title="点击修改"></span>');
+                        $resName.data({
+                            staffid: staffId,
+                            text: text,
+                            depart: depart
+                        }).text(name);
+
+                        $resName.on('click', function () {
+                            _this.respNameClick($(this));
+                        });
+
+                        $resName.insertAfter($addBtn);
+                    }
+
+                    _this.cleanRespInput();
+                    $('.resp-name.active').removeClass('active');
+                } 
+            });
+
+            // 责任人被更改时
+            $('#RespondStaffId').on('keydown', function () {
+
+                var staffId = $(this).data('staffid'),
+                    completed = $(this).data('complete');
+
+                if (completed) {
+                    // 删除加号后面的名称
+                    $('.resp-name').each(function () {
+                        if ($(this).data('staffid') == staffId) {
+                            $(this).remove();
+                        }
+                    });
+
+                    _this.cleanRespInput();
+                }
+            });
 
             $('#OccurrenceLineId').on('change', function() {
                 var lineId = $(this).val();
@@ -154,6 +209,60 @@
             });
         },
 
+        respExsits: function(staffid) {
+            
+            var exsits = false;
+            $('.resp-name').each(function() {
+                if ($(this).data('staffid') == staffid) {
+                    exsits = true;
+                    return false;
+                }
+            });
+
+            return exsits;
+        },
+
+        respNameClick: function ($resp) {
+
+            $resp.addClass('active').siblings().removeClass('active');
+            this.fillRespInput(
+                $resp.data('staffid'),
+                $resp.data('text'),
+                $resp.data('depart'),
+                $resp.data('name')
+                );
+        },
+
+        fillRespInput: function(staffid, text, depart, name) {
+            var $input = $('#RespondStaffId'),
+                $depart = $input.parent().next().find('input');
+
+            $input.data({
+                complete: true,
+                staffid: staffid,
+                text: text,
+                depart: depart,
+                name: name
+            }).val(text);
+
+            $depart.val(depart || '未知部门');
+        },
+
+        cleanRespInput: function() {
+            var $input = $('#RespondStaffId'),
+                $depart = $input.parent().next().find('input');
+
+            $input.data({
+                complete: false,
+                staffid: 0,
+                text: '',
+                depart: '',
+                name: ''
+            }).val('');
+
+            $depart.val('');
+        },
+
         save: function() {
             if ($('.edit-form').valid()) {
                 var riskInfo = common.formJsonfiy('.edit-form');
@@ -161,7 +270,13 @@
                     Materialize.toast('提报人没有从提示下拉框中选择，不能提交', 3000);
                     return;
                 }
-                if (riskInfo.RespondStaffId <= 0) {
+
+                var respStaffIds = [];
+                $('.resp-name').each(function() {
+                    respStaffIds.push($(this).data('staffid'));
+                });
+
+                if (respStaffIds.length === 0) {
                     //Materialize.toast('责任人没有从提示下拉框中选择，不能提交', 3000);
 
                     // @FrancisTan 2016-12-11 修改提示信息內容
@@ -197,7 +312,7 @@
                     common.ajax({
                         url: '/Risk/AddRisk',
                         data: {
-                            responds: riskInfo.RespondStaffId,
+                            responds: respStaffIds.join('###'),
                             risk: JSON.stringify(riskInfo)
                         }
                     }).done(function (res) {

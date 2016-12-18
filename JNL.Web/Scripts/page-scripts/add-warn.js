@@ -22,7 +22,7 @@
                 { type: 18, selector: '#WarningSource', value: 'Id', selected: defaultSource }
             ]);
 
-            $('#dtBox').DateTimePicker({ defaultDate: new Date() });
+            $('#dtBox').DateTimePicker();
 
             var textAreaRules = {
                 required: true,

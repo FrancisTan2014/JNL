@@ -382,9 +382,10 @@
                     }).done(function (res) {
                         if (res.code == 108) {
                             _this.$editItem.find('.description').text(input);
+                            Materialize.toast('操作成功:(=', 3000);
                         }
 
-                        Materialize.toast(res.msg, 3000);
+                        Materialize.toast('操作失败，请稍后重试:(=', 3000);
                     });
                 }
             } else {
