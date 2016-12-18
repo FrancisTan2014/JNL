@@ -34,9 +34,9 @@
         {
             targets: [3],
             onCreateCell: function(value) {
-                if (value && value.length > 60) {
-                    return value.substr(0, 60) + '...';
-                }
+                //if (value && value.length > 60) {
+                //    return value.substr(0, 60) + '...';
+                //}
 
                 return value;
             }
