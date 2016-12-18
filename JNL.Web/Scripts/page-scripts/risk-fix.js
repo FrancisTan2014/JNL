@@ -6,7 +6,7 @@
 
     window.page = {
         commonTable: null,
-        columns: ['AddTime', 'ReportStaffDepart', 'RiskType', 'RiskRespondDepart', 'HasDealed', 'RiskSummary', 'RiskDetails', 'RiskId'],
+        columns: ['AddTime', 'ReportStaffDepart', 'ReportStaffName', 'RiskRespondDepart', 'DealTimeLimit', 'RiskSummary', 'RiskDetails', 'RiskId'],
         builds: [
         {
             targets: [4],

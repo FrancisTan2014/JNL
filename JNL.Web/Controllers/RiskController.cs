@@ -47,6 +47,14 @@ namespace JNL.Web.Controllers
                     ResponseStaffId = s.ToInt32()
                 }).ToList();
 
+            if (riskInfo == null)
+            {
+                return Json(ErrorModel.InputError);
+            }
+
+            // 2016-12-18 将处置期限设置为当前时间+72小时
+            riskInfo.DealTimeLimit = riskInfo.VerifyTime.AddDays(3);
+
             var riskBll = new RiskInfoBll();
             var respondBll = new RiskResponseStaffBll();
 
