@@ -266,11 +266,11 @@ namespace JNL.Web.Controllers
 
             var groupList = modelList.GroupBy(t => t.RiskSecondLevelId).ToList();
 
-            // 红线：2 甲类：167，298 乙：657 丙：1223
-            var hx = GetSingleTypeMonthAmmounts(new List<int> { 2 }, groupList);
-            var jia = GetSingleTypeMonthAmmounts(new List<int> { 167, 298 }, groupList);
-            var yi = GetSingleTypeMonthAmmounts(new List<int> { 657 }, groupList);
-            var bing = GetSingleTypeMonthAmmounts(new List<int> { 1223 }, groupList);
+            // 红线：5 甲类：6,7,10,11 乙：8,12 丙：9,13
+            var hx = GetSingleTypeMonthAmmounts(new List<int> { 5 }, groupList);
+            var jia = GetSingleTypeMonthAmmounts(new List<int> { 6, 7, 10, 11 }, groupList);
+            var yi = GetSingleTypeMonthAmmounts(new List<int> { 8,12 }, groupList);
+            var bing = GetSingleTypeMonthAmmounts(new List<int> { 9,13 }, groupList);
 
             // 甲类及以上占比
             var roteList = new double[12];
