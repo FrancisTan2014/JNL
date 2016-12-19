@@ -71,7 +71,7 @@
 
                     var month = $('#searchMonth').val();
                     if (month > 0) {
-                        conditions.push('Month=' + month);
+                        conditions.push('Month<=' + month);
                     }
 
                     return conditions;
