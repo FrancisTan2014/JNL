@@ -20,22 +20,31 @@ namespace JNL.Web.Controllers
 
         public ActionResult List()
         {
-            var category = RouteData.Values["id"].ToString().ToInt32();
+            var category = RouteData.Values["fileType"].ToString().ToInt32();
+            var level = RouteData.Values["level"].ToString().ToInt32();
 
-            if (category < 2 || category > 4)
+            if (category < 2 || category > 4 || level < 1 || level > 3)
             {
                 return Redirect("/Error/NotFound");
             }
 
             var titleDic = new Dictionary<int, string>
             {
-                { 2, "非正常情况应急处理" },
+                { 2, "非正常情况应急处置" },
                 { 3, "应急管理" },
-                { 4,"应急预案" }
+                { 4, "应急预案" }
             };
 
-            ViewBag.Title = titleDic[category];
+            var levelDic = new Dictionary<int, string>
+            {
+                { 1, "总公司" },
+                { 2, "铁路局" },
+                { 3, "机务段" }
+            };
+
+            ViewBag.Title = $"{titleDic[category]} - {levelDic[level]}";
             ViewBag.CateTory = category;
+            ViewBag.Level = level;
 
             return View();
         }

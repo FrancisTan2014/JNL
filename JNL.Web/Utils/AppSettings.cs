@@ -44,10 +44,14 @@ namespace JNL.Web.Utils
                     return ExamFilesPath;
                 case 4:
                     return TraceFilesUploadPath;
+                case 5:
+                    return ArticleFiles;
                 default:
                     return string.Empty;
             }
         }
+
+        public static string ArticleFiles => GetConfig("ArticleFiles");
 
         public static string TraceFilesUploadPath => GetConfig("TraceFiles");
 

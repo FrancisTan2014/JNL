@@ -28,8 +28,10 @@ namespace JNL.Model
 		#region Model
 		private int _id;
 		private int _categoryid;
+	    private int _publevel;
 		private string _title;
 		private string _content;
+	    private string _filepath;
 		private int _createstaffid;
 		private DateTime _addtime= DateTime.Now;
 		private bool _isdelete= false;
@@ -49,10 +51,18 @@ namespace JNL.Model
 			set{ _categoryid=value;}
 			get{return _categoryid;}
 		}
-		/// <summary>
-		/// 文章标题
-		/// </summary>
-		public string Title
+        /// <summary>
+        /// 发布级别（1 总公司； 2 铁路局； 3 机务段）
+        /// </summary>
+	    public int PubLevel
+	    {
+            set { _publevel = value; }
+            get { return _publevel; }
+	    }
+        /// <summary>
+        /// 文章标题
+        /// </summary>
+        public string Title
 		{
 			set{ _title=value;}
 			get{return _title;}
@@ -65,10 +75,18 @@ namespace JNL.Model
 			set{ _content=value;}
 			get{return _content;}
 		}
-		/// <summary>
-		/// 添加人
-		/// </summary>
-		public int CreateStaffId
+        /// <summary>
+        /// 文件地址
+        /// </summary>
+	    public string FilePath
+	    {
+            set { _filepath = value; }
+            get { return _filepath; }
+	    }
+        /// <summary>
+        /// 添加人
+        /// </summary>
+        public int CreateStaffId
 		{
 			set{ _createstaffid=value;}
 			get{return _createstaffid;}

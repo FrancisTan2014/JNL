@@ -8,12 +8,13 @@
         commonTable: null,
         departs: [],
 
-        columns: ['Id', 'Title', 'Creator', 'Department', 'AddTime', 'Id'],
+        columns: ['Id', 'Title', 'Creator', 'Department', 'AddTime', 'FilePath'],
         builds: [
         {
             targets: [5],
-            onCreateCell: function (columnValue) {
-                return '<td><a href="/Article/Scan/{0}" title="点击进入查看">查 看</a></td>'.format(columnValue);
+            onCreateCell: function (columnValue, data) {
+                return '<td><a href="{0}" download="{1}" title="点击下载文件" class="btn waves-light waves-effect"><i class="small mdi-editor-vertical-align-bottom"></i></a></td>'.format(columnValue, data.Title);
+                
             }
         }],
 
@@ -24,7 +25,8 @@
 
         getConditions: function () {
             var category = $('.depart-verify').data('category');
-            return 'CategoryId=' + category;
+            var level = $('.depart-verify').data('level');
+            return 'CategoryId={0} AND PubLevel={1}'.format(category, level);
         },
 
         init: function () {

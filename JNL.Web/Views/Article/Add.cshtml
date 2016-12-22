@@ -34,8 +34,26 @@
             </div>
         </div>
         <div class="col s12 input-field">
-            <textarea id="Content" name="Content"></textarea>
+            <div class="select-wrapper">
+                <select class="initialized" id="PubLevel" name="PubLevel">
+                    <option value="-1">请选择发布级别</option>
+                    <option value="1">总公司</option>
+                    <option value="2">铁路局</option>
+                    <option value="3">机务段</option>
+                </select>
+            </div>
         </div>
+        <div class="col s12 input-field">
+            <input type="hidden" name="FilePath" />
+            <div class="select-wrapper">
+                <div class="file-field input-field col s12">
+                    <div class="uploadify"></div>
+                </div>
+            </div>
+        </div>
+        @*<div class="col s12 input-field">
+            <textarea id="Content" name="Content"></textarea>
+        </div>*@
     </div>
     <div class="row">
         <button id="btnSave" class="btn waves-effect waves-block waves-light right" type="button">保 存</button>
@@ -43,5 +61,6 @@
 </form>
 <div class="bottom"></div>
 
-<script src="/Scripts/plugins/wangEditor/js/wangEditor.min.js"></script>
+@*<script src="/Scripts/plugins/wangEditor/js/wangEditor.min.js"></script>*@
+<script src="/Scripts/plugins/uplodifive/jquery.uploadifive.min.js"></script>
 <script src="/Scripts/page-scripts/add-article.js"></script>
