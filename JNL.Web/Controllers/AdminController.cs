@@ -18,6 +18,7 @@ namespace JNL.Web.Controllers
     /// </summary>
     public class AdminController : Controller
     {
+        #region 员工管理
         /// <summary>
         /// 员工列表管理
         /// </summary>
@@ -72,8 +73,10 @@ namespace JNL.Web.Controllers
             }
 
             return Json(ErrorModel.OperateFailed);
-        }
+        } 
+        #endregion
 
+        #region 风险概述管理
         /// <summary>
         /// 风险概述管理
         /// </summary>
@@ -136,8 +139,10 @@ namespace JNL.Web.Controllers
             }
 
             return Json(ErrorModel.OperateFailed);
-        }
+        } 
+        #endregion
 
+        #region 计算最近三年的得分
         /// <summary>
         /// 计算最近三年的得分
         /// </summary>
@@ -155,8 +160,10 @@ namespace JNL.Web.Controllers
             StaffScoreHelper.ComputeWholeYearStaffScore(currentYear - 2);
 
             return Json(ErrorModel.OperateSuccess, JsonRequestBehavior.AllowGet);
-        }
+        } 
+        #endregion
 
+        #region 字典维护
         /// <summary>
         /// 字典维护
         /// </summary>
@@ -167,8 +174,8 @@ namespace JNL.Web.Controllers
 
         public JsonResult GetDictories(int? type, int parent)
         {
-            var condition = type == null 
-                ? $"ParentId={parent}" 
+            var condition = type == null
+                ? $"ParentId={parent}"
                 : $"Type={type} AND ParentId={parent}";
 
             var bll = new DictionariesBll();
@@ -215,7 +222,7 @@ namespace JNL.Web.Controllers
             bool success;
             if (model.Id > 0)
             {
-                success = bll.Update(model, new[] {"Name"});
+                success = bll.Update(model, new[] { "Name" });
             }
             else
             {
@@ -229,5 +236,74 @@ namespace JNL.Web.Controllers
 
             return Json(ErrorModel.GetDataFailed);
         }
+        #endregion
+
+        #region 录入情况统计
+        /// <summary>
+        /// 指标管理
+        /// </summary>
+        public ActionResult Quota()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public JsonResult AddQuota(int staffId, int ammount)
+        {
+            if (staffId <= 0 || ammount <= 0)
+            {
+                return Json(ErrorModel.InputError);
+            }
+
+            var quota = new Quota
+            {
+                QuotaType = 1,
+                QuotaAmmount = ammount,
+                StaffId = staffId
+            };
+
+            var quotaBll = new QuotaBll();
+            if (quotaBll.Insert(quota).Id > 0)
+            {
+                return Json(ErrorModel.OperateSuccess);
+            }
+
+            return Json(ErrorModel.OperateFailed);
+        }
+
+        [HttpPost]
+        public JsonResult UpdateQuota(int quotaId, int ammount)
+        {
+            if (quotaId <= 0 || ammount <= 0)
+            {
+                return Json(ErrorModel.InputError);
+            }
+
+            var quotaBll = new QuotaBll();
+            var quota = quotaBll.QuerySingle(quotaId);
+            if (quota != null)
+            {
+                quota.QuotaAmmount = ammount;
+                quota.UpdateTime = DateTime.Now;
+
+                if (quotaBll.Update(quota))
+                {
+                    return Json(ErrorModel.OperateSuccess);
+                }
+
+                return Json(ErrorModel.OperateFailed);
+            }
+
+            return Json(ErrorModel.InputError);
+        }
+
+        /// <summary>
+        /// 指标完成情况统计
+        /// </summary>
+        public ActionResult QuotaAchievement()
+        {
+            return View();
+        }
+        #endregion
     }
 }

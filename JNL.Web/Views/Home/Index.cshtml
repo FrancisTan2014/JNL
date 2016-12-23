@@ -3,4 +3,61 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>首页</h2>
+<style>
+    .card {
+        box-shadow: none !important;
+    }
+
+        .card .row {
+            margin: 0;
+        }
+
+    .card-body {
+        padding-top: 0;
+    }
+
+    .edit-form {
+        padding-top: 20px;
+    }
+
+    .btn-group .btn {
+        width: 20%;
+    }
+
+    #staffList {
+        padding: 10px;
+        text-align: center;
+    }
+
+    .row header {
+        display: inline-block;
+        padding: 11px 24px;
+        vertical-align: middle;
+        line-height: 17px;
+        font-size: 20px;
+        margin: 20px 0;
+    }
+
+</style>
+
+<h5 class="title">@ViewBag.Title</h5>
+
+<div class="row">
+    <div class="card card-outlined style-primary">
+        <div class="card-head">
+            <header>您本月风险信息录入情况</header>
+        </div><!--end .card-head -->
+        <div class="card-body">
+            <div class="row">
+                <div class="input-field col s6 flow-text center-align">
+                    <label>您本月应该录入条数</label>
+                    <p>@(ViewBag.Achievement == null ? 0 : ViewBag.Achievement.QuotaAmmount)</p>
+                </div>
+                <div class="input-field col s6 flow-text center-align">
+                    <label>您本月实际录入条数</label>
+                    <p>@(ViewBag.Achievement == null ? 0 : ViewBag.Achievement.AchieveAmmount)</p>
+                </div>
+            </div>
+        </div><!--end .card-body -->
+    </div>
+</div>

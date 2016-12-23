@@ -1,0 +1,67 @@
+﻿@{
+    ViewBag.Title = "指标管理";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h5 class="title">@ViewBag.Title</h5>
+
+<div id="searchBox" class="row">
+    <div class="col s3 offset-s2">
+        <input type="text" placeholder="姓名/工号" data-condition="WorkId LIKE '%{{value}}%' OR SalaryId LIKE '%{{value}}%' OR [Name] LIKE '%{{value}}%'" />
+    </div>
+    <div class="col s3">
+        <div class="select-wrapper">
+            <select id="searchReport" class="initialized" data-condition="DepartmentId={{value}}">
+                <option value="-1">部门</option>
+            </select>
+        </div>
+    </div>
+    <div class="col s2">
+        <button id="btnSearch" class="btn waves-effect waves-block waves-light w100p" type="button">查 询</button>
+    </div>
+    <div class="col s2">
+        <button id="btnAdd" class="btn waves-effect waves-block waves-light w100p" type="button">添加指标</button>
+    </div>
+</div>
+
+<table class="bordered data-table">
+    <thead>
+        <tr>
+            <th>序号</th>
+            <th>姓名</th>
+            <th>部门</th>
+            <th>指标名称</th>
+            <th>指标量化数</th>
+            <th>更新时间</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<!-- 模态框 -->
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <h4 id="editTitle">添加</h4>
+        <div class="mt40"></div>
+        <div class="input-field">
+            <label for="QuotaName" class="col s2">指标名称</label>
+            <input id="QuotaName" class="col s10" type="text" readonly="readonly" value="风险信息每月录入条数"/>
+        </div>
+        <div class="input-field" id="targetStaff">
+            <label for="staffName">目标人员</label>
+            <input type="text" placeholder="输入工号/姓名查找" id="staffName" />
+        </div>
+        <div class="input-field">
+            <label for="QuotaAmmount" class="col s2">指标量化数</label>
+            <input type="text" class="col s10" id="QuotaAmmount" name="QuotaAmmount" />
+        </div>
+    </div>
+    <div class="modal-footer">
+        @*<a class="left ml24 mt15 error">错误消息！</a>*@
+        <a href="javascript:void(0);" class="btn modal-action modal-close waves-effect btn-flat" id="btnSave">保 存</a>
+        <a href="javascript:void(0);" class="btn modal-action modal-close waves-effect btn-flat">取 消</a>
+    </div>
+</div>
+
+<script src="/Scripts/page-scripts/admin-quota.js"></script>

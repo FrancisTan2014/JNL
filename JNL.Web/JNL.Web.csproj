@@ -204,6 +204,8 @@
     <Content Include="Scripts\page-scripts\add-warn.js" />
     <Content Include="Scripts\page-scripts\admin-dictionaries.js" />
     <Content Include="Scripts\page-scripts\admin-edit-staff.js" />
+    <Content Include="Scripts\page-scripts\admin-quota-achievement.js" />
+    <Content Include="Scripts\page-scripts\admin-quota.js" />
     <Content Include="Scripts\page-scripts\admin-risk-summary.js" />
     <Content Include="Scripts\page-scripts\admin-staff-list.js" />
     <Content Include="Scripts\page-scripts\analysis-action.js" />
@@ -393,6 +395,8 @@
     <Content Include="Views\Admin\EditStaff.cshtml" />
     <Content Include="Views\Admin\RiskSummary.cshtml" />
     <Content Include="Views\Admin\Dictionaries.cshtml" />
+    <Content Include="Views\Admin\Quota.cshtml" />
+    <Content Include="Views\Admin\QuotaAchievement.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

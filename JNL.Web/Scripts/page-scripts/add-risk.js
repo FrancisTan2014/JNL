@@ -95,6 +95,7 @@
                     // 责任人
                     var text = '{0} | {1} | {2}'.format(data.SalaryId, data.Name, data.WorkId);
                     page.fillRespInput(data.Id, text, data.Department, data.Name);
+                    $('[name=RespondStaffId]').val(data.Id);
                 }
             }
         },
@@ -297,9 +298,17 @@
                     return;
                 }
 
+                var respId = $('[name=RespondStaffId]').val();
                 var respStaffIds = [];
-                $('.resp-name').each(function() {
-                    respStaffIds.push($(this).data('staffid'));
+                if (respId > 0) {
+                    respStaffIds.push(respId);
+                }
+
+                $('.resp-name').each(function () {
+                    var staffid = $(this).data('staffid');
+                    if (staffid != respId) {
+                        respStaffIds.push(staffid);
+                    }
                 });
 
                 if (respStaffIds.length === 0) {

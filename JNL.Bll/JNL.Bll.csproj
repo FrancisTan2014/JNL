@@ -59,6 +59,8 @@
     <Compile Include="Partials\LocoQuality28Bll.cs" />
     <Compile Include="Partials\LocoQuality6Bll.cs" />
     <Compile Include="Partials\MenuBll.cs" />
+    <Compile Include="Partials\QuotaAchievementBll.cs" />
+    <Compile Include="Partials\QuotaBll.cs" />
     <Compile Include="Partials\RiskInfoBll.cs" />
     <Compile Include="Partials\RiskResponseStaffBll.cs" />
     <Compile Include="Partials\RiskSummaryBll.cs" />
@@ -73,6 +75,8 @@
     <Compile Include="Partials\ViewLocomotiveBll.cs" />
     <Compile Include="Partials\ViewLocoQuality28Bll.cs" />
     <Compile Include="Partials\ViewLocoQuality6Bll.cs" />
+    <Compile Include="Partials\ViewQuotaAchievementBll.cs" />
+    <Compile Include="Partials\ViewQuotaBll.cs" />
     <Compile Include="Partials\ViewRiskInfoBll.cs" />
     <Compile Include="Partials\ViewRiskRespondRiskBll.cs" />
     <Compile Include="Partials\ViewRiskResponseBll.cs" />

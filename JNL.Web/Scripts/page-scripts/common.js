@@ -1499,7 +1499,7 @@
             if ($drop.length > 0) {
                 this.$drop = $drop;
             } else {
-                this.$drop = $('<ul id="___intelligence___" class="dropdown-content"></ul>');
+                this.$drop = $('<ul id="___intelligence___" style="z-index: 999999;" class="dropdown-content"></ul>');
                 this.$drop.appendTo('body');
             }
         };

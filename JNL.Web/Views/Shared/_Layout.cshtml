@@ -34,7 +34,7 @@
         <div class="navbar-fixed">
             <nav>
                 <div class="nav-wrapper">
-                    <a href="javascript:void(0);" class="brand-logo right dropdown-button waves-effect waves-block waves-light" data-activates="dropdown0" id="loginName">姚智禄</a>
+                    <a href="javascript:void(0);" class="brand-logo right dropdown-button waves-effect waves-block waves-light" data-activates="dropdown0" id="loginName"></a>
                     <ul id="dropdown0" class="dropdown-content">
                         <li><a href="/Home/Logout">退出登录</a></li>
                     </ul>
@@ -82,9 +82,9 @@
                         <li class="first-menu">
                             <a href="javascript:void(0);" class="dropdown-button waves-effect waves-block waves-light" data-activates="dropdown6">应急管理</a>
                             <ul id="dropdown6" class="dropdown-content">
-                                <li class="second-menu" data-target="#target15" id="exception"><a href="/Article/List/2" class="waves-effect waves-block waves-light">非正常情况处理<i class="mdi-hardware-keyboard-arrow-right right"></i></a></li>
-                                <li class="second-menu" data-target="#target16" id="suddenly"><a href="/Article/List/3" class="waves-effect waves-block waves-light">应急管理<i class="mdi-hardware-keyboard-arrow-right right"></i></a></li>
-                                <li class="second-menu" data-target="#target17" id="sudManager"><a href="/Article/List/4" class="waves-effect waves-block waves-light">应急预案<i class="mdi-hardware-keyboard-arrow-right right"></i></a></li>
+                                <li class="second-menu" data-target="#target15" id="exception"><a href="javascript:void(0);" class="waves-effect waves-block waves-light">非正常情况处理<i class="mdi-hardware-keyboard-arrow-right right"></i></a></li>
+                                <li class="second-menu" data-target="#target16" id="suddenly"><a href="javascript:void(0);" class="waves-effect waves-block waves-light">应急管理<i class="mdi-hardware-keyboard-arrow-right right"></i></a></li>
+                                <li class="second-menu" data-target="#target17" id="sudManager"><a href="javascript:void(0);" class="waves-effect waves-block waves-light">应急预案<i class="mdi-hardware-keyboard-arrow-right right"></i></a></li>
                             </ul>
                         </li>
                         <li class="first-menu">
@@ -105,6 +105,7 @@
                                 <li class="second-menu" data-target="#target13" id="adminStaff"><a href="javascript:void(0);">人员管理<i class="mdi-hardware-keyboard-arrow-right right"></i></a></li>
                                 <li><a href="/Admin/RiskSummary">风险概述管理</a></li>
                                 <li><a href="/Admin/Dictionaries">字典维护</a></li>
+                                <li class="second-menu" data-target="#target18" id="quotaManager"><a href="javascript:void(0);" class="waves-effect waves-block waves-light">录入情况统计<i class="mdi-hardware-keyboard-arrow-right right"></i></a></li>
                             </ul>
                         </li>
                     </ul>
@@ -211,6 +212,10 @@
                     <li class="third-menu-item"><a href="/Article/List/4/1">总公司</a></li>
                     <li class="third-menu-item"><a href="/Article/List/4/2">铁路局</a></li>
                     <li class="third-menu-item"><a href="/Article/List/4/3">机务段</a></li>
+                </ul>
+                <ul id="target18" data-source="#quotaManager" class="dropdown-content third-menu">
+                    <li class="third-menu-item"><a href="/Admin/Quota">指标管理</a></li>
+                    <li class="third-menu-item"><a href="/Admin/QuotaAchievement">指标完成情况</a></li>
                 </ul>
             </nav>
         </div>

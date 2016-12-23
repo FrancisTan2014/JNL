@@ -29,6 +29,14 @@ namespace JNL.Web.Controllers
             ViewBag.RiskType = riskType.Id;
             ViewBag.RiskLevels = AppSettings.NeedReformRiskLevels;
 
+            // @FrancisTan 2016-12-23
+            // 修改提报人录入，改为以当前登录人信息填充
+            // 并且取消手动输出提报人功能
+            var loginUser = LoginStatus.GetLoginUser();
+            ViewBag.ReportUserId = loginUser.Id;
+            ViewBag.ReportUserInfo = $"{loginUser.SalaryId} | {loginUser.Name} | {loginUser.WorkId}";
+            ViewBag.ReportDepart = loginUser.Department;
+
             return View();
         }
 
@@ -66,7 +74,9 @@ namespace JNL.Web.Controllers
                     riskResponds.ForEach(r => r.RiskId = riskInfo.Id);
                     respondBll.BulkInsert(riskResponds);
 
-                    return true;
+                    // @FrancisTan 2016-12-23
+                    // 更新风险信息录入条数指标完成记录
+                    return UpdateQuotaAchievement(riskInfo);
                 }
 
                 return false;
@@ -78,6 +88,45 @@ namespace JNL.Web.Controllers
             }
 
             return Json(ErrorModel.OperateFailed);
+        }
+
+        /// <summary>
+        /// 更新风险信息指标完成情况
+        /// </summary>
+        /// <since>2016-12-23 11:11</since>
+        private bool UpdateQuotaAchievement(RiskInfo riskInfo)
+        {
+            var quotaBll = new QuotaBll();
+            var quota = quotaBll.QuerySingle($"[QuotaType]=1 AND StaffId={riskInfo.ReportStaffId}");
+
+            // 检查当前登录人是否被指定风险信息录入条数指标
+            // 存在指标则更新指标完成情况，不存在则直接返回true
+            if (quota != null)
+            {
+                var quotaAchievementBll = new QuotaAchievementBll();
+                var condition = $"QuotaId={quota.Id} AND [Year]={DateTime.Now.Year} AND [Month]={DateTime.Now.Month}";
+                var record = quotaAchievementBll.QuerySingle(condition);
+
+                // 检查当前登录人本月指标完成情况记录是否存在
+                // 不存在则创建新记录，存在则更新记录
+                if (record == null)
+                {
+                    record = new QuotaAchievement
+                    {
+                        QuotaId = quota.Id,
+                        AchieveAmmount = 1,
+                        Year = DateTime.Now.Year,
+                        Month = DateTime.Now.Month
+                    };
+
+                    return quotaAchievementBll.Insert(record).Id > 0;
+                }
+
+                record.AchieveAmmount += 1;
+                return quotaAchievementBll.Update(record);
+            }
+
+            return true;
         }
 
         public ActionResult UpdateRisk()

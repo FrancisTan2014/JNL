@@ -14,6 +14,13 @@ namespace JNL.Web.Controllers
     {
         public ActionResult Index()
         {
+            var viewQuotaBll = new ViewQuotaAchievementBll();
+            var loginStaffId = LoginStatus.GetLoginId();
+            var condition = $"StaffId={loginStaffId} AND [Year]={DateTime.Now.Year} AND [Month]={DateTime.Now.Month}";
+
+            ViewBag.Achievement = viewQuotaBll.QuerySingle(condition);
+
+
             return View();
         }
 
@@ -34,18 +41,19 @@ namespace JNL.Web.Controllers
 
                 if (loginResult == LoginResult.Success)
                 {
+                    var loginUser = staffBll.QuerySingle(userId);
+
                     // 记住登录状态
                     if (userInput.Remember)
                     {
                         LoginStatus.WriteCookieFor7Days(userId);
+                        CookieHelper.Set(CookieNames.LoginUserName, loginUser.Name, 7*24*3600);
                     }
                     else
                     {
                         LoginStatus.WriteCookieForSession(userId);
+                        CookieHelper.Set(CookieNames.LoginUserName, loginUser.Name);
                     }
-
-                    var loginUser = staffBll.QuerySingle(userId);
-                    CookieHelper.Set(CookieNames.LoginUserName, loginUser.Name);
 
                     return Json(ErrorModel.LoginSuccess);
                 }

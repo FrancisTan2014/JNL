@@ -71,11 +71,11 @@
                         <div class="input-field col s7">
                             <input type="hidden" name="Id" value="0" />
                             <input type="hidden" name="RiskTypeId" value="@ViewBag.RiskType"/>
-                            <input type="hidden" name="ReportStaffId"/>
-                            <input type="text" id="ReportStaffId" name="ReportStaff" maxlength="30" placeholder="输入人名/工号搜索"/>
+                            <input type="hidden" name="ReportStaffId" value="@ViewBag.ReportUserId" />
+                            <input type="text" id="ReportStaffId" name="ReportStaff" maxlength="30" placeholder="输入人名/工号搜索" value="@ViewBag.ReportUserInfo" readonly="readonly"/>
                         </div>
                         <div class="input-field col s5">
-                            <input type="text" placeholder="提报部门" value="集宁机务段" readonly="readonly"/>
+                            <input type="text" placeholder="提报部门" value="@ViewBag.ReportDepart" readonly="readonly"/>
                             <input type="hidden" value="@ViewBag.RiskLevels" id="RiskLevels" />
                         </div>
                     </div>

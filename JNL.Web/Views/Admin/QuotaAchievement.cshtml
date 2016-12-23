@@ -1,0 +1,71 @@
+﻿@{
+    ViewBag.Title = "指标完成情况";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h5 class="title">@ViewBag.Title</h5>
+
+<div id="searchBox" class="row">
+    <div class="col s2 offset-s4">
+        <input type="text" placeholder="姓名/工号" data-condition="WorkId LIKE '%{{value}}%' OR SalaryId LIKE '%{{value}}%' OR [Name] LIKE '%{{value}}%'" />
+    </div>
+    <div class="col s2">
+        <div class="select-wrapper">
+            <select id="searchReport" class="initialized" data-condition="DepartmentId={{value}}">
+                <option value="-1">部门</option>
+            </select>
+        </div>
+    </div>
+    <div class="col s1">
+        <div class="select-wrapper">
+            <select id="searchYear" class="initialized" data-condition="[Year]={{value}}">
+
+                @{
+                    var startYear = DateTime.Now.Year;
+                    for (int i = 0; i < 5; i++)
+                    {
+                        <option value="@(startYear-i)">@(startYear-i)</option>
+                    }
+                }
+                
+            </select>
+        </div>
+    </div>
+    <div class="col s1">
+        <div class="select-wrapper">
+            <select id="searchMonth" class="initialized" data-condition="[Month]={{value}}">
+                <option value="-1">全年</option>
+
+                @{
+                    var currMonth = DateTime.Now.Month;
+                    for (int i = 1; i <= 12; i++)
+                    {
+                        <option value="@i" @(i == currMonth ? "selected='selected'" : "")>@i</option>
+                    }
+                }
+
+            </select>
+        </div>
+    </div>
+    <div class="col s2">
+        <button id="btnSearch" class="btn waves-effect waves-block waves-light w100p" type="button">查 询</button>
+    </div>
+</div>
+
+<table class="bordered data-table">
+    <thead>
+    <tr>
+        <th>序号</th>
+        <th>姓名</th>
+        <th>部门</th>
+        <th>指标名称</th>
+        <th>指标量化数</th>
+        <th>已完成数</th>
+        <th>月份</th>
+        <th>更新时间</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script src="/Scripts/page-scripts/admin-quota-achievement.js"></script>

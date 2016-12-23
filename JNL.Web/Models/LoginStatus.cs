@@ -59,10 +59,10 @@ namespace JNL.Web.Models
         /// 获取当前登录的用户实体信息
         /// </summary>
         /// <returns></returns>
-        public static Staff GetLoginUser()
+        public static ViewStaff GetLoginUser()
         {
             var userId = GetLoginId();
-            var staff = new StaffBll().QuerySingle(userId);
+            var staff = new ViewStaffBll().QuerySingle(userId);
 
             if (staff == null)
             {
