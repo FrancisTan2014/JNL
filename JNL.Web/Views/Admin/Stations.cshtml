@@ -1,0 +1,80 @@
+﻿@{
+    ViewBag.Title = "车站管理";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h5 class="title">@ViewBag.Title</h5>
+
+<div id="searchBox" class="row">
+    <div class="col s3 offset-s5">
+        <input type="text" placeholder="车站名称/拼音简称" data-condition="[Name] LIKE '%{{value}}%' OR Spell LIKE '%{{value}}%'" />
+    </div>
+    <div class="col s2">
+        <button id="btnSearch" class="btn waves-effect waves-block waves-light w100p" type="button">查 询</button>
+    </div>
+    <div class="col s2">
+        <button id="btnAdd" class="btn waves-effect waves-block waves-light w100p" type="button">添加车站</button>
+    </div>
+</div>
+
+<table class="bordered data-table">
+    <thead>
+        <tr>
+            <th>序号</th>
+            <th>车站名称</th>
+            <th>拼音简称</th>
+            <th>更新时间</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<!-- 添加车站模态框 -->
+<div id="addModal" class="modal">
+    <div class="modal-content">
+        <h4 class="editTitle">添加车站</h4>
+        <div class="mt40"></div>
+        <form>
+            <div class="input-field">
+                <label for="addName" class="col s2">车站名称</label>
+                <input id="addName" name="Name" class="col s10" type="text" maxlength="15"/>
+            </div>
+            <div class="input-field">
+                <label for="addSpell">拼音简称</label>
+                <input type="text" name="Spell" id="addSpell" />
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        @*<a class="left ml24 mt15 error">错误消息！</a>*@
+        <a href="javascript:void(0);" class="btn modal-action modal-close waves-effect btn-flat btn-save">保 存</a>
+        <a href="javascript:void(0);" class="btn modal-action modal-close waves-effect btn-flat">取 消</a>
+    </div>
+</div>
+
+<!-- 修改车站模态框 -->
+<div id="editModal" class="modal">
+    <div class="modal-content">
+        <h4 class="editTitle">修改车站信息</h4>
+        <div class="mt40"></div>
+        <form>
+            <input type="hidden" name="Id" />
+            <div class="input-field">
+                <label for="editName" class="col s2">车站名称</label>
+                <input name="Name" class="col s10" type="text" maxlength="15" id="editName"/>
+            </div>
+            <div class="input-field">
+                <label for="editSpell">拼音简称</label>
+                <input type="text" name="Spell" id="editSpell" maxlength="20" />
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        @*<a class="left ml24 mt15 error">错误消息！</a>*@
+        <a href="javascript:void(0);" class="btn modal-action modal-close waves-effect btn-flat btn-save">保 存</a>
+        <a href="javascript:void(0);" class="btn modal-action modal-close waves-effect btn-flat">取 消</a>
+    </div>
+</div>
+
+<script src="/Scripts/page-scripts/admin-stations.js"></script>

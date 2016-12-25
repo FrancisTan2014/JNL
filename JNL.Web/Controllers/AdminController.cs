@@ -73,7 +73,7 @@ namespace JNL.Web.Controllers
             }
 
             return Json(ErrorModel.OperateFailed);
-        } 
+        }
         #endregion
 
         #region 风险概述管理
@@ -139,7 +139,7 @@ namespace JNL.Web.Controllers
             }
 
             return Json(ErrorModel.OperateFailed);
-        } 
+        }
         #endregion
 
         #region 计算最近三年的得分
@@ -160,7 +160,7 @@ namespace JNL.Web.Controllers
             StaffScoreHelper.ComputeWholeYearStaffScore(currentYear - 2);
 
             return Json(ErrorModel.OperateSuccess, JsonRequestBehavior.AllowGet);
-        } 
+        }
         #endregion
 
         #region 字典维护
@@ -304,6 +304,145 @@ namespace JNL.Web.Controllers
         {
             return View();
         }
+        #endregion
+
+        #region 车站管理
+
+        public ActionResult Stations()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// 添加/修改车站
+        /// </summary>
+        [HttpPost]
+        public JsonResult EditStation(string json)
+        {
+            var station = JsonHelper.Deserialize<Station>(json);
+            if (station == null)
+            {
+                return Json(ErrorModel.InputError);
+            }
+
+            var stationBll = new StationBll();
+            if (stationBll.Exists($"[Name]='{station.Name}'"))
+            {
+                return Json(ErrorModel.ExistSameItem);
+            }
+
+            bool success;
+            if (station.Id == 0)
+            {
+                success = stationBll.Insert(station).Id > 0;
+            }
+            else
+            {
+                success = stationBll.Update(station);
+            }
+
+            return Json(success ? ErrorModel.OperateSuccess : ErrorModel.OperateFailed);
+        }
+
+        #endregion
+
+        #region 线路管理
+
+        public ActionResult Lines()
+        {
+            return View();
+        }
+
+        public ActionResult EditLine()
+        {
+            var id = RouteData.Values["id"];
+            ViewBag.Id = id?.ToString().ToInt32() ?? 0;
+            ViewBag.Title = id == null ? "添加线路" : "修改线路信息";
+
+            return View();
+        }
+
+        [HttpPost]
+        public JsonResult EditLine(int lineId)
+        {
+            var lineName = Request["lineName"];
+            var firstStation = Request["firstStation"];
+            var lastStation = Request["lastStation"];
+            var stationIds = Request["stationIds"];
+
+            if (string.IsNullOrEmpty(lineName) || string.IsNullOrEmpty(stationIds) || string.IsNullOrEmpty(firstStation) || string.IsNullOrEmpty(lastStation))
+            {
+                return Json(ErrorModel.InputError);
+            }
+
+            var lineBll = new LineBll();
+            #region 执行事务，操作Line及LineStations表
+            var success = lineBll.ExecuteTransation(() =>
+                {
+                    // 更新Line表数据
+                    var line = new Line
+                    {
+                        Id = lineId,
+                        FirstStation = firstStation,
+                        LastStation = lastStation,
+                        Name = lineName
+                    };
+
+                    bool lineSuccess;
+                    if (lineId == 0)
+                    {
+                        lineId = lineBll.Insert(line).Id;
+                        lineSuccess = lineId > 0;
+                    }
+                    else
+                    {
+                        lineSuccess = lineBll.Update(line);
+                    }
+
+                    if (lineSuccess)
+                    {
+                        // 删除车站线路关联表数据
+                        var relateBll = new LineStationsBll();
+                        bool deleteSuccess = true;
+                        if (relateBll.Exists($"LineId={lineId}"))
+                        {
+                            deleteSuccess = relateBll.Delete($"LineId={lineId}");
+                        }
+
+                        if (!deleteSuccess)
+                        {
+                            // 存在且删除失败，事务回滚
+                            return false;
+                        }
+
+                        //插入新的车站线路关联表数据
+                        var sort = 0;
+                        var newRelations = stationIds.Split(new[] { "###" }, StringSplitOptions.RemoveEmptyEntries)
+                                .Select(str => str.ToInt32())
+                                .Select(stationId => new LineStations
+                                {
+                                    LineId = lineId,
+                                    StationId = stationId,
+                                    Sort = ++sort
+                                });
+
+                        relateBll.BulkInsert(newRelations);
+
+                        return true;
+                    }
+
+                    return false;
+                });
+            #endregion
+
+            if (success)
+            {
+                return Json(ErrorModel.OperateSuccess);
+            }
+
+            return Json(ErrorModel.OperateFailed);
+        }
+
         #endregion
     }
 }

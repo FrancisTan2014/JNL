@@ -203,11 +203,14 @@
     <Content Include="Scripts\page-scripts\add-live6.js" />
     <Content Include="Scripts\page-scripts\add-warn.js" />
     <Content Include="Scripts\page-scripts\admin-dictionaries.js" />
+    <Content Include="Scripts\page-scripts\admin-edit-line.js" />
     <Content Include="Scripts\page-scripts\admin-edit-staff.js" />
+    <Content Include="Scripts\page-scripts\admin-lines.js" />
     <Content Include="Scripts\page-scripts\admin-quota-achievement.js" />
     <Content Include="Scripts\page-scripts\admin-quota.js" />
     <Content Include="Scripts\page-scripts\admin-risk-summary.js" />
     <Content Include="Scripts\page-scripts\admin-staff-list.js" />
+    <Content Include="Scripts\page-scripts\admin-stations.js" />
     <Content Include="Scripts\page-scripts\analysis-action.js" />
     <Content Include="Scripts\page-scripts\analysis-area.js" />
     <Content Include="Scripts\page-scripts\analysis-constitute.js" />
@@ -397,6 +400,9 @@
     <Content Include="Views\Admin\Dictionaries.cshtml" />
     <Content Include="Views\Admin\Quota.cshtml" />
     <Content Include="Views\Admin\QuotaAchievement.cshtml" />
+    <Content Include="Views\Admin\Stations.cshtml" />
+    <Content Include="Views\Admin\Lines.cshtml" />
+    <Content Include="Views\Admin\EditLine.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,54 @@
+﻿@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h5 class="title">@ViewBag.Title</h5>
+
+<style>
+    .edit-form {
+        padding-top: 20px;
+    }
+    .btn-group {
+        text-align: center;
+    }
+    
+    .station-group {
+        padding-top: 10px;
+    }
+
+    .station {
+        padding: 10px;
+        display: inline-block;
+    }
+    .station:hover {
+        background: #26a69a;
+        color: #fff;
+        cursor: pointer;
+    }
+</style>
+
+<form class="edit-form z-depth-5" data-id="@ViewBag.Id">
+    <div class="row">
+        <label for="Name">线路名称</label>
+        <input type="text" maxlength="20" name="Name" id="Name"/>
+    </div>
+    <div class="row">
+        <label>经过车站(操作提示：点击车站名称进行删除操作，添加车站则通过在下方文本框中输入车站名称进行添加)</label>
+        <div class="station-group">
+            @*<span class="station" title="点击删除">集宁南</span>
+            <i class="mdi-image-navigate-next"></i>
+            <span class="station" title="点击删除">集宁南</span>*@
+        </div>
+    </div>
+    <div class="row">
+        <input class="col s10" type="text" placeholder="输入车站名称添加车站" maxlength="15" id="addStationName" />
+        <button type="button" class="btn waves-block waves-effect waves-light col s2" id="btnAddStation">添加车站</button>
+    </div>
+    <div class="row">
+        <a href="javascript:history.back();" class="btn waves-block waves-effect waves-light col s2">返 回</a>
+        <button type="button" class="btn waves-block waves-effect waves-light col s2 offset-s1" id="btnSave">保 存</button>
+    </div>
+</form>
+
+<script src="/Scripts/page-scripts/admin-edit-line.js"></script>
