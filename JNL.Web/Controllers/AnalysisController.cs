@@ -738,10 +738,22 @@ namespace JNL.Web.Controllers
             if (type == 1)
             {
                 result =
-                    list.Where(t => !string.IsNullOrEmpty(t.FirstStationName) && (string.IsNullOrEmpty(t.LastStationName) || t.FirstStationName == t.LastStationName))
-                    .GroupBy(t => t.FirstStationName)
-                    .Select(group => new TempArea1 { station = group.Key, count = group.Count() })
-                    .OrderByDescending(t => t.count);
+                    list.Where(
+                        t =>
+                            !string.IsNullOrEmpty(t.FirstStationName) &&
+                            (string.IsNullOrEmpty(t.LastStationName) || t.FirstStationName == t.LastStationName))
+                        .GroupBy(t => t.FirstStationName)
+                        .Select(group => new TempArea1 {station = group.Key, count = group.Count()})
+                        .OrderByDescending(t => t.count).ToList();
+
+                // @FrancisTan 2016-12-26
+                // 增加一栏总计，统计总数
+                var temp1 = (List<TempArea1>) result;
+                temp1.Add(new TempArea1
+                {
+                    station = "合计",
+                    count = temp1.Sum(m => m.count)
+                });
             }
             else
             {
@@ -755,13 +767,23 @@ namespace JNL.Web.Controllers
                     {
                         tempList.AddRange(
                             group.GroupBy(t => t.LastStationName)
-                            .Select(g => new TempArea2
-                            {
-                                first = group.Key,
-                                last = g.Key,
-                                count = g.Count()
-                            }));
+                                .Select(g => new TempArea2
+                                {
+                                    first = group.Key,
+                                    last = g.Key,
+                                    count = g.Count()
+                                }));
                     });
+
+                // @FrancisTan 2016-12-26
+                // 增加一栏总计，统计总数
+                tempList.Add(new TempArea2
+                {
+                    first = "合计",
+                    last = "",
+                    count = tempList.Sum(m => m.count)
+                });
+
                 result = tempList.OrderByDescending(t => t.count);
             }
 
