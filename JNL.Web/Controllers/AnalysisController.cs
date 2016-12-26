@@ -108,6 +108,19 @@ namespace JNL.Web.Controllers
                 });
 
                 return model;
+            }).ToList();
+
+            // 2016-12-26 @FrancisTan
+            // 增加一行总计，统计各分类录入总数
+            analysisList.Add(new TempSourceResult
+            {
+                Name = "总计",
+                Red = analysisList.Sum(m=>m.Red),
+                One = analysisList.Sum(m=>m.One),
+                Two = analysisList.Sum(m=>m.Two),
+                Three = analysisList.Sum(m=>m.Three),
+                Four = analysisList.Sum(m=>m.Four),
+                Info = analysisList.Sum(m=>m.Info)
             });
 
             return Json(ErrorModel.GetDataSuccess(analysisList));
