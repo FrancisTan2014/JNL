@@ -376,7 +376,7 @@ namespace JNL.Web.Controllers
             }
 
             var lineBll = new LineBll();
-            #region 执行事务，操作Line及LineStations表
+            #region 执行事务，更新Line及LineStations表的数据
             var success = lineBll.ExecuteTransation(() =>
                 {
                     // 更新Line表数据

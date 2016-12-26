@@ -81,13 +81,16 @@
         },
 
         departClick: function() {
-            var id = $(this).data('id');
+            var id = $(this).data('id'),
+                name = $(this).text();
             if ($(this).hasClass('active')) {
                 $(this).removeClass('active').prop('title', '点击选中');
                 page.departs.remove(id);
+                Materialize.toast('已从落实部门列表中移除“{0}”:(='.format(name), 3000);
             } else {
                 page.departs.push(id);
                 $(this).addClass('active').prop('title', '点击取消');
+                Materialize.toast('已选中“{0}”为落实部门:(='.format(name), 3000);
             }
         },
 

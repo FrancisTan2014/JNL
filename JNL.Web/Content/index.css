@@ -36,6 +36,11 @@ nav {
 
 .hide { display: none }
 
+/* 页面说明文字颜色 */
+.page-comment {
+    color: #999;
+}
+
 /* 所有录入表单的统一样式 */
 .edit-form {
     padding: 0 20px 20px 20px;
