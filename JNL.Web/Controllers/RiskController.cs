@@ -73,10 +73,6 @@ namespace JNL.Web.Controllers
                 {
                     riskResponds.ForEach(r => r.RiskId = riskInfo.Id);
                     respondBll.BulkInsert(riskResponds);
-
-                    // @FrancisTan 2016-12-23
-                    // 更新风险信息录入条数指标完成记录
-                    return UpdateQuotaAchievement(riskInfo);
                 }
 
                 return false;
@@ -205,6 +201,13 @@ namespace JNL.Web.Controllers
             var success = riskBll.ExecuteTransation(() =>
             {
                 var res1 = riskBll.Update(risk);
+                if (res1 && risk.VerifyStatus == 4)
+                {
+                    // @FrancisTan 2017-07-04
+                    // 风险办审核通过后将个人添加风险记录条数+1
+                    UpdateQuotaAchievement(risk);
+                }
+
                 var res2 = respondBll.Delete($"RiskId={risk.Id}");
                 if (responds.Any())
                 {
@@ -382,7 +385,8 @@ namespace JNL.Web.Controllers
         public ActionResult Detail()
         {
             var id = RouteData.Values["id"].ToString().ToInt32();
-            var model = new ViewRiskRespondRiskBll().QuerySingle(id);
+            //var model = new ViewRiskRespondRiskBll().QuerySingle(id);
+            var model = new ViewRiskRespondRiskBll().QuerySingle($"RiskId={id}");
 
             if (model == null)
             {

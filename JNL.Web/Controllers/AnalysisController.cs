@@ -694,7 +694,8 @@ namespace JNL.Web.Controllers
                     return $@"SELECT RiskSecondLevelId,RiskSecondLevelName,DepartmentId,Department,COUNT(1) AS [Count] FROM
                               (SELECT RiskSecondLevelId,RiskSecondLevelName,Department,DepartmentId FROM ViewRiskRespondRisk WHERE OccurrenceTime>'{start}' AND OccurrenceTime<'{end}') AS NEWT
                               GROUP BY RiskSecondLevelId,RiskSecondLevelName,DepartmentId,Department
-                              HAVING RiskSecondLevelName IN('红线','甲Ⅰ','甲Ⅱ','乙','丙','信息')";
+                              HAVING RiskSecondLevelName IN('红线','甲Ⅰ','甲Ⅱ','乙','丙','信息')"
+                              + (string.IsNullOrEmpty(departs) ? "" : $" AND DepartmentId IN ({departs})");
 
                 case 3:
                     var lastCondition = string.IsNullOrEmpty(departs) ? string.Empty : $"AND DepartmentId IN({departs})";
