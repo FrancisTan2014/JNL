@@ -1210,6 +1210,7 @@
                 builds: [],
                 ajaxParams: {},
                 getConditions: function () { },
+                beforeBuildTr: function ($tr, data) {},
                 afterLoaded: function () { }
             }, options);
 
@@ -1291,6 +1292,10 @@
             var _this = this;
 
             var $tr = $('<tr></tr>');
+            if (typeof (_this.config.beforeBuildTr) === 'function') {
+                _this.config.beforeBuildTr($tr, data);
+            }
+
             _this.config.columns.forEach(function (column, index) {
                 var onCreateCell;
                 _this.config.builds.forEach(function (build) {
@@ -1316,7 +1321,8 @@
                         $tr.append(result);
                     }
                 } else {
-                    $tr.append('<td>{0}</td>'.format(value || ''));
+                    //$tr.append('<td>{0}</td>'.format(value || ''));
+                    $tr.append('<td>{0}</td>'.format(value));
                 }
             });
 

@@ -18,6 +18,15 @@
     // 初始化表格
     var table = $.commonTable('.data-table', {
         columns: ['Id', 'Name', 'Department', 'QuotaType', 'QuotaAmmount', 'AchieveAmmount', 'Month', 'UpdateTime'],
+        beforeBuildTr: function ($tr, data) {
+            console.info(data);
+            // 未完成显示红色，完成显示绿色
+            if (data.AchieveAmmount >= data.QuotaAmmount) {
+                $tr.css('color', '#00c853');
+            } else {
+                $tr.css('color', '#f44336');
+            }
+        },
         builds: [
             {
                 targets: [3],

@@ -3,11 +3,31 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<style>
+    .finishied, .not-finishied {
+        display: inline-block;
+        width: 20px;
+        height: 14px;
+    }
+    .finishied {
+        background: #00c853;
+    }
+    .not-finishied {
+        background: #f44336;
+    }
+</style>
+
 <h5 class="title">@ViewBag.Title</h5>
 
 <div id="searchBox" class="row">
-    <div class="col s2 offset-s4">
-        <input type="text" placeholder="姓名/工号" data-condition="WorkId LIKE '%{{value}}%' OR SalaryId LIKE '%{{value}}%' OR [Name] LIKE '%{{value}}%'" />
+    <div class="col s2">
+        <span class="finishied"></span>
+        <strong>已完成</strong>
+        <span class="not-finishied"></span>
+        <strong>未完成</strong>
+    </div>
+    <div class="col s2 offset-s2">
+        <input type="text" placeholder="姓名/工号" data-condition="WorkId LIKE '%{{value}}%' OR SalaryId LIKE '%{{value}}%' OR [Name] LIKE '%{{value}}%'"/>
     </div>
     <div class="col s2">
         <div class="select-wrapper">
@@ -24,10 +44,10 @@
                     var startYear = DateTime.Now.Year;
                     for (int i = 0; i < 5; i++)
                     {
-                        <option value="@(startYear-i)">@(startYear-i)</option>
+                        <option value="@(startYear - i)">@(startYear - i)</option>
                     }
                 }
-                
+
             </select>
         </div>
     </div>

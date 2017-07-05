@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using JNL.Bll;
@@ -43,6 +45,13 @@ namespace JNL.Web.Controllers
         [HttpPost]
         public JsonResult AddRisk(string risk, string responds)
         {
+            // 启动每月为每个员工插入一条风险信息记录指标的任务
+            var quotaAchievementBll = new QuotaAchievementBll();
+            if (!quotaAchievementBll.Exists($"IsDelete=0 AND [Year]={DateTime.Now.Year} AND [Month]={DateTime.Now.Month}"))
+            {
+                AddQuotaAchievementForEveryStaffPerMonth();
+            }
+
             if (string.IsNullOrEmpty(risk) || string.IsNullOrEmpty(responds))
             {
                 return Json(ErrorModel.InputError);
@@ -73,6 +82,8 @@ namespace JNL.Web.Controllers
                 {
                     riskResponds.ForEach(r => r.RiskId = riskInfo.Id);
                     respondBll.BulkInsert(riskResponds);
+
+                    return true;
                 }
 
                 return false;
@@ -84,6 +95,32 @@ namespace JNL.Web.Controllers
             }
 
             return Json(ErrorModel.OperateFailed);
+        }
+
+        // 启动每月为每个员工插入一条风险信息记录指标的任务
+        private void AddQuotaAchievementForEveryStaffPerMonth()
+        {
+            Task.Factory.StartNew(() =>
+            {
+                var quotaBll = new QuotaBll();
+                var quotaAchievementBll = new QuotaAchievementBll();
+                var quotaList = quotaBll.QueryList("IsDelete=0");
+
+                var achieveList = new List<QuotaAchievement>();
+                quotaList.ForEach(q =>
+                {
+                    achieveList.Add(new QuotaAchievement
+                    {
+                        AchieveAmmount = 0,
+                        Month = DateTime.Now.Month,
+                        Year = DateTime.Now.Year,
+                        QuotaId = q.Id,
+                        UpdateTime = DateTime.Now
+                    });
+                });
+
+                quotaAchievementBll.BulkInsert(achieveList);
+            });
         }
 
         /// <summary>
