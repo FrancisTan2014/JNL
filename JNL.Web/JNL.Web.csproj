@@ -405,6 +405,7 @@
     <Content Include="Views\Admin\Lines.cshtml" />
     <Content Include="Views\Admin\EditLine.cshtml" />
     <Content Include="Views\Admin\RiskConfig.cshtml" />
+    <Content Include="Views\Admin\BugTools.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

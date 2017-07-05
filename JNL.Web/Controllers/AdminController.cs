@@ -10,6 +10,7 @@ using JNL.Utilities.Helpers;
 using JNL.Web.Models;
 using JNL.Web.Utils;
 using NPOI.OpenXmlFormats;
+using WebGrease.Css.Extensions;
 
 namespace JNL.Web.Controllers
 {
@@ -472,6 +473,50 @@ namespace JNL.Web.Controllers
             }
 
             return Json(ErrorModel.OperateFailed);
+        }
+
+        #endregion
+
+        #region BUG修复工具
+
+        public ActionResult BugTools()
+        {
+            if (LoginStatus.GetLoginUser().Name == "姚智禄")
+            {
+                return View();
+            }
+            else
+            {
+                return Redirect("/Home/Index");
+            }
+        }
+
+        [HttpPost]
+        public JsonResult FixRiskSummaryData()
+        {
+            try
+            {
+                var riskBll = new RiskSummaryBll();
+                var topList = riskBll.QueryList("ParentId=0 AND IsDelete=0").ToList();
+                var secondList = riskBll.QueryList("ParentId<>0 AND SecondLevelId=0 AND IsDelete=0");
+                if (secondList.Any(item => item.TopestTypeId == 0 && item.TopestName == ""))
+                {
+                    secondList.ForEach(risk =>
+                    {
+                        var parent = topList.Find(r => r.Id == risk.ParentId);
+                        risk.TopestName = parent.Description;
+                        risk.TopestTypeId = parent.Id;
+
+                        riskBll.Update(risk, new[] { nameof(JNL.Model.RiskSummary.TopestName), nameof(JNL.Model.RiskSummary.TopestTypeId) });
+                    });
+                }
+            }
+            catch
+            {
+                //
+            }
+
+            return Json(ErrorModel.OperateSuccess);
         }
 
         #endregion

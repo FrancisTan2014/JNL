@@ -26,24 +26,27 @@
             </select>
         </div>
     </div>
-    <div class="col s3">
+    <div class="col s2">
         <div class="select-wrapper">
             <select id="searchRespond" class="initialized" data-condition="DepartmentId={{value}}">
                 <option value="-1">责任部门</option>
             </select>
         </div>
     </div>
-    <div class="col s3">
+    <div class="col s2">
         <div class="select-wrapper">
             <select id="searchLevel" class="initialized" data-condition="RiskSecondLevelId={{value}}">
                 <option value="-1">风险等级</option>
             </select>
         </div>
     </div>
-    <div class="col s3">
+    <div class="col s2">
+        <input type="text" id="reportName" class="search-text" placeholder="提报人姓名" data-condition="ReportStaffName LIKE '%{{value}}%'" />
+    </div>
+    <div class="col s2">
         <input type="text" placeholder="提报起始时间" id="searchStart" class="datepicker" data-condition="OccurrenceTime>'{{value}}'"/>
     </div>
-    <div class="col s3">
+    <div class="col s2">
         <input type="text" placeholder="提报结束时间" id="searchEnd" class="datepicker" data-condition="OccurrenceTime<'{{value}} 23:59:59'"/>
     </div>
     <div class="col s2">
@@ -59,6 +62,9 @@
                 <option value="-1">列车类别</option>
             </select>
         </div>
+    </div>
+    <div class="col s2">
+        <input type="text" class="search-text" id="occurrencePlace" placeholder="发生地点" data-condition="(FirstStationName LIKE '%{{value}}%' OR LastStationName LIKE '%{{value}}%')" />
     </div>
     <div class="col s2">
         <button id="btnSearch" class="btn waves-effect waves-block waves-light" type="button">查 询</button>

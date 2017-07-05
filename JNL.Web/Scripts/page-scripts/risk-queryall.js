@@ -82,7 +82,7 @@
         },
         getConditions: function () {
             var conditions = ['VerifyStatus=4'];
-            $('#searchBox').find('select.initialized,input.datepicker').each(function () {
+            $('#searchBox').find('select.initialized,input.datepicker,input.search-text').each(function () {
                 var $this = $(this),
                     value = $this.val();
 
