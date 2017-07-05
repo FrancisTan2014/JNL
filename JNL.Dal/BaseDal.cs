@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -504,11 +505,9 @@ namespace JNL.Dal
 
             try
             {
-                return enumerable.Select(entity =>
-                {
-                    var type = entity.GetType();
-                    return type.InvokeMember(fieldName, BindingFlags.GetProperty, null, entity, null);
-                });
+                var type = typeof(T);
+                var prop = type.GetProperty(fieldName);
+                return enumerable.Select(entity => prop.GetValue(entity, BindingFlags.GetProperty, null, null, CultureInfo.CurrentCulture));
             }
             catch (Exception)
             {

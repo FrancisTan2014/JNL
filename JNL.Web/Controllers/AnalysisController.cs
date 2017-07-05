@@ -836,16 +836,27 @@ namespace JNL.Web.Controllers
 
         private class TempTimeSection
         {
+            public int Id { get; set; }
             public string RiskSecondLevelName { get; set; }
             public int Hour { get; set; }
         }
 
         [HttpPost]
-        public JsonResult TimeSection(string start, string end)
+        public JsonResult TimeSection(string start, string end, int depart)
         {
             var cmdText =
-                $@"SELECT RiskSecondLevelName,DATEPART(HOUR, OccurrenceTime) AS [Hour] FROM ViewRiskInfo WHERE RiskSecondLevelName IS NOT NULL AND RiskSecondLevelName IN('红线','甲Ⅰ','甲Ⅱ','乙','丙','信息') AND OccurrenceTime BETWEEN '{start}' AND '{end}'";
+                $@"SELECT Id,RiskSecondLevelName,DATEPART(HOUR, OccurrenceTime) AS [Hour] FROM ViewRiskInfo WHERE RiskSecondLevelName IS NOT NULL AND RiskSecondLevelName IN('红线','甲Ⅰ','甲Ⅱ','乙','丙','信息') AND OccurrenceTime BETWEEN '{start}' AND '{end}'";
             var list = new ViewRiskInfoBll().ExecuteModel<TempTimeSection>(cmdText).ToList();
+
+            // @FrancisTan 2017-07-05
+            // 时间段分析增加部门
+            if (depart > 0)
+            {
+                var responBll = new ViewRiskResponseStaffBll();
+                var departRiskIds =
+                    responBll.QuerySingleColumn($"DepartmentId={depart}", "RiskId");
+                list = list.Where(item => departRiskIds != null && departRiskIds.Contains(item.Id)).ToList();
+            }
 
             var result = new List<TempDistribute>();
             for (int i = 0; i < 24; i++)

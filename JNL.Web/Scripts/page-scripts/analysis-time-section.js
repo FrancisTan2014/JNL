@@ -2,6 +2,20 @@
     $(function () {
         common.pickdate();
 
+        $.initSelect({
+            selectors: ['#DepartmentId'],
+            ajaxUrl: '/Common/GetList',
+            getAjaxParams: function () {
+                return { TableName: 'Department' };
+            },
+            textField: 'Name',
+            valueField: 'Id',
+            selectedValue: -1,
+            afterBuilt: function ($select) {
+                $select.material_select();
+            }
+        });
+
         $('#btnSearch').on('click', function () {
             var params = getAjaxParams();
             if (params) {
@@ -40,8 +54,10 @@
         }
         end += ' 23:59:59';
 
+        var departId = $('#DepartmentId').val();
+
         return {
-            type: type, start: start, end: end
+            type: type, start: start, end: end, depart: departId
         };
     }
 

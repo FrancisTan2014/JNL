@@ -32,6 +32,13 @@
         <input type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="datepicker" id="searchEnd" placeholder="结束日期" />
     </div>
     <div class="col s2 input-field">
+        <div class="select-wrapper">
+            <select class="initialized" name="DepartmentId" id="DepartmentId">
+                <option value="-1">请选择</option>
+            </select>
+        </div>
+    </div>
+    <div class="col s2 input-field">
         <button id="btnSearch" class="btn waves-effect waves-block waves-light" type="button">查 询</button>
     </div>
 </div>
