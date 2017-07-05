@@ -444,5 +444,36 @@ namespace JNL.Web.Controllers
         }
 
         #endregion
+
+        #region 风险信息配置项
+
+        public ActionResult RiskConfig()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public JsonResult ConfigExists(int type, int target)
+        {
+            var bll = new AdminConfigBll();
+            var exists = bll.Exists($"ConfigType={type} AND TargetId={target}");
+
+            return Json(exists ? ErrorModel.TrueResult : ErrorModel.FalseResult);
+        }
+
+        [HttpPost]
+        public JsonResult DeleteConfig(int type, int target)
+        {
+            var bll = new AdminConfigBll();
+            var success = bll.Delete($"ConfigType={type} AND TargetId={target}");
+            if (success)
+            {
+                return Json(ErrorModel.OperateSuccess);
+            }
+
+            return Json(ErrorModel.OperateFailed);
+        }
+
+        #endregion
     }
 }

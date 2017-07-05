@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="BaseDal.cs" />
     <Compile Include="Partials\AccidentDal.cs" />
+    <Compile Include="Partials\AdminConfigDal.cs" />
     <Compile Include="Partials\ArticleCategoryDal.cs" />
     <Compile Include="Partials\ArticleDal.cs" />
     <Compile Include="Partials\BasicFileDal.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="Partials\StaffScoreDal.cs" />
     <Compile Include="Partials\StationDal.cs" />
     <Compile Include="Partials\TraceInfoDal.cs" />
+    <Compile Include="Partials\ViewAdminConfigDal.cs" />
     <Compile Include="Partials\ViewArticleDal.cs" />
     <Compile Include="Partials\ViewExamScoreDal.cs" />
     <Compile Include="Partials\ViewLineDal.cs" />

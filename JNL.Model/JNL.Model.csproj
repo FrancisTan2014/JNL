@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="DictionaryType.cs" />
     <Compile Include="Partials\Accident.cs" />
+    <Compile Include="Partials\AdminConfig.cs" />
     <Compile Include="Partials\Article.cs" />
     <Compile Include="Partials\ArticleCategory.cs" />
     <Compile Include="Partials\BasicFile.cs" />
@@ -66,6 +67,7 @@
     <Compile Include="Partials\StaffScore.cs" />
     <Compile Include="Partials\Station.cs" />
     <Compile Include="Partials\TraceInfo.cs" />
+    <Compile Include="Partials\ViewAdminConfig.cs" />
     <Compile Include="Partials\ViewArticle.cs" />
     <Compile Include="Partials\ViewExamScore.cs" />
     <Compile Include="Partials\ViewLine.cs" />

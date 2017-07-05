@@ -1,0 +1,56 @@
+﻿@{
+    ViewBag.Title = "风险信息配置项";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .card {
+        margin: 0;
+    }
+    .card .desc {
+        height: 67px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+    .col {
+        margin-top: 10px;
+    }
+</style>
+
+<h5 class="title">@ViewBag.Title</h5>
+
+<div class="row">
+    <div class="col offset-s2 s3">
+        <div class="select-wrapper">
+            <select id="configType">
+                <option value="1">构成分析配置项</option>
+                <option value="2">阶段分析配置项</option>
+            </select>
+        </div> 
+    </div>
+    <div class="col s7">
+        <input type="text" placeholder="输入关键字查询，从弹出的下拉框中选择项添加" id="keyWords" />
+    </div>
+</div>
+
+<div class="row" id="container">
+    
+</div>
+
+<div id="template" style="display: none">
+    <div class="col s3">
+        <div class="card">
+            <div class="card blue-grey darken-1">
+                <div class="card-content white-text">
+                    <span class="card-title">{{title}}</span>
+                    <p class="desc">{{desc}}</p>
+                </div>
+                <div class="card-action right">
+                    <a href="javascript:void(0);" class="remove" data-id="{{id}}">删 除</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/Scripts/page-scripts/admin-riskconfig.js"></script>

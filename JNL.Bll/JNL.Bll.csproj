@@ -46,6 +46,7 @@
     <Compile Include="ExceptionLogBll.cs" />
     <Compile Include="LoginResult.cs" />
     <Compile Include="Partials\AccidentBll.cs" />
+    <Compile Include="Partials\AdminConfigBll.cs" />
     <Compile Include="Partials\ArticleBll.cs" />
     <Compile Include="Partials\ArticleCategoryBll.cs" />
     <Compile Include="Partials\BasicFileBll.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="Partials\StaffScoreBll.cs" />
     <Compile Include="Partials\StationBll.cs" />
     <Compile Include="Partials\TraceInfoBll.cs" />
+    <Compile Include="Partials\ViewAdminConfigBll.cs" />
     <Compile Include="Partials\ViewArticleBll.cs" />
     <Compile Include="Partials\ViewExamScoreBll.cs" />
     <Compile Include="Partials\ViewLineBll.cs" />

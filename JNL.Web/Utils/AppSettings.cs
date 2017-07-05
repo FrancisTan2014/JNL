@@ -108,13 +108,8 @@ namespace JNL.Web.Utils
         {
             get
             {
-                var config = GetConfig("ConstituteAnalysisRiskSummaryIds");
-                if (!string.IsNullOrEmpty(config))
-                {
-                    return config.Split(',').Select(s => s.ToInt32()).ToArray();
-                }
-
-                return new int[1];
+                var bll = new AdminConfigBll();
+                return bll.QueryList("ConfigType=1").Select(item => item.TargetId).ToArray();
             }
         }
 
@@ -125,13 +120,8 @@ namespace JNL.Web.Utils
         {
             get
             {
-                var config = GetConfig("StageAnalysisRiskSummaryIds");
-                if (!string.IsNullOrEmpty(config))
-                {
-                    return config.Split(',').Select(s => s.ToInt32()).ToArray();
-                }
-
-                return new int[1];
+                var bll = new AdminConfigBll();
+                return bll.QueryList("ConfigType=2").Select(item => item.TargetId).ToArray();
             }
         }
     }

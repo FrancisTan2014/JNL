@@ -209,6 +209,7 @@
     <Content Include="Scripts\page-scripts\admin-quota-achievement.js" />
     <Content Include="Scripts\page-scripts\admin-quota.js" />
     <Content Include="Scripts\page-scripts\admin-risk-summary.js" />
+    <Content Include="Scripts\page-scripts\admin-riskconfig.js" />
     <Content Include="Scripts\page-scripts\admin-staff-list.js" />
     <Content Include="Scripts\page-scripts\admin-stations.js" />
     <Content Include="Scripts\page-scripts\analysis-action.js" />
@@ -403,6 +404,7 @@
     <Content Include="Views\Admin\Stations.cshtml" />
     <Content Include="Views\Admin\Lines.cshtml" />
     <Content Include="Views\Admin\EditLine.cshtml" />
+    <Content Include="Views\Admin\RiskConfig.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
