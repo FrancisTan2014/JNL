@@ -6,15 +6,26 @@
 <h5 class="title">@ViewBag.Title</h5>
 
 <div class="btn" id="fixRisk">修复综合分析下的风险等级点不开的BUG</div>
+<div class="btn" id="fixScore">修复干部履责评价中分值不正确的问题</div>
 
+<script src="/node_modules/materialize-css/dist/js/materialize.min.js"></script>
 <script>
-    $(function() {
+    $(function () {
         $('#fixRisk').on('click',
-            function() {
+            function () {
                 common.ajax({
                     url: '/Admin/FixRiskSummaryData'
-                }).done(function(res) {
-                    Materialize('已修复！！！', 3000);
+                }).done(function (res) {
+                    Materialize.toast('修复成功！！！', 3000);
+                }); 
+            });
+
+        $('#fixScore').on('click',
+            function () {
+                common.ajax({
+                    url: '/Admin/ComputeStaffScore'
+                }).done(function (res) {
+                    Materialize.toast('修复成功！！！', 3000);
                 });
             });
     });

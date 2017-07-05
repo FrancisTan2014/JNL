@@ -148,13 +148,8 @@ namespace JNL.Web.Controllers
         /// 计算最近三年的得分
         /// </summary>
         /// <returns></returns>
-        public JsonResult ComputeStaffScore(string password)
+        public JsonResult ComputeStaffScore()
         {
-            if (password != "yaozhilu")
-            {
-                return Json(ErrorModel.NoAuth, JsonRequestBehavior.AllowGet);
-            }
-
             var currentYear = DateTime.Now.Year;
             StaffScoreHelper.ComputeWholeYearStaffScore(currentYear);
             StaffScoreHelper.ComputeWholeYearStaffScore(currentYear - 1);

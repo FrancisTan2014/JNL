@@ -52,7 +52,7 @@
                     PageSize: 20
                 },
                 getConditions: function () {
-                    var conditions = [];
+                    var conditions = ['WorkFlagId=1'];
 
                     var staffId = $('#searchStaff').val();
                     if (staffId > 0) {

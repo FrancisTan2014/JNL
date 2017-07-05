@@ -51,38 +51,63 @@ namespace JNL.Web.Utils
 
             try
             {
-                // 查询本月风险信息集合
-                var riskBll = new ViewRiskInfoBll();
-                var monthRisks =
-                    riskBll.QueryList(
-                        $"DATEPART(YEAR, OccurrenceTime)={year} AND DATEPART(MONTH, OccurrenceTime)={month}",
-                        new[] { "Id", "RiskSecondLevelId" }).ToList();
-                if (!monthRisks.Any())
-                {
-                    return;
-                }
+                #region Original
 
-                // 查询本月风险责任人
-                var respondBll = new RiskResponseStaffBll();
-                var riskIdList = monthRisks.Select(r => r.Id);
-                var respondList = respondBll.QueryList($"RiskId IN({string.Join(",", riskIdList)})", new[] { "RiskId", "ResponseStaffId" });
+                //// 查询本月风险信息集合
+                //var riskBll = new ViewRiskInfoBll();
+                //var monthRisks =
+                //    riskBll.QueryList(
+                //        $"DATEPART(YEAR, OccurrenceTime)={year} AND DATEPART(MONTH, OccurrenceTime)={month}",
+                //        new[] { "Id", "RiskSecondLevelId" }).ToList();
+                //if (!monthRisks.Any())
+                //{
+                //    return;
+                //}
+
+                //// 查询本月风险责任人
+                //var respondBll = new ViewRiskRespondRiskBll();
+                //var riskIdList = monthRisks.Select(r => r.Id);
+                //var respondList = respondBll.QueryList($"RiskId IN({string.Join(",", riskIdList)})", new[] { "RiskId", "ResponseStaffId" });
+
+                //var minusScoreDic = AppSettings.RiskMinusScoreDic;
+
+                //// 计算每个责任人所扣的分数
+                //var staffScoreList = monthRisks.Join(respondList, outer => outer.Id, inner => inner.RiskId, (outer, inner) => new StaffScore
+                //    {
+                //        StaffId = inner.ResponseStaffId,
+                //        MinusScore = minusScoreDic.ContainsKey(outer.RiskSecondLevelId ?? 0) ? minusScoreDic[outer.RiskSecondLevelId.Value] : 0
+                //    })
+                //    .GroupBy(s => s.StaffId)
+                //    .Select(group => new StaffScore
+                //    {
+                //        StaffId = group.Key,
+                //        Year = year,
+                //        Month = month,
+                //        MinusScore = group.Sum(s => s.MinusScore)
+                //    });
+
+                #endregion
+
+                var viewRiskResBll = new ViewRiskRespondRiskBll();
+                var riskList =
+                    viewRiskResBll.QueryList(
+                        $"DATEPART(YEAR, OccurrenceTime)={year} AND DATEPART(MONTH, OccurrenceTime)={month}");
 
                 var minusScoreDic = AppSettings.RiskMinusScoreDic;
-
-                // 计算每个责任人所扣的分数
-                var staffScoreList = monthRisks.Join(respondList, outer => outer.Id, inner => inner.RiskId, (outer, inner) => new StaffScore
+                var staffScoreList = riskList.Select(r => new StaffScore
                 {
-                    StaffId = inner.ResponseStaffId,
-                    MinusScore = minusScoreDic.ContainsKey(outer.RiskSecondLevelId ?? 0) ? minusScoreDic[outer.RiskSecondLevelId.Value] : 0
+                    StaffId = r.ResponseStaffId,
+                    MinusScore = minusScoreDic.ContainsKey(r.RiskSecondLevelId.Value) ? minusScoreDic[r.RiskSecondLevelId.Value] : 0
                 })
                 .GroupBy(s => s.StaffId)
                 .Select(group => new StaffScore
-                {
-                    StaffId = group.Key,
-                    Year = year,
-                    Month = month,
-                    MinusScore = group.Sum(s => s.MinusScore)
-                });
+                    {
+                        StaffId = group.Key,
+                        Year = year,
+                        Month = month,
+                        MinusScore = group.Sum(item => item.MinusScore),
+                        UpdateTime = DateTime.Now
+                    });
 
                 var staffScoreBll = new StaffScoreBll();
                 staffScoreBll.ExecuteTransation(
