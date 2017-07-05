@@ -65,6 +65,11 @@
                 conditions.push('Reason LIKE \'%{0}%\''.format(reason));
             }
 
+            var type = $('#searchType').val();
+            if (type) {
+                conditions.push('AccidentType=\'{0}\''.format(type));
+            }
+
             $('.same-condition').each(function() {
                 var value = $(this).val(),
                     field = $(this).data('field');
