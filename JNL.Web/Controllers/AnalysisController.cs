@@ -717,12 +717,14 @@ namespace JNL.Web.Controllers
 
         private class TempArea1
         {
+            public string line { get; set; }
             public string station { get; set; }
             public int count { get; set; }
         }
 
         private class TempArea2
         {
+            public string line { get; set; }
             public string first { get; set; }
             public string last { get; set; }
             public int count { get; set; }
@@ -732,8 +734,9 @@ namespace JNL.Web.Controllers
         public JsonResult Area(int type, string start, string end)
         {
             var cmdText =
-                $@"SELECT FirstStationName,LastStationName FROM ViewRiskInfo WHERE (FirstStationName IS NOT NULL OR LastStationName IS NOT NULL) AND OccurrenceTime BETWEEN '{start}' AND '{end}'";
-            var list = new ViewRiskInfoBll().ExecuteModel<ViewRiskInfo>(cmdText);
+                $@"SELECT FirstStationName,LastStationName,OccurrenceLineName FROM ViewRiskInfo WHERE (FirstStationName IS NOT NULL OR LastStationName IS NOT NULL) AND OccurrenceTime BETWEEN '{start}' AND '{end}'";
+            var list = new ViewRiskInfoBll().ExecuteModel<ViewRiskInfo>(cmdText).ToList();
+            var line = list[0]?.OccurrenceLineName;
 
             object result;
             if (type == 1)
@@ -744,7 +747,7 @@ namespace JNL.Web.Controllers
                             !string.IsNullOrEmpty(t.FirstStationName) &&
                             (string.IsNullOrEmpty(t.LastStationName) || t.FirstStationName == t.LastStationName))
                         .GroupBy(t => t.FirstStationName)
-                        .Select(group => new TempArea1 {station = group.Key, count = group.Count()})
+                        .Select(group => new TempArea1 { line = line, station = group.Key, count = group.Count()})
                         .OrderByDescending(t => t.count).ToList();
 
                 // @FrancisTan 2016-12-26
@@ -752,6 +755,7 @@ namespace JNL.Web.Controllers
                 var temp1 = (List<TempArea1>) result;
                 temp1.Add(new TempArea1
                 {
+                    line = string.Empty,
                     station = "合计",
                     count = temp1.Sum(m => m.count)
                 });
@@ -770,6 +774,7 @@ namespace JNL.Web.Controllers
                             group.GroupBy(t => t.LastStationName)
                                 .Select(g => new TempArea2
                                 {
+                                    line = line,
                                     first = group.Key,
                                     last = g.Key,
                                     count = g.Count()
@@ -780,7 +785,8 @@ namespace JNL.Web.Controllers
                 // 增加一栏总计，统计总数
                 tempList.Add(new TempArea2
                 {
-                    first = "合计",
+                    line = "合计",
+                    first = "",
                     last = "",
                     count = tempList.Sum(m => m.count)
                 });

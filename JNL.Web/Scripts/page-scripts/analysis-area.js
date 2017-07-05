@@ -53,18 +53,18 @@
 
     function buildTr(type, data, $tr) {
         if (type == 1) {
-            $tr.append('<td>{0}</td><td>{1}</td>'.format(data.station, data.count));
+            $tr.append('<td>{0}</td><td>{1}</td><td>{2}</td>'.format(data.line, data.station, data.count));
         } else {
-            $tr.append('<td>{0}</td><td>{1}</td><td>{2}</td>'.format(data.first, data.last, data.count));
+            $tr.append('<td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td>'.format(data.line, data.first, data.last, data.count));
         }
     }
 
     function initTitle(type) {
         var $title = $('.data-table>thead>tr');
         if (type == 1) {
-            $title.append('<th>站场</th><th>数量</th>');
+            $title.append('<th>发生线路</th><th>站场</th><th>数量</th>');
         } else {
-            $title.append('<th>站1</th> <th>站2</th> <th>数量</th>');
+            $title.append('<th>发生线路</th><th>站1</th> <th>站2</th> <th>数量</th>');
         }
     }
 
